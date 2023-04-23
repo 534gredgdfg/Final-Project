@@ -9,27 +9,28 @@ namespace Final_Project
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        
+        DateTime lastShotTime = DateTime.MinValue;
         private SpriteBatch _spriteBatch;
         Player user;
         
         
 
-        Texture2D rectangleTexture, lukeStillRight;
+        Texture2D rectangleTexture, lukeStillRight, stormtroperAimingLeft;
         
 
         int mainGameWidth = 1200;
         int mainGameHeight = 1000;
-        int fired = 0;
+        float userGunInterval = 0.5f;
+
         bool initialRespawn = true;
         float seconds;
         float startTime;
         private float playerRotation;
         private Vector2 playerPosition;
-        private Vector2 playerOrigin;
+        
 
         List<Rectangle> barriersList;
-        
+        List<Player> stormtrooperlist = new List<Player>();
 
         List<LaserClass> laserList = new List<LaserClass>();
         Random rand = new Random();
@@ -66,7 +67,9 @@ namespace Final_Project
             barriersList.Add(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), rand.Next(10, 200), rand.Next(10, 200)));
             barriersList.Add(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), rand.Next(10, 200), rand.Next(10, 200)));
             barriersList.Add(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), rand.Next(10, 200), rand.Next(10, 200)));
+
             
+
             base.Initialize();
             user = new Player(lukeStillRight, 500, 500);
             
@@ -79,8 +82,9 @@ namespace Final_Project
 
             // TODO: use this.Content to load your game content here
             rectangleTexture = Content.Load<Texture2D>("rectangle");
+            stormtroperAimingLeft = Content.Load<Texture2D>("stormtroperAimingLeft");
             lukeStillRight = Content.Load<Texture2D>("lukeStandingRight");
-            playerOrigin = new Vector2(32, 62);
+            
             
         }
 
@@ -105,7 +109,7 @@ namespace Final_Project
                     _graphics.PreferredBackBufferWidth = mainGameWidth; // Sets the width of the window
                     _graphics.PreferredBackBufferHeight = mainGameHeight; // Sets the height of the window
                     _graphics.ApplyChanges(); // Applies the new dimensions
-                    
+                    stormtrooperlist.Add(new Player(stormtroperAimingLeft, 100, 100));
                 }
 
 
@@ -113,6 +117,8 @@ namespace Final_Project
             }
             else if (screen == Screen.MainScreen)
             {
+                
+
                 var distance = new Vector2(mouseState.X - playerPosition.X, mouseState.Y - playerPosition.Y);
 
                 playerRotation = (float)Math.Atan2(distance.Y, distance.X);
@@ -139,15 +145,32 @@ namespace Final_Project
                 
                 user.Update();
 
-
-
-                //Shoot
                 
-                if (mouseState.LeftButton == ButtonState.Pressed)
+
+                 foreach (Player troops in stormtrooperlist)
+                 {
+
+                    if (user.YLocation > troops.YLocationBottom)
+                        troops.VSpeed = 1;
+                    if (user.YLocationBottom< troops.YLocation)
+                        troops.VSpeed = -1;
+
+                    if (user.XLocation > troops.XLocationRight)
+                        troops.HSpeed = 1;
+                    if (user.XLocationRight < troops.XLocation)
+                        troops.HSpeed = -1;
+                    troops.Update();
+                 }
+
+
+
+                TimeSpan timeSinceLastShot = DateTime.Now - lastShotTime;
+                if (timeSinceLastShot.TotalSeconds >= userGunInterval && mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    laserList.Add(new LaserClass(rectangleTexture, playerPosition, playerRotation, new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 10, 10)));
-                    
+                    laserList.Add(new LaserClass(rectangleTexture, playerPosition, playerRotation, new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 30, 8)));
+                    lastShotTime = DateTime.Now; // update last shot time
                 }
+
 
 
                 //Loop through the list of bullets and update their position
@@ -162,34 +185,45 @@ namespace Final_Project
                 foreach (Rectangle barrier in barriersList)
                     if (user.Collide(barrier))
                         user.UndoMove();
-
-                if (laserList.Count > 0)
+                
+                foreach (Player troops in stormtrooperlist)
                 {
-                    foreach (LaserClass t in laserList)
+                    
+                    foreach (Rectangle barrier in barriersList)
                     {
-                        foreach (Rectangle barrier in barriersList)
+                        if (troops.Collide(barrier))
                         {
-                            if (t.Collide(barrier))
-                            {
-
-                                laserList.Remove(t);
-                                
-
-
-                            }
-
+                            troops.UndoMove();
+                            break;
                         }
-
-
                     }
                 }
-               
-                
-
-                
-
-
-
+                /*
+                for (int i = laserList.Count - 1; i >= 0; i--)
+                {
+                    LaserClass t = laserList[i];
+                    foreach (Player troops in stormtrooperlist)
+                    {
+                        if (troops.Collide(t))
+                        {
+                            laserList.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
+                */
+                for (int i = laserList.Count - 1; i >= 0; i--)
+                {
+                    LaserClass t = laserList[i];
+                    foreach (Rectangle barrier in barriersList)
+                    {
+                        if (t.Collide(barrier))
+                        {
+                            laserList.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
 
 
 
@@ -234,6 +268,12 @@ namespace Final_Project
                 {
 
                     bullet.Draw(_spriteBatch);
+
+                }
+                foreach (Player ai in stormtrooperlist)
+                {
+
+                    ai.Draw(_spriteBatch);
 
                 }
             }

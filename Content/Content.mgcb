@@ -25,18 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/lukeStandingRight.png;lukeStandingRight.png
 
-#begin C:/Users/owenr/Downloads/lukeStillRight.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=0,255,0,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:C:/Users/owenr/Downloads/lukeStillRight.png;lukeStillRight.png
-
 #begin rectangle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -48,4 +36,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:rectangle.png
+
+#begin stormtroperAimingLeft.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=32,200,248,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:stormtroperAimingLeft.png
 

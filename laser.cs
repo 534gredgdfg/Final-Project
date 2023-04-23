@@ -16,6 +16,7 @@ namespace Final_Project
             private Vector2 velocity;
             private Rectangle rect;
             private float rotation;
+            
 
             public LaserClass(Texture2D texture, Vector2 position, float rotation, Rectangle rect)
             {
@@ -29,20 +30,12 @@ namespace Final_Project
 
                 this.rect = rect;
         }
-        public float XLocation
-        {
-            get { return rect.X; }
-            set { rect.X = (int)value; }
-        }
-        public float YLocation
-        {
-            get { return rect.Y; }
-            set { rect.Y = (int)value; }
-        }
+        
         public void Update(GameTime gt)
             {
 
                 velocity = new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation)) * 5f;
+                velocity = velocity * 3;
 
                 position += velocity;
                 rect.X = (int)position.X;
@@ -65,10 +58,11 @@ namespace Final_Project
 
         public void Draw(SpriteBatch sb)
             { 
+                    
+                    
+                    sb.Draw(texture, rect, null, Color.Red, rotation, Vector2.Zero, SpriteEffects.None, 0f);
 
-                    sb.Draw(texture, rect , Color.Red);
-
-            }
+        }
         
 
 

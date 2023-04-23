@@ -12,7 +12,8 @@ namespace Final_Project
     {
         private Texture2D _texture;
         private Rectangle _location;
-        private Vector2 _speed; 
+        private Vector2 _speed;
+        
         Random rand = new Random();
         public Player(Texture2D texture, int x, int y)
         {
