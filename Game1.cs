@@ -52,7 +52,7 @@ namespace Final_Project
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
-
+        //-----------------------------------------------------------------------Initialize--------------------------------------------------------------------------------------
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -71,11 +71,11 @@ namespace Final_Project
             
 
             base.Initialize();
-            user = new Player(lukeStillRight, 500, 500);
+            user = new Player(lukeStillRight, 500, 500, 64, 124, 200);
             
             
         }
-
+        //----------------------------------------------------------------------LoadContent--------------------------------------------------------------------------------------
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -87,7 +87,7 @@ namespace Final_Project
             
             
         }
-
+        //-----------------------------------------------------------------------Update--------------------------------------------------------------------------------------
         protected override void Update(GameTime gameTime)
         {
             mouseState = Mouse.GetState();
@@ -96,7 +96,7 @@ namespace Final_Project
                 Exit();
 
             // TODO: Add your update logic here
-           
+
 
             if (screen == Screen.TitleScreen)
             {
@@ -109,7 +109,8 @@ namespace Final_Project
                     _graphics.PreferredBackBufferWidth = mainGameWidth; // Sets the width of the window
                     _graphics.PreferredBackBufferHeight = mainGameHeight; // Sets the height of the window
                     _graphics.ApplyChanges(); // Applies the new dimensions
-                    stormtrooperlist.Add(new Player(stormtroperAimingLeft, 100, 100));
+                    //Texture, x, y, width, health
+                    stormtrooperlist.Add(new Player(stormtroperAimingLeft, 100, 100, 64, 124, 100));
                 }
 
 
@@ -117,14 +118,14 @@ namespace Final_Project
             }
             else if (screen == Screen.MainScreen)
             {
-                
+
 
                 var distance = new Vector2(mouseState.X - playerPosition.X, mouseState.Y - playerPosition.Y);
 
                 playerRotation = (float)Math.Atan2(distance.Y, distance.X);
-                playerPosition = new Vector2(user.XLocationRight , user.YLocation  );
+                playerPosition = new Vector2(user.XLocationRight, user.YLocation);
                 seconds = (float)gameTime.TotalGameTime.TotalSeconds - startTime;
-
+                //Move user if barrier spawned in them
                 if (initialRespawn == true)
                 {
                     initialRespawn = false;
@@ -132,6 +133,7 @@ namespace Final_Project
                         if (user.Collide(barrier))
                             user.Respawn();
                 }
+                //Make user move
                 user.HSpeed = 0;
                 user.VSpeed = 0;
                 if (keyboardState.IsKeyDown(Keys.D))
@@ -142,17 +144,17 @@ namespace Final_Project
                     user.VSpeed = -3;
                 else if (keyboardState.IsKeyDown(Keys.S))
                     user.VSpeed = 3;
-                
+
                 user.Update();
 
-                
 
-                 foreach (Player troops in stormtrooperlist)
-                 {
+                //Make ai move
+                foreach (Player troops in stormtrooperlist)
+                {
 
                     if (user.YLocation > troops.YLocationBottom)
                         troops.VSpeed = 1;
-                    if (user.YLocationBottom< troops.YLocation)
+                    if (user.YLocationBottom < troops.YLocation)
                         troops.VSpeed = -1;
 
                     if (user.XLocation > troops.XLocationRight)
@@ -160,10 +162,10 @@ namespace Final_Project
                     if (user.XLocationRight < troops.XLocation)
                         troops.HSpeed = -1;
                     troops.Update();
-                 }
+                }
 
 
-
+                //Make time between shots
                 TimeSpan timeSinceLastShot = DateTime.Now - lastShotTime;
                 if (timeSinceLastShot.TotalSeconds >= userGunInterval && mouseState.LeftButton == ButtonState.Pressed)
                 {
@@ -173,22 +175,22 @@ namespace Final_Project
 
 
 
-                //Loop through the list of bullets and update their position
-
+                
+                //Update Laser
                 foreach (LaserClass bullet in laserList)
                 {
 
                     bullet.Update(gameTime);
 
                 }
-
+                //Make barriers for user
                 foreach (Rectangle barrier in barriersList)
                     if (user.Collide(barrier))
                         user.UndoMove();
-                
+                //Make barriers for ai
                 foreach (Player troops in stormtrooperlist)
                 {
-                    
+
                     foreach (Rectangle barrier in barriersList)
                     {
                         if (troops.Collide(barrier))
@@ -198,20 +200,24 @@ namespace Final_Project
                         }
                     }
                 }
-                /*
+                //If ai gets shot
                 for (int i = laserList.Count - 1; i >= 0; i--)
-                {
-                    LaserClass t = laserList[i];
+                { 
+                                       
+                   LaserClass laser = laserList[i];
                     foreach (Player troops in stormtrooperlist)
                     {
-                        if (troops.Collide(t))
+
+                        if (troops.Collide(laser.GetBoundingBox()))
                         {
                             laserList.RemoveAt(i);
+                            troops.Health -= 32;
                             break;
                         }
                     }
+                    
                 }
-                */
+                //If laser hits barrier
                 for (int i = laserList.Count - 1; i >= 0; i--)
                 {
                     LaserClass t = laserList[i];
@@ -224,7 +230,23 @@ namespace Final_Project
                         }
                     }
                 }
+                //Detect user dealth
+                if (user.Health <= 0)
+                {
+                    screen = Screen.OutroScreen;
+                }
+                //Detect ai dealth
+                for (int i = stormtrooperlist.Count - 1; i >= 0; i--)
+                {
+                    Player troops = stormtrooperlist[i];
 
+                    if (troops.Health <= 0)
+                    {
+                        stormtrooperlist.RemoveAt(i);
+
+                    }
+                }
+                
 
 
             }
@@ -241,7 +263,7 @@ namespace Final_Project
             }
             base.Update(gameTime);
         }
-
+        //---------------------------------------------------------------Draw--------------------------------------------------------------------------------------
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);

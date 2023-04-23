@@ -45,6 +45,10 @@ namespace Final_Project
 
 
         }
+        public Rectangle GetBoundingBox()
+        {
+            return new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+        }
         public bool Collide(Rectangle item)
         {
             return rect.Intersects(item);

@@ -13,13 +13,18 @@ namespace Final_Project
         private Texture2D _texture;
         private Rectangle _location;
         private Vector2 _speed;
-        
+        private int width;
+        private int height;
+        private int _health;
+
         Random rand = new Random();
-        public Player(Texture2D texture, int x, int y)
+        public Player(Texture2D texture, int x, int y, int width, int height, int health)
         {
             _texture = texture;
-            _location = new Rectangle(x, y, 64, 124);
+            _location = new Rectangle(x, y, width, height);
             _speed = new Vector2();
+            _health = health;
+            
         }
         public float XLocation
         {
@@ -51,6 +56,15 @@ namespace Final_Project
         {
             get { return _speed.Y; }
             set { _speed.Y = value; }
+        }
+        public float Health
+        {
+            get { return _health; }
+            set { _health = (int)value; }
+        }
+        public Rectangle GetBoundingBox()
+        {
+            return new Rectangle(_location.X, _location.Y, width, height);
         }
         private void Move()
         {
