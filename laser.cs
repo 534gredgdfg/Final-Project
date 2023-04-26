@@ -7,39 +7,42 @@ using System.Collections.Generic;
 
 namespace Final_Project
 {
-    
-        public class LaserClass
+
+    public class LaserClass
+    {
+
+        private Texture2D texture;
+        private Vector2 position;
+        private Vector2 velocity;
+        private Rectangle rect;
+        private float rotation;
+        
+
+        public LaserClass(Texture2D texture, Vector2 position, float rotation, Rectangle rect)
         {
 
-            private Texture2D texture;
-            private Vector2 position;
-            private Vector2 velocity;
-            private Rectangle rect;
-            private float rotation;
-            
+            this.texture = texture;
 
-            public LaserClass(Texture2D texture, Vector2 position, float rotation, Rectangle rect)
-            {
+            this.position = position;
 
-                this.texture = texture;
-
-                this.position = position;
-
-                this.rotation = rotation;
+            this.rotation = rotation;
 
 
-                this.rect = rect;
+            this.rect = rect;
+          
         }
-        
+       
+
+
         public void Update(GameTime gt)
-            {
+        {
 
-                velocity = new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation)) * 5f;
-                velocity = velocity * 3;
+            velocity = new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation)) * 5f;
+            velocity = velocity * 3;
 
-                position += velocity;
-                rect.X = (int)position.X;
-                rect.Y = (int)position.Y;
+            position += velocity;
+            rect.X = (int)position.X;
+            rect.Y = (int)position.Y;
 
 
 
@@ -54,16 +57,15 @@ namespace Final_Project
             return rect.Intersects(item);
         }
 
-        
+
 
         public void Draw(SpriteBatch sb)
-            { 
-                    
-                    
-                    sb.Draw(texture, rect, null, Color.Red, rotation, Vector2.Zero, SpriteEffects.None, 0f);
+        {
+
+
+            sb.Draw(texture, rect, null, Color.Red, rotation, Vector2.Zero, SpriteEffects.None, 0f);
 
         }
-        
 
 
 
@@ -71,6 +73,6 @@ namespace Final_Project
 
 
     }
+}
     
 
-}

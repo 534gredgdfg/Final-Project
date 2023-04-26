@@ -16,18 +16,23 @@ namespace Final_Project
         private int _health;
         private int height;
         private int width;
-        private int _cooldownTime;
+        private int _AicooldownTime;
         private int _fireableShots;
-
+        private int _damage;
+        private int _heatUpAmount;
+        private float _gunInterval;
+        private string _weapontype;
         Random rand = new Random();
-        public Player(Texture2D texture, int x, int y, int width, int height, int health, int cooldownTime, int fireableShots)
+        public Player(Texture2D texture, int x, int y, int width, int height, int health, int fireableShots,string weapontype)
         {
             _texture = texture;
             _location = new Rectangle(x, y, width, height);
             _speed = new Vector2();
             _health = health;
-            _cooldownTime = cooldownTime;
+            
             _fireableShots = fireableShots;
+            _weapontype = weapontype;
+            
         }
         public float XLocation
         {
@@ -80,10 +85,61 @@ namespace Final_Project
             get { return _fireableShots; }
             set { _fireableShots = (int)value; }
         }
-        public float cooldownTime
+        public float AICooldownTime
         {
-            get { return _cooldownTime; }
-            set { _cooldownTime = (int)value; }
+            get { return _AicooldownTime; }
+            set { _AicooldownTime = (int)value; }
+        }
+        public string WeaponType
+        {
+            get { return _weapontype; }
+            set { _weapontype = value; }
+        }
+        public float WeaponDamage
+        {
+            get { return _damage; }
+            set { _damage = (int)value; }
+        }
+        public float GunInterval
+        {
+            get { return _gunInterval; }
+            set { _gunInterval = value; }
+        }
+        public float HeatUpAmount
+        {
+            get { return _heatUpAmount; }
+            set { _heatUpAmount =(int) value; }
+        }
+
+        public void ChoosingWeapon()
+        {
+            if (_weapontype == "pistol")
+            {
+                _damage = 24;
+                _gunInterval = 0.5f;
+                _heatUpAmount = 35;
+                _AicooldownTime = 5;
+            }
+               
+            else if (_weapontype == "blaster")
+            {
+                _damage = 32;
+                _gunInterval = 0.6f;
+                _heatUpAmount = 28;
+                _AicooldownTime = 5;
+            }
+                
+            else if (_weapontype == "minigun")
+            {
+                _damage = 8;
+                _gunInterval = 0.05f;
+                _heatUpAmount = 1;
+                _AicooldownTime = 5;
+            }
+                
+
+
+
         }
         public Rectangle GetBoundingBox()
         {
