@@ -54,11 +54,7 @@ namespace Final_Project
             return rect.Intersects(item);
         }
 
-        public void Remove()
-        {
-            rect.X = 0;
-            rect.Y = 0;
-        }
+        
 
         public void Draw(SpriteBatch sb)
             { 
