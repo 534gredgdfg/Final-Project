@@ -17,22 +17,27 @@ namespace Final_Project
         private int height;
         private int width;
         private int _AicooldownTime;
-        private int _fireableShots;
+        private int _AiFireableShots;
         private int _damage;
-        private int _heatUpAmount;
+        private float _heatUpAmount;
         private float _gunInterval;
         private string _weapontype;
         Random rand = new Random();
-        public Player(Texture2D texture, int x, int y, int width, int height, int health, int fireableShots,string weapontype)
+        public Player(Texture2D texture, int x, int y, int width, int height, int health,string weapontype)
         {
             _texture = texture;
             _location = new Rectangle(x, y, width, height);
             _speed = new Vector2();
             _health = health;
             
-            _fireableShots = fireableShots;
+            
             _weapontype = weapontype;
             
+        }
+        public Texture2D Texture
+        {
+            get { return _texture; }
+            set { _texture = value; }
         }
         public float XLocation
         {
@@ -80,10 +85,10 @@ namespace Final_Project
             get { return _health; }
             set { _health = (int)value; }
         }
-        public float fireableShots
+        public float AiFireableShots
         {
-            get { return _fireableShots; }
-            set { _fireableShots = (int)value; }
+            get { return _AiFireableShots; }
+            set { _AiFireableShots = (int)value; }
         }
         public float AICooldownTime
         {
@@ -108,7 +113,7 @@ namespace Final_Project
         public float HeatUpAmount
         {
             get { return _heatUpAmount; }
-            set { _heatUpAmount =(int) value; }
+            set { _heatUpAmount = value; }
         }
 
         public void ChoosingWeapon()
@@ -117,26 +122,36 @@ namespace Final_Project
             {
                 _damage = 24;
                 _gunInterval = 0.5f;
-                _heatUpAmount = 35;
+                _heatUpAmount = 50;
                 _AicooldownTime = 5;
+                _AiFireableShots = 7;
             }
                
             else if (_weapontype == "blaster")
             {
                 _damage = 32;
                 _gunInterval = 0.6f;
-                _heatUpAmount = 28;
+                _heatUpAmount = 40;
                 _AicooldownTime = 5;
+                _AiFireableShots = 12;
             }
                 
             else if (_weapontype == "minigun")
             {
                 _damage = 8;
-                _gunInterval = 0.05f;
-                _heatUpAmount = 1;
+                _gunInterval = 0.2f;
+                _heatUpAmount = 25;
                 _AicooldownTime = 5;
+                _AiFireableShots = 25;
             }
+            else if (_weapontype == "lightsaber")
+            {
+                _damage = 45;
+                _gunInterval = 0.4f;
+                _heatUpAmount = 60;
                 
+            }
+
 
 
 
@@ -156,14 +171,22 @@ namespace Final_Project
             _location.X -= (int)_speed.X;
             _location.Y -= (int)_speed.Y ;
         }
+        public Rectangle LightSaberHitBoxRight()
+        {
+            return new Rectangle(_location.X +width/2 , _location.Y - 20, 125, height + 40);
+        }
+        public Rectangle LightSaberHitBoxLeft()
+        {
+            return new Rectangle(_location.X - 75, _location.Y - 20, 125, height + 40);
+        }
         public bool Collide(Rectangle item)
         {
             return _location.Intersects(item);
         }        
         public void Respawn()
         {
-            _location.X = rand.Next(0, 1000);
-            _location.Y = rand.Next(0, 800);
+            _location.X = rand.Next(350, 1050);
+            _location.Y = rand.Next(225, 675);
         }
         public void Update(Vector2 backSpeed)
         {
