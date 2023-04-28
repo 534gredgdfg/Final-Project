@@ -59,11 +59,11 @@ namespace Final_Project
 
 
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb, Texture2D texture)
         {
 
 
-            sb.Draw(texture, rect, null, Color.Red, rotation, Vector2.Zero, SpriteEffects.None, 0f);
+            sb.Draw(texture, rect, null, Color.White, rotation, Vector2.Zero, SpriteEffects.None, 0f);
 
         }
 

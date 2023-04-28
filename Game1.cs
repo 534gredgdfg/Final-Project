@@ -19,7 +19,7 @@ namespace Final_Project
         Rectangle cooldownBarRed, cooldownBarWhite;
        
 
-        Texture2D rectangleTexture, lukeStillRight, lukeStillLeft, stormtroperAimingLeft;
+        Texture2D rectangleTexture, lukeStillRight, lukeStillLeft, stormtroperAimingLeft, stormtrooperWalkingRight, stormtrooperWalkingLeft, laserTexture;
         Vector2 backroundSpeed;
 
         int mainGameWidth = 1400;
@@ -31,11 +31,12 @@ namespace Final_Project
       
         bool UserFacingRight = true;
 
+        bool trooperGoingRight = true;
 
         bool cooldownTimer = false;
         int firedShotsAi = 0;
 
-       
+        float damgaeMultiplyer = 0.0f;
         float seconds; 
         float startTime;
         
@@ -44,9 +45,12 @@ namespace Final_Project
         private Vector2 playerPosition; 
         private Vector2 enemyPosition;
 
-        
 
-        
+
+        List<Texture2D> stormtropperTexturesRight;
+        List<Texture2D> stormtropperTexturesLeft;
+        double trooperIndexRight;
+        double trooperIndexLeft;
         List<Barriers> barriersList = new List<Barriers>();
         List<Player> stormtrooperlist = new List<Player>();
 
@@ -84,20 +88,21 @@ namespace Final_Project
             cooldownBarRed = new Rectangle(160, mainScreenHeight - 50, 0, 25);
             cooldownBarWhite = new Rectangle(160, mainScreenHeight - 50, 200, 25);
 
-          
             
+            stormtropperTexturesRight = new List<Texture2D>();
+            stormtropperTexturesLeft = new List<Texture2D>();
+            trooperIndexRight = 0;
+            trooperIndexLeft = 0;
+
+
+
+
+
 
             base.Initialize();
             //Texture, x, y, width, health, heatup amount, firable shots
-            user = new Player(lukeStillRight, 500, 500, 64, 124, 10000,   "lightsaber");
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), rand.Next(10, 200), rand.Next(10, 200))));
-
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), rand.Next(10, 200), rand.Next(10, 200))));
-
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), rand.Next(10, 200), rand.Next(10, 200))));
-
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), rand.Next(10, 200), rand.Next(10, 200))));
-
+            user = new Player(lukeStillRight, 500, 500, 64, 124, 10000, "blaster");
+            
             //Top Wall
             barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth *3,60)));
             //Left Wall
@@ -119,6 +124,47 @@ namespace Final_Project
             stormtroperAimingLeft = Content.Load<Texture2D>("stormtroperAimingLeft");
             lukeStillRight = Content.Load<Texture2D>("lukeStandingRight");
             lukeStillLeft = Content.Load<Texture2D>("lukeStandingLeft");
+            stormtrooperWalkingRight =Content.Load<Texture2D>("DriodWalkingRight");
+            stormtrooperWalkingLeft = Content.Load<Texture2D>("DriodWalkingLeft");
+            laserTexture = Content.Load<Texture2D>("Small Laser");
+
+            Texture2D cropTexture1;
+            Texture2D cropTexture2;
+            Rectangle sourceRect1;
+            Rectangle sourceRect2;
+            int width = stormtrooperWalkingRight.Width / 3;
+            int height = stormtrooperWalkingRight.Height;
+
+
+            for (int x = 0; x < 3; x++)
+            {
+                sourceRect1 = new Rectangle(x * width, 0, width, height);
+                cropTexture1 = new Texture2D(GraphicsDevice, width, height);
+
+                Color[] data = new Color[width * height];
+                stormtrooperWalkingRight.GetData(0, sourceRect1, data, 0, data.Length);
+
+                cropTexture1.SetData(data);
+
+                stormtropperTexturesRight.Add(cropTexture1);
+            }
+
+
+            int width1 = stormtrooperWalkingLeft.Width / 3;
+            int height1 = stormtrooperWalkingLeft.Height;
+
+            for (int x = 0; x < 3; x++)
+            {
+                sourceRect2 = new Rectangle(x * width1, 0, width1, height1);
+                cropTexture2 = new Texture2D(GraphicsDevice, width1, height1);
+
+                Color[] data2 = new Color[width1 * height1];
+                stormtrooperWalkingLeft.GetData(0, sourceRect2, data2, 0, data2.Length);
+
+                cropTexture2.SetData(data2);
+
+                stormtropperTexturesLeft.Add(cropTexture2);
+            }
 
 
         }
@@ -145,8 +191,8 @@ namespace Final_Project
                     _graphics.PreferredBackBufferHeight = mainScreenHeight; // Sets the height of the window
                     _graphics.ApplyChanges(); // Applies the new dimensions
                     //Texture, x, y, width, health, weapon type
-                    stormtrooperlist.Add(new Player(stormtroperAimingLeft, 100, 100, 64, 124, 100 ,"minigun"));
-                    stormtrooperlist.Add(new Player(stormtroperAimingLeft, 500, 300, 84, 144, 150 ,"minigun"));
+                    stormtrooperlist.Add(new Player(stormtroperAimingLeft, 100, 100, 64, 124, 100 , "sniper"));
+                    stormtrooperlist.Add(new Player(stormtroperAimingLeft, 500, 300, 84, 144, 150 , "sniper"));
                 }
 
 
@@ -154,7 +200,29 @@ namespace Final_Project
             }
             else if (screen == Screen.MainScreen)
             {
+                
+                if (trooperGoingRight == true)
+                {
+                    trooperIndexRight += 0.05;
+                    if (trooperIndexRight >= stormtropperTexturesRight.Count - 0.5)
+                        trooperIndexRight = 0;
+                }
+                else
+                {
+                    trooperIndexLeft += 0.05;
+                    if (trooperIndexLeft >= stormtropperTexturesLeft.Count - 0.5)
+                        trooperIndexLeft = 0;
+                }
+                
 
+
+                for (int i = 0; barriersList.Count <= 35; i++)
+                {
+                    barriersList.Add(new Barriers(rectangleTexture, new Rectangle(rand.Next(-mainGameWidth, mainGameWidth*2), rand.Next(-mainGameHeight, mainGameHeight*2), rand.Next(50, 200), rand.Next(50, 200))));
+                }
+                    
+
+              
 
                 var distance = new Vector2(mouseState.X - playerPosition.X, mouseState.Y - playerPosition.Y);
 
@@ -166,13 +234,33 @@ namespace Final_Project
                 //Move user if barrier spawned in them
                 if (seconds <= 1)
                 {
-                    
-                    foreach (Barriers barrier in barriersList)
+
+                    for (int i = barriersList.Count - 1; i >= 0; i--)
+                    {
+                        Barriers barrier = barriersList[i];
                         if (user.Collide(barrier.GetBoundingBox()))
-                            user.Respawn();
+                        {
+                            barriersList.RemoveAt(i);
+                            break;
+                        }
+                    }
+                    foreach (Player troops in stormtrooperlist)
+                    {
+                        for (int i = barriersList.Count - 1; i >= 0; i--)
+                        {
+                            Barriers barrier = barriersList[i];
+                            if (troops.Collide(barrier.GetBoundingBox()))
+                            {
+                                barriersList.RemoveAt(i);
+                                break;
+                            }
+                        }
+                    }
+                       
                 }
-                //Make user move
                 
+                //Make user move
+
                 if (keyboardState.IsKeyDown(Keys.D))
                 {
                     user.HSpeed = 4;
@@ -211,84 +299,84 @@ namespace Final_Project
                         troops.VSpeed = -1;
 
                     if (user.XLocation > troops.XLocationRight)
+                    {
+                        trooperGoingRight = true;
                         troops.HSpeed = 1;
+                    }
+                        
                     if (user.XLocationRight < troops.XLocation)
+                    {
+                        trooperGoingRight = false;
                         troops.HSpeed = -1;
+                    }
+                        
 
                 }
 
               
 
 
-                foreach (Player troops in stormtrooperlist)
-                {
-                    foreach (Barriers barrier in barriersList)
-                    {
-                        
-                        
-                            backroundSpeed.X = 0;
-                            backroundSpeed.Y = 0;
-                            if (user.YLocationBottom >= mainGameHeight - mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.S))
-                            {
-                                backroundSpeed.Y = user.VSpeed * -1;
-                            }
-                                
-
-                            if (user.YLocation <= mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.W))
-                            {
-                                backroundSpeed.Y = user.VSpeed * -1;
-                            }
-                                
-
-                            if (user.XLocationRight >= mainGameWidth - mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.D))
-                            {
-                                backroundSpeed.X = user.HSpeed * -1;
-                            }
-                                
-
-                            if (user.XLocation <= mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.A))
-                            {
-                                backroundSpeed.X = user.HSpeed * -1;
-                            }                        
-
-                    }
-
-                }
                 
-                if (movedDistanceY < mainGameHeight)
+                    
+                        
+                        
+                backroundSpeed.X = 0;
+                backroundSpeed.Y = 0;
+                if (user.YLocationBottom >= mainGameHeight - mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.S))
                 {
-                    if (user.YLocationBottom >= mainGameHeight - mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.S))
+                    backroundSpeed.Y = user.VSpeed * -1;
+                    if (movedDistanceY < mainGameHeight)
                         user.VSpeed = 0;
+                    else
+                        backroundSpeed.Y = 0;
+                }
+                                
+
+                if (user.YLocation <= mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.W))
+                {
+                    backroundSpeed.Y = user.VSpeed * -1;
+                    if (movedDistanceY > -mainGameHeight)                                           
+                            user.VSpeed = 0;                    
+                    else
+                        backroundSpeed.Y = 0;
+                }
+                                
+
+                if (user.XLocationRight >= mainGameWidth - mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.D))
+                {
+                    backroundSpeed.X = user.HSpeed * -1;
+                    if (movedDistanceX < mainGameWidth)                                           
+                            user.HSpeed = 0;
+                    else
+                        backroundSpeed.X = 0;
 
                 }
-                else
-                    backroundSpeed.Y = 0;
-                if (movedDistanceY > -mainGameHeight)
+                                
+
+                if (user.XLocation <= mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.A))
                 {
-                    if (user.YLocation <= mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.W))
-                        user.VSpeed = 0;
+                    backroundSpeed.X = user.HSpeed * -1;
+                    if (movedDistanceX > -mainGameWidth)                                           
+                            user.HSpeed = 0;                   
+                    else
+                        backroundSpeed.X = 0;
+
                 }
-                else
-                    backroundSpeed.Y = 0;
 
 
-                if (movedDistanceX < mainGameWidth)
-                {
-                    if (user.XLocationRight >= mainGameWidth - mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.D))
-                        user.HSpeed = 0;
-                }
-                else
-                    backroundSpeed.X = 0;
-                if (movedDistanceX > -mainGameWidth)
-                {
-                    if (user.XLocation <= mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.A))
-                        user.HSpeed = 0;
-                }
-                else
-                    backroundSpeed.X = 0;
 
                 movedDistanceX -= (int)backroundSpeed.X;
                 movedDistanceY -= (int)backroundSpeed.Y;
+                
+               
+                
+                
+
+
+                
+             
+               
+               
                 user.Update(new Vector2(0,0));
 
                 //Make barriers for user
@@ -405,7 +493,7 @@ namespace Final_Project
                                 enemyPosition = new Vector2(troops.XLocationRight, troops.YLocation);
                             else
                                 enemyPosition = new Vector2(troops.XLocation, troops.YLocation);
-                            float missingRange = rand.Next(-50, 50);
+                            float missingRange = rand.Next(-75, 75);
                             var enemydistance = new Vector2(playerPosition.X + missingRange - enemyPosition.X, playerPosition.Y + missingRange - enemyPosition.Y);
                             enemyRotation = (float)Math.Atan2(enemydistance.Y, enemydistance.X);
 
@@ -425,9 +513,7 @@ namespace Final_Project
 
                 }
 
-                
 
-               
 
                 //Update User Laser
                 foreach (LaserClass bullet in laserList)
@@ -443,7 +529,9 @@ namespace Final_Project
                     bullet.Update(gameTime);
 
                 }
-                   
+
+
+
                 //Make barriers for ai
                 foreach (Player troops in stormtrooperlist)
                 {
@@ -471,13 +559,23 @@ namespace Final_Project
                    LaserClass laser = laserList[i];
                     foreach (Player troops in stormtrooperlist)
                     {
-
-                        if (troops.Collide(laser.GetBoundingBox()))
+                        if (troops.GetBoundingBox().Contains(laser.GetBoundingBox()))
                         {
+                            damgaeMultiplyer = 1f;
+                            if (troops.HeadShotBox().Contains(laser.GetBoundingBox()))
+                            {
+                                damgaeMultiplyer = 1.5f;
+                                
+                            }
+                            
+                            troops.Health -= user.WeaponDamage * damgaeMultiplyer;
                             laserList.RemoveAt(i);
-                            troops.Health -= user.WeaponDamage;
                             break;
                         }
+
+                        
+                                
+                        
                     }
                     
                 }
@@ -520,6 +618,7 @@ namespace Final_Project
                         }
                     }
                 }
+               
                 //Detect user dealth
                 if (user.Health <= 0)
                 {
@@ -580,19 +679,22 @@ namespace Final_Project
                 foreach (LaserClass bullet in laserList)
                 {
 
-                    bullet.Draw(_spriteBatch);
+                    bullet.Draw(_spriteBatch, laserTexture);
 
                 }
                 foreach (Player ai in stormtrooperlist)
                 {
-
-                    ai.Draw(_spriteBatch);
+                    if (trooperGoingRight == true)
+                        ai.DrawAI(_spriteBatch, stormtropperTexturesRight[(int)Math.Round(trooperIndexRight)]);
+                    else
+                        ai.DrawAI(_spriteBatch, stormtropperTexturesLeft[(int)Math.Round(trooperIndexLeft)]);
 
                 }
+              
                 foreach (LaserClass bullet in enemyLaserList)
                 {
 
-                    bullet.Draw(_spriteBatch);
+                    bullet.Draw(_spriteBatch, laserTexture);
 
                 }
                 //Hud

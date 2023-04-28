@@ -121,7 +121,7 @@ namespace Final_Project
             if (_weapontype == "pistol")
             {
                 _damage = 24;
-                _gunInterval = 0.5f;
+                _gunInterval = 0.4f;
                 _heatUpAmount = 50;
                 _AicooldownTime = 5;
                 _AiFireableShots = 7;
@@ -129,9 +129,9 @@ namespace Final_Project
                
             else if (_weapontype == "blaster")
             {
-                _damage = 32;
+                _damage = 30;
                 _gunInterval = 0.6f;
-                _heatUpAmount = 40;
+                _heatUpAmount = 65;
                 _AicooldownTime = 5;
                 _AiFireableShots = 12;
             }
@@ -139,14 +139,22 @@ namespace Final_Project
             else if (_weapontype == "minigun")
             {
                 _damage = 8;
-                _gunInterval = 0.2f;
-                _heatUpAmount = 25;
+                _gunInterval = 0.1f;
+                _heatUpAmount = 20;
                 _AicooldownTime = 5;
-                _AiFireableShots = 25;
+                _AiFireableShots = 20;
+            }
+            else if (_weapontype == "sniper")
+            {
+                _damage = 99;
+                _gunInterval = 2f;
+                _heatUpAmount = 160;
+                _AicooldownTime = 5;
+                _AiFireableShots = 1;
             }
             else if (_weapontype == "lightsaber")
             {
-                _damage = 45;
+                _damage = 50;
                 _gunInterval = 0.4f;
                 _heatUpAmount = 60;
                 
@@ -158,7 +166,7 @@ namespace Final_Project
         }
         public Rectangle GetBoundingBox()
         {
-            return new Rectangle(_location.X, _location.Y, width, height);
+            return new Rectangle(_location.X, _location.Y, _location.Width, _location.Height);
         }
         private void Move(Vector2 backSpeed)
         {
@@ -173,26 +181,35 @@ namespace Final_Project
         }
         public Rectangle LightSaberHitBoxRight()
         {
-            return new Rectangle(_location.X +width/2 , _location.Y - 20, 125, height + 40);
+            return new Rectangle(_location.X +width/2 , _location.Y - 20, 125, _location.Height + 40);
         }
         public Rectangle LightSaberHitBoxLeft()
         {
-            return new Rectangle(_location.X - 75, _location.Y - 20, 125, height + 40);
+            return new Rectangle(_location.X - 75, _location.Y - 20, 125, _location.Height + 40);
         }
+        public Rectangle HeadShotBox()
+        {
+            return new Rectangle(_location.X - 1, _location.Y - 1, _location.Width + 2, _location.Height / 3);
+        }
+       
         public bool Collide(Rectangle item)
         {
             return _location.Intersects(item);
         }        
         public void Respawn()
         {
-            _location.X = rand.Next(350, 1050);
-            _location.Y = rand.Next(225, 675);
+            _location.X = rand.Next(350, 1050- width);
+            _location.Y = rand.Next(225, 675 - height);
         }
         public void Update(Vector2 backSpeed)
         {
             Move(backSpeed);
         }
         public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_texture, _location, Color.White);
+        }
+        public void DrawAI(SpriteBatch spriteBatch, Texture2D _texture)
         {
             spriteBatch.Draw(_texture, _location, Color.White);
         }
