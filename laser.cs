@@ -42,7 +42,7 @@ namespace Final_Project
 
             position += velocity;
             rect.X = (int)position.X ;
-            rect.Y = (int)position.Y ;
+            rect.Y = (int)position.Y + 40 ;
 
 
 

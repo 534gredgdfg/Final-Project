@@ -156,7 +156,7 @@ namespace Final_Project
             {
                 _damage = 50;
                 _gunInterval = 0.4f;
-                _heatUpAmount = 60;
+                _heatUpAmount = 210;
                 
             }
 
@@ -191,7 +191,16 @@ namespace Final_Project
         {
             return new Rectangle(_location.X - 1, _location.Y - 1, _location.Width + 2, _location.Height / 3);
         }
-       
+        public Rectangle Hitbox()
+        {
+            return new Rectangle(_location.X + 60, _location.Y, _location.Width -110, _location.Height);
+        }
+        public Rectangle Largebox()
+        {
+            return new Rectangle(_location.X -30, _location.Y -30, _location.Width + 60, _location.Height +60);
+        }
+
+
         public bool Collide(Rectangle item)
         {
             return _location.Intersects(item);
