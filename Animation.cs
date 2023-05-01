@@ -62,32 +62,7 @@ namespace Final_Project
            
 
         }
-        public void OneTimeAnimation(GraphicsDevice graphicsDevice)
-        {
-            _textureList = new List<Texture2D>();
-            Texture2D cropTexture;
-
-            Rectangle sourceRect;
-
-            int width = _texture.Width / _diffImages;
-            int height = _texture.Height;
-
-
-            for (int x = 0; x < _diffImages; x++)
-            {
-                sourceRect = new Rectangle(x * width, 0, width, height);
-                cropTexture = new Texture2D(graphicsDevice, width, height);
-
-                Color[] data = new Color[width * height];
-                _texture.GetData(0, sourceRect, data, 0, data.Length);
-
-                cropTexture.SetData(data);
-
-                _textureList.Add(cropTexture);
-            }
-            
-
-        }
+      
         public void ChangeImage()
         {
             _animationIndex += _index;
@@ -96,8 +71,9 @@ namespace Final_Project
                 _draw = "false";
                 _animationIndex = 0;
             }
-            
 
+
+         
 
 
 

@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:Arrow Man Scaled.png
 
+#begin C:/Users/owenr/Downloads/Attack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Attack.png;Attack.png
+
 #begin C:/Users/owenr/Downloads/Goblin Running Right.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -96,6 +108,13 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/spritesheet (6).png;spritesheet (6).png
+
+#begin File.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:File.spritefont;HealthFont.spritefont
 
 #begin Goblin Running Left.png
 /importer:TextureImporter
@@ -204,4 +223,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Small Laser.png
+
+#begin spritesheet (5)L.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spritesheet (5)L.png
 

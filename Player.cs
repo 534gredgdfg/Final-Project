@@ -22,15 +22,17 @@ namespace Final_Project
         private float _heatUpAmount;
         private float _gunInterval;
         private string _weapontype;
+        private string _enemyType;
+        private string _direction;
         Random rand = new Random();
-        public Player(Texture2D texture, int x, int y, int width, int height, int health,string weapontype)
+        public Player(Texture2D texture, int x, int y, int width, int height,  int health,string weapontype, string enemyType, string direction)
         {
             _texture = texture;
             _location = new Rectangle(x, y, width, height);
             _speed = new Vector2();
             _health = health;
-            
-            
+            _enemyType = enemyType;
+            _direction = direction;
             _weapontype = weapontype;
             
         }
@@ -100,6 +102,11 @@ namespace Final_Project
             get { return _weapontype; }
             set { _weapontype = value; }
         }
+        public string Direction
+        {
+            get { return _direction; }
+            set { _direction = value; }
+        }
         public float WeaponDamage
         {
             get { return _damage; }
@@ -115,8 +122,45 @@ namespace Final_Project
             get { return _heatUpAmount; }
             set { _heatUpAmount = value; }
         }
+        public void TroopsSpeed(Rectangle user)
+        {
+            if (user.Y + user.Height / 2 > _location.Bottom)
+            {
+                if (_enemyType == "fast")
+                    _speed.Y = 2;
+                else
+                    _speed.Y = 1;
 
-        public void ChoosingWeapon()
+            }
+            if (user.Bottom - user.Height / 2 < _location.Y)
+            {
+                if (_enemyType == "fast")
+                    _speed.Y = -2;
+                else
+                    _speed.Y = -1;
+            }
+            if (user.X + user.Width / 2 > _location.Right)
+            {
+                if (_enemyType == "fast")
+                    _speed.X = 2;
+                else
+                    _speed.X = 1;
+                _direction = "right";
+            }
+            if (user.Right - user.Width / 2 < _location.X)
+            {
+                if (_enemyType == "fast")
+                    _speed.X = -2;
+                else
+                    _speed.X = -1;
+                _direction = "left";
+            }
+
+
+
+        }
+
+            public void ChoosingWeapon()
         {
             if (_weapontype == "pistol")
             {
@@ -127,7 +171,7 @@ namespace Final_Project
                 _AiFireableShots = 7;
             }
                
-            else if (_weapontype == "blaster")
+            else if (_weapontype == "projectile")
             {
                 _damage = 30;
                 _gunInterval = 0.6f;
@@ -136,22 +180,15 @@ namespace Final_Project
                 _AiFireableShots = 12;
             }
                 
-            else if (_weapontype == "minigun")
+            else if (_weapontype == "melee")
             {
-                _damage = 8;
-                _gunInterval = 0.1f;
+                _damage = 30;
+                _gunInterval = 0.8f;
                 _heatUpAmount = 20;
                 _AicooldownTime = 5;
-                _AiFireableShots = 20;
+                _AiFireableShots = 3;
             }
-            else if (_weapontype == "sniper")
-            {
-                _damage = 99;
-                _gunInterval = 2f;
-                _heatUpAmount = 160;
-                _AicooldownTime = 5;
-                _AiFireableShots = 1;
-            }
+            
             else if (_weapontype == "lightsaber")
             {
                 _damage = 50;
@@ -181,11 +218,11 @@ namespace Final_Project
         }
         public Rectangle LightSaberHitBoxRight()
         {
-            return new Rectangle(_location.X +width/2 , _location.Y - 20, 125, _location.Height + 40);
+            return new Rectangle(_location.X +_location.Width/2 , _location.Y, _location.Width, _location.Height );
         }
         public Rectangle LightSaberHitBoxLeft()
         {
-            return new Rectangle(_location.X - 75, _location.Y - 20, 125, _location.Height + 40);
+            return new Rectangle(_location.X - _location.Width/2, _location.Y , _location.Width, _location.Height );
         }
         public Rectangle HeadShotBox()
         {
