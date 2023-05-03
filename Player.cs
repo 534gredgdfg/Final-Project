@@ -19,22 +19,36 @@ namespace Final_Project
         private int _AicooldownTime;
         private int _AiFireableShots;
         private int _damage;
+
+        private double _animationSpeed;
+
         private float _heatUpAmount;
         private float _gunInterval;
+
         private string _weapontype;
         private string _enemyType;
-        private string _direction;
+        private string _melee;
+        private string _attackAnimation;
+        private Animation _animation;
+       
+        List<Texture2D> _walkingTextures;
+        List<Texture2D> _standingTextures;
+        List<Texture2D> _meleeTextures;
+
         Random rand = new Random();
-        public Player(Texture2D texture, int x, int y, int width, int height,  int health,string weapontype, string enemyType, string direction)
+        public Player(Rectangle location,  int health,string weapontype, string enemyType, List<Texture2D> walkingTextures, List<Texture2D> standingTextures, List<Texture2D> meleeTextures)
         {
-            _texture = texture;
-            _location = new Rectangle(x, y, width, height);
+           
+            _location = location;
             _speed = new Vector2();
             _health = health;
             _enemyType = enemyType;
-            _direction = direction;
-            _weapontype = weapontype;
-            
+            _melee = "melee";
+            _attackAnimation = "not over";
+             _weapontype = weapontype;
+            _walkingTextures = walkingTextures;
+            _standingTextures = standingTextures;
+            _meleeTextures = meleeTextures;
         }
         public Texture2D Texture
         {
@@ -102,11 +116,7 @@ namespace Final_Project
             get { return _weapontype; }
             set { _weapontype = value; }
         }
-        public string Direction
-        {
-            get { return _direction; }
-            set { _direction = value; }
-        }
+     
         public float WeaponDamage
         {
             get { return _damage; }
@@ -145,7 +155,7 @@ namespace Final_Project
                     _speed.X = 2;
                 else
                     _speed.X = 1;
-                _direction = "right";
+               
             }
             if (user.Right - user.Width / 2 < _location.X)
             {
@@ -153,7 +163,7 @@ namespace Final_Project
                     _speed.X = -2;
                 else
                     _speed.X = -1;
-                _direction = "left";
+                
             }
 
 
@@ -162,43 +172,30 @@ namespace Final_Project
 
             public void ChoosingWeapon()
         {
-            if (_weapontype == "pistol")
-            {
-                _damage = 24;
-                _gunInterval = 0.4f;
-                _heatUpAmount = 50;
-                _AicooldownTime = 5;
-                _AiFireableShots = 7;
-            }
-               
-            else if (_weapontype == "projectile")
-            {
-                _damage = 30;
-                _gunInterval = 0.6f;
-                _heatUpAmount = 65;
-                _AicooldownTime = 5;
-                _AiFireableShots = 12;
-            }
-                
-            else if (_weapontype == "melee")
-            {
-                _damage = 30;
-                _gunInterval = 0.8f;
-                _heatUpAmount = 20;
-                _AicooldownTime = 5;
-                _AiFireableShots = 3;
-            }
             
-            else if (_weapontype == "lightsaber")
+               
+            if (_weapontype == "arrow")
+            {
+                _damage = 30;
+                _gunInterval = 3f;
+                
+            }
+            else if (_weapontype == "wizard ball")
             {
                 _damage = 50;
-                _gunInterval = 0.4f;
-                _heatUpAmount = 210;
+                _gunInterval = 1f;
                 
             }
 
 
-
+            else if (_weapontype == "melee")
+            {
+                _damage = 34;
+                _gunInterval = 2.5f;
+               
+            }
+            
+           
 
         }
         public Rectangle GetBoundingBox()
@@ -215,6 +212,16 @@ namespace Final_Project
         {
             _location.X -= (int)_speed.X;
             _location.Y -= (int)_speed.Y ;
+        }
+        public void UndoMoveH()
+        {
+            _location.X -= (int)_speed.X;
+            
+        }
+        public void UndoMoveV()
+        {
+            _location.Y -= (int)_speed.Y;
+
         }
         public Rectangle LightSaberHitBoxRight()
         {
@@ -241,23 +248,64 @@ namespace Final_Project
         public bool Collide(Rectangle item)
         {
             return _location.Intersects(item);
-        }        
+        }
+        public bool MeleeCollide(Rectangle item)
+        {
+            return _location.Intersects(item);
+        }
+        public void AiMelee(Rectangle item, double gunInterval, double time)
+        {
+            if (_location.Intersects(item) && time >= gunInterval)            
+                _melee = "true";
+                                        
+            else
+                _melee = "false";
+           
+
+        }
         public void Respawn()
         {
             _location.X = rand.Next(350, 1050- width);
             _location.Y = rand.Next(225, 675 - height);
         }
+
+       
+
         public void Update(Vector2 backSpeed)
         {
+            _animationSpeed += 0.1;
+            if (_animationSpeed >= _meleeTextures.Count - 0.5)
+            {
+                _animationSpeed = 0;
+                _melee = "false";
+            }
+
+            if (_animationSpeed >= _walkingTextures.Count - 0.5)
+            {
+                _animationSpeed = 0;
+            }
+            if (_animationSpeed >= _standingTextures.Count - 0.5)
+            {
+                _animationSpeed = 0;
+            }
+            
+            
+
             Move(backSpeed);
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, _location, Color.White);
+            if (_melee == "true")
+                spriteBatch.Draw(_meleeTextures[(int)Math.Round(_animationSpeed)], _location, Color.White);
+            else if (HSpeed > 0)
+                spriteBatch.Draw(_walkingTextures[(int)Math.Round(_animationSpeed)], _location, Color.White);
+          
+            else
+                spriteBatch.Draw(_standingTextures[(int)Math.Round(_animationSpeed)], _location, Color.White);
+
+            //spriteBatch.Draw(_texture, _location, Color.White);
         }
-        public void DrawAI(SpriteBatch spriteBatch, Texture2D _texture)
-        {
-            spriteBatch.Draw(_texture, _location, Color.White);
-        }
+
+       
     }
 }

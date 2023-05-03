@@ -24,60 +24,18 @@ namespace Final_Project
 
 
        
-        public Animation(GraphicsDevice graphicsDevice, int diffImages, double index,Texture2D texture, List<Texture2D> textureList)
-        {
-            _texture = texture;
-            _diffImages = diffImages;
-            _index = index;
-            _textureList = textureList;
-            _graphicsDevice = graphicsDevice;
-            _draw = "true";
-
-
-        }
-         public void ReapetingAnimation(GraphicsDevice graphicsDevice)
+        public Animation(List<Texture2D> textureList)
         {
 
-            _textureList = new List<Texture2D>();
-            Texture2D cropTexture;
-
-            Rectangle sourceRect;
             
-            int width = _texture.Width / _diffImages;
-            int height = _texture.Height;
-
-
-            for (int x = 0; x < _diffImages; x++)
-            {
-                sourceRect = new Rectangle(x * width, 0, width, height);
-                cropTexture = new Texture2D(graphicsDevice, width, height);
-
-                Color[] data = new Color[width * height];
-                _texture.GetData(0, sourceRect, data, 0, data.Length);
-
-                cropTexture.SetData(data);
-
-                _textureList.Add(cropTexture);
-            }
+            _textureList = textureList;
+           
            
 
-        }
-      
-        public void ChangeImage()
-        {
-            _animationIndex += _index;
-            if (_animationIndex >= _textureList.Count - 0.5)
-            {
-                _draw = "false";
-                _animationIndex = 0;
-            }
-
-
-         
-
-
 
         }
+        
+       
         public string drawAnimation
         {
             get { return _draw; }
@@ -91,7 +49,7 @@ namespace Final_Project
             spriteBatch.Draw(_textureList[(int)Math.Round(_animationIndex)], rect, Color.White);
 
         }
-        public void DrawOneTime(SpriteBatch spriteBatch, Rectangle rect)
+        public void DrawOneTime(SpriteBatch spriteBatch, Texture2D _texture, Rectangle rect)
         {
 
             if (_draw == "true")
@@ -100,9 +58,6 @@ namespace Final_Project
 
         }
 
-
-
-
-
+        
     }
 }
