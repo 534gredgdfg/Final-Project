@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ArcherArrow_scaled.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ArcherArrow_scaled.png
+
 #begin Arrow Man Scaled.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -24,6 +36,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Arrow Man Scaled.png
+
+#begin AttackArcher_scaled.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:AttackArcher_scaled.png
 
 #begin C:/Users/owenr/Downloads/Attack.png
 /importer:TextureImporter
@@ -212,7 +236,7 @@
 /processorParam:TextureFormat=Color
 /build:rectangle.png
 
-#begin Small Laser.png
+#begin RunArcher_scaled.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,255,255,255
@@ -222,7 +246,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Small Laser.png
+/build:RunArcher_scaled.png
 
 #begin spritesheet (5)L.png
 /importer:TextureImporter

@@ -20,16 +20,17 @@ namespace Final_Project
         private int _AiFireableShots;
         private int _damage;
 
-        private double _animationSpeed;
+        private double _meleeSpeed;
+        private double _walkingSpeed;
+        private double _standingSpeed;
 
         private float _heatUpAmount;
         private float _gunInterval;
 
         private string _weapontype;
         private string _enemyType;
-        private string _melee;
-        private string _attackAnimation;
-        private Animation _animation;
+        private string _attack;
+       
        
         List<Texture2D> _walkingTextures;
         List<Texture2D> _standingTextures;
@@ -43,8 +44,8 @@ namespace Final_Project
             _speed = new Vector2();
             _health = health;
             _enemyType = enemyType;
-            _melee = "melee";
-            _attackAnimation = "not over";
+            _attack = "false";
+           
              _weapontype = weapontype;
             _walkingTextures = walkingTextures;
             _standingTextures = standingTextures;
@@ -132,6 +133,11 @@ namespace Final_Project
             get { return _heatUpAmount; }
             set { _heatUpAmount = value; }
         }
+        public string Attacking
+        {
+            get { return _attack; }
+            set { _attack = value; }
+        }
         public void TroopsSpeed(Rectangle user)
         {
             if (user.Y + user.Height / 2 > _location.Bottom)
@@ -165,19 +171,16 @@ namespace Final_Project
                     _speed.X = -1;
                 
             }
-
-
-
         }
 
-            public void ChoosingWeapon()
+        public void ChoosingWeapon()
         {
             
                
             if (_weapontype == "arrow")
             {
                 _damage = 30;
-                _gunInterval = 3f;
+                _gunInterval = 2f;
                 
             }
             else if (_weapontype == "wizard ball")
@@ -191,12 +194,8 @@ namespace Final_Project
             else if (_weapontype == "melee")
             {
                 _damage = 34;
-                _gunInterval = 2.5f;
-               
+                _gunInterval = 2.5f;              
             }
-            
-           
-
         }
         public Rectangle GetBoundingBox()
         {
@@ -223,6 +222,7 @@ namespace Final_Project
             _location.Y -= (int)_speed.Y;
 
         }
+       
         public Rectangle LightSaberHitBoxRight()
         {
             return new Rectangle(_location.X +_location.Width/2 , _location.Y, _location.Width, _location.Height );
@@ -249,61 +249,53 @@ namespace Final_Project
         {
             return _location.Intersects(item);
         }
-        public bool MeleeCollide(Rectangle item)
+      
+        
+        public void Attack()
         {
-            return _location.Intersects(item);
+                _attack = "true";   
         }
-        public void AiMelee(Rectangle item, double gunInterval, double time)
-        {
-            if (_location.Intersects(item) && time >= gunInterval)            
-                _melee = "true";
-                                        
-            else
-                _melee = "false";
-           
-
-        }
+        
         public void Respawn()
         {
             _location.X = rand.Next(350, 1050- width);
             _location.Y = rand.Next(225, 675 - height);
-        }
-
-       
+        }       
 
         public void Update(Vector2 backSpeed)
         {
-            _animationSpeed += 0.1;
-            if (_animationSpeed >= _meleeTextures.Count - 0.5)
+            _meleeSpeed += 0.1;
+            if (_meleeSpeed >= _meleeTextures.Count - 0.5)
             {
-                _animationSpeed = 0;
-                _melee = "false";
+                _meleeSpeed = 0;
+                _attack = "false";
             }
-
-            if (_animationSpeed >= _walkingTextures.Count - 0.5)
+            _walkingSpeed += 0.1;
+            if (_walkingSpeed >= _walkingTextures.Count - 0.5)
             {
-                _animationSpeed = 0;
+                _walkingSpeed = 0;
             }
-            if (_animationSpeed >= _standingTextures.Count - 0.5)
+            _standingSpeed += 0.1;
+            if (_standingSpeed >= _standingTextures.Count - 0.5)
             {
-                _animationSpeed = 0;
+                _standingSpeed = 0;
             }
-            
-            
 
             Move(backSpeed);
         }
+        
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (_melee == "true")
-                spriteBatch.Draw(_meleeTextures[(int)Math.Round(_animationSpeed)], _location, Color.White);
+            
+            if (_attack == "true")
+                spriteBatch.Draw(_meleeTextures[(int)Math.Round(_meleeSpeed)], _location, Color.White);
             else if (HSpeed > 0)
-                spriteBatch.Draw(_walkingTextures[(int)Math.Round(_animationSpeed)], _location, Color.White);
+                spriteBatch.Draw(_walkingTextures[(int)Math.Round(_walkingSpeed)], _location, Color.White);
           
             else
-                spriteBatch.Draw(_standingTextures[(int)Math.Round(_animationSpeed)], _location, Color.White);
+                spriteBatch.Draw(_standingTextures[(int)Math.Round(_standingSpeed)], _location, Color.White);
 
-            //spriteBatch.Draw(_texture, _location, Color.White);
+            
         }
 
        
