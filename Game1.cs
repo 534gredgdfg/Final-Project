@@ -241,7 +241,7 @@ namespace Final_Project
                     //Texture, x, y, width, height, speed, health, weapon type
                     stormtrooperlist.Add(new Player( new Rectangle(100, 100, 200, 100), 100 , "melee", "slow", AiRightList, AiRightList, AiMeleeRightList));
                     stormtrooperlist.Add(new Player(new Rectangle(500, 300, 200, 100), 150 , "melee", "fast", AiRightList, AiRightList, AiMeleeRightList));
-                    stormtrooperlist.Add(new Player(new Rectangle(800, 400, 200, 150), 90, "arrow", "slow", AiArcherRightList, AiArcherRightList, AiArcherMeleeRightList));
+                    stormtrooperlist.Add(new Player(new Rectangle(800, 400, 175, 125), 90, "arrow", "slow", AiArcherRightList, AiArcherRightList, AiArcherMeleeRightList));
                 }
 
 
@@ -450,31 +450,38 @@ namespace Final_Project
                 //User Shots
                 TimeSpan timeSinceLastShot = DateTime.Now - lastShotTime;
 
-                if (timeSinceLastShot.TotalSeconds >= user.GunInterval && mouseState.LeftButton == ButtonState.Pressed)
+                if (timeSinceLastShot.TotalSeconds >= user.GunInterval )
                 {
-                  
-                    lastShotTime = DateTime.Now; // update last shot time
-                    if (user.WeaponType == "lightsaber")
+                      
+
+                    if (mouseState.RightButton == ButtonState.Pressed)
                     {
-                 
-                        foreach (Player troops in stormtrooperlist)
-                        {
+                        lastShotTime = DateTime.Now; // update last shot time
+                        
 
-                            if (UserFacingRight == true)
+                            if (user.Collide(user.GetBoundingBox()))
                             {
-                                if (troops.Collide(user.LightSaberHitBoxRight()))
-                                    troops.Health -= user.WeaponDamage;
+                                user.Attack();
                             }
-                            else
-                            {
-                                if (troops.Collide(user.LightSaberHitBoxLeft()))
-                                    troops.Health -= user.WeaponDamage;
-                            }
-                        }
 
+
+                            foreach (Player troops in stormtrooperlist)
+                            {
+                                if (user.LightSaberHitBoxRight().Intersects(troops.Hitbox()))
+                                    troops.Health -= user.WeaponDamage;
+
+
+                                else if (user.LightSaberHitBoxLeft().Intersects(troops.Hitbox()))
+                                    troops.Health -= user.WeaponDamage;
+
+                            }
+
+                        
+                        
                     }
-                    else
+                    else if (mouseState.LeftButton == ButtonState.Pressed)
                     {
+                        lastShotTime = DateTime.Now; // update last shot time
                         laserList.Add(new LaserClass(rectangleTexture, playerPosition, playerRotation, new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 30, 30)));
                         user.Attack();
 
@@ -492,10 +499,11 @@ namespace Final_Project
                 foreach (Player troops in stormtrooperlist)
                 {
 
-                    
+                   
 
                     if (timeSinceLastShotAi.TotalSeconds >= troops.GunInterval)
                     {
+                        troops.ResetEnemyHit();
                         if (troops.HSpeed > 0)
                             enemyPosition = new Vector2(troops.XLocationRight, troops.YLocation);
                         else
@@ -509,7 +517,7 @@ namespace Final_Project
                         {                          
                            
                             enemyLaserList.Add(new LaserClass(rectangleTexture, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 30, 8)));
-                            troops.Attack();
+                            troops.ArrowAttack();
                         }
 
                         lastShotTimeAi = DateTime.Now; // update last shot time 
@@ -572,7 +580,7 @@ namespace Final_Project
 
                     foreach (Barriers barrier in barriersList)
                     {
-                        if (barrier.GetBoundingBox().Intersects(troops.Hitbox()))
+                        if (barrier.GetBoundingBox().Intersects(troops.EnemyHitbox()))
                         {
                             troops.UndoMove();
                             break;
@@ -593,7 +601,7 @@ namespace Final_Project
                    LaserClass laser = laserList[i];
                     foreach (Player troops in stormtrooperlist)
                     {
-                        if (troops.Hitbox().Contains(laser.GetBoundingBox()))
+                        if (troops.EnemyHitbox().Contains(laser.GetBoundingBox()))
                         {
                             damgaeMultiplyer = 1f;
                             if (troops.HeadShotBox().Contains(laser.GetBoundingBox()))
@@ -603,6 +611,7 @@ namespace Final_Project
                             }
                             
                             troops.Health -= user.WeaponDamage * damgaeMultiplyer;
+                            troops.EnemyHit();
                             laserList.RemoveAt(i);
                             break;
                         }
@@ -723,8 +732,12 @@ namespace Final_Project
                 foreach (LaserClass bullet in laserList)
                     bullet.Draw(_spriteBatch, laserTexture);              
                 
-                foreach (Player ai in stormtrooperlist)                
+                foreach (Player ai in stormtrooperlist)
+                {
                     ai.Draw(_spriteBatch);
+                    ai.DrawDamage(_spriteBatch, healthFont, (int)user.WeaponDamage);
+                }              
+                    
                                                  
                 foreach (LaserClass bullet in enemyLaserList)                
                     bullet.Draw(_spriteBatch, arrowTexture);

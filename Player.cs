@@ -30,8 +30,8 @@ namespace Final_Project
         private string _weapontype;
         private string _enemyType;
         private string _attack;
-       
-       
+        private string _drawingDamage;
+
         List<Texture2D> _walkingTextures;
         List<Texture2D> _standingTextures;
         List<Texture2D> _meleeTextures;
@@ -45,8 +45,8 @@ namespace Final_Project
             _health = health;
             _enemyType = enemyType;
             _attack = "false";
-           
-             _weapontype = weapontype;
+            _drawingDamage = "false";
+            _weapontype = weapontype;
             _walkingTextures = walkingTextures;
             _standingTextures = standingTextures;
             _meleeTextures = meleeTextures;
@@ -214,13 +214,11 @@ namespace Final_Project
         }
         public void UndoMoveH()
         {
-            _location.X -= (int)_speed.X;
-            
+            _location.X -= (int)_speed.X;         
         }
         public void UndoMoveV()
         {
             _location.Y -= (int)_speed.Y;
-
         }
        
         public Rectangle LightSaberHitBoxRight()
@@ -237,7 +235,11 @@ namespace Final_Project
         }
         public Rectangle Hitbox()
         {
-            return new Rectangle(_location.X + 60, _location.Y, _location.Width -110, _location.Height);
+            return new Rectangle(_location.X + _location.Width/3, _location.Y, _location.Width - _location.Width/2, _location.Height );
+        }
+        public Rectangle EnemyHitbox()
+        {
+            return new Rectangle(_location.X + _location.Width / 3, _location.Y, _location.Width - _location.Width / 3 * 2, _location.Height);
         }
         public Rectangle Largebox()
         {
@@ -255,7 +257,18 @@ namespace Final_Project
         {
                 _attack = "true";   
         }
-        
+        public void ArrowAttack()
+        {
+            _attack = "true";
+        }
+        public void EnemyHit()
+        {
+            _drawingDamage = "true";
+        }
+        public void ResetEnemyHit()
+        {
+            _drawingDamage = "false";
+        }
         public void Respawn()
         {
             _location.X = rand.Next(350, 1050- width);
@@ -270,6 +283,7 @@ namespace Final_Project
                 _meleeSpeed = 0;
                 _attack = "false";
             }
+
             _walkingSpeed += 0.1;
             if (_walkingSpeed >= _walkingTextures.Count - 0.5)
             {
@@ -297,7 +311,12 @@ namespace Final_Project
 
             
         }
+        public void DrawDamage(SpriteBatch spriteBatch, SpriteFont FontText, int userDamage)
+        {
+            if (_drawingDamage == "true")
+                 spriteBatch.DrawString(FontText, $"{userDamage}",new Vector2 (_location.X, _location.Y), Color.White);
+        }
 
-       
+
     }
 }

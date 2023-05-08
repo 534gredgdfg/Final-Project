@@ -37,18 +37,6 @@
 /processorParam:TextureFormat=Color
 /build:Arrow Man Scaled.png
 
-#begin AttackArcher_scaled.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:AttackArcher_scaled.png
-
 #begin C:/Users/owenr/Downloads/Attack.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -61,6 +49,18 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Attack.png;Attack.png
 
+#begin C:/Users/owenr/Downloads/AttackArcher_scaled.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/AttackArcher_scaled.png;AttackArcher_scaled.png
+
 #begin C:/Users/owenr/Downloads/Goblin Running Right.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -72,6 +72,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Goblin Running Right.png;Goblin Running Right.png
+
+#begin C:/Users/owenr/Downloads/RunArcher_scaled.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/RunArcher_scaled.png;RunArcher_scaled.png
 
 #begin C:/Users/owenr/Downloads/spritesheet (1).png
 /importer:TextureImporter
@@ -235,18 +247,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:rectangle.png
-
-#begin RunArcher_scaled.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:RunArcher_scaled.png
 
 #begin spritesheet (5)L.png
 /importer:TextureImporter
