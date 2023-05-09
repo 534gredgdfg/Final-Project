@@ -7,11 +7,13 @@ using System.Text;
 
 namespace Final_Project
 {
-    
+
     internal class Player
     {
         private Texture2D _texture;
         private Rectangle _location;
+        private Rectangle greenBar;
+        private Rectangle redBar;
         private Vector2 _speed;
         private int _health;
         private int height;
@@ -19,6 +21,8 @@ namespace Final_Project
         private int _AicooldownTime;
         private int _AiFireableShots;
         private int _damage;
+
+      
 
         private double _meleeSpeed;
         private double _walkingSpeed;
@@ -37,9 +41,9 @@ namespace Final_Project
         List<Texture2D> _meleeTextures;
 
         Random rand = new Random();
-        public Player(Rectangle location,  int health,string weapontype, string enemyType, List<Texture2D> walkingTextures, List<Texture2D> standingTextures, List<Texture2D> meleeTextures)
+        public Player(Rectangle location, int health, string weapontype, string enemyType, List<Texture2D> walkingTextures, List<Texture2D> standingTextures, List<Texture2D> meleeTextures)
         {
-           
+
             _location = location;
             _speed = new Vector2();
             _health = health;
@@ -50,6 +54,9 @@ namespace Final_Project
             _walkingTextures = walkingTextures;
             _standingTextures = standingTextures;
             _meleeTextures = meleeTextures;
+            redBar = new Rectangle(_location.X, _location.Y, (int)Health, 15);
+            greenBar = new Rectangle(_location.X, _location.Y, (int)Health, 15);
+
         }
         public Texture2D Texture
         {
@@ -117,7 +124,7 @@ namespace Final_Project
             get { return _weapontype; }
             set { _weapontype = value; }
         }
-     
+
         public float WeaponDamage
         {
             get { return _damage; }
@@ -161,7 +168,7 @@ namespace Final_Project
                     _speed.X = 2;
                 else
                     _speed.X = 1;
-               
+
             }
             if (user.Right - user.Width / 2 < _location.X)
             {
@@ -169,32 +176,32 @@ namespace Final_Project
                     _speed.X = -2;
                 else
                     _speed.X = -1;
-                
+
             }
         }
 
         public void ChoosingWeapon()
         {
-            
-               
+
+
             if (_weapontype == "arrow")
             {
                 _damage = 30;
                 _gunInterval = 2f;
-                
+
             }
             else if (_weapontype == "wizard ball")
             {
                 _damage = 50;
                 _gunInterval = 1f;
-                
+
             }
 
 
             else if (_weapontype == "melee")
             {
                 _damage = 34;
-                _gunInterval = 2.5f;              
+                _gunInterval = 2.5f;
             }
         }
         public Rectangle GetBoundingBox()
@@ -204,30 +211,30 @@ namespace Final_Project
         private void Move(Vector2 backSpeed)
         {
             _location.X += (int)_speed.X + (int)backSpeed.X;
-            _location.Y += (int)_speed.Y +(int)backSpeed.Y;
+            _location.Y += (int)_speed.Y + (int)backSpeed.Y;
         }
 
         public void UndoMove()
         {
             _location.X -= (int)_speed.X;
-            _location.Y -= (int)_speed.Y ;
+            _location.Y -= (int)_speed.Y;
         }
         public void UndoMoveH()
         {
-            _location.X -= (int)_speed.X;         
+            _location.X -= (int)_speed.X;
         }
         public void UndoMoveV()
         {
             _location.Y -= (int)_speed.Y;
         }
-       
+
         public Rectangle LightSaberHitBoxRight()
         {
-            return new Rectangle(_location.X +_location.Width/2 , _location.Y, _location.Width, _location.Height );
+            return new Rectangle(_location.X + _location.Width / 2, _location.Y, _location.Width, _location.Height);
         }
         public Rectangle LightSaberHitBoxLeft()
         {
-            return new Rectangle(_location.X - _location.Width/2, _location.Y , _location.Width, _location.Height );
+            return new Rectangle(_location.X - _location.Width / 2, _location.Y, _location.Width, _location.Height);
         }
         public Rectangle HeadShotBox()
         {
@@ -235,7 +242,7 @@ namespace Final_Project
         }
         public Rectangle Hitbox()
         {
-            return new Rectangle(_location.X + _location.Width/3, _location.Y, _location.Width - _location.Width/2, _location.Height );
+            return new Rectangle(_location.X + _location.Width / 3, _location.Y, _location.Width - _location.Width / 2, _location.Height);
         }
         public Rectangle EnemyHitbox()
         {
@@ -243,7 +250,7 @@ namespace Final_Project
         }
         public Rectangle Largebox()
         {
-            return new Rectangle(_location.X -30, _location.Y -30, _location.Width + 60, _location.Height +60);
+            return new Rectangle(_location.X - 30, _location.Y - 30, _location.Width + 60, _location.Height + 60);
         }
 
 
@@ -251,11 +258,11 @@ namespace Final_Project
         {
             return _location.Intersects(item);
         }
-      
-        
+
+
         public void Attack()
         {
-                _attack = "true";   
+            _attack = "true";
         }
         public void ArrowAttack()
         {
@@ -271,9 +278,9 @@ namespace Final_Project
         }
         public void Respawn()
         {
-            _location.X = rand.Next(350, 1050- width);
+            _location.X = rand.Next(350, 1050 - width);
             _location.Y = rand.Next(225, 675 - height);
-        }       
+        }
 
         public void Update(Vector2 backSpeed)
         {
@@ -294,27 +301,63 @@ namespace Final_Project
             {
                 _standingSpeed = 0;
             }
+            
+            redBar.X = _locationX;
+            greenBar.X = _location.X;
+            redBar.Y = _location.Y;
+            greenBar.Y = _location.Y;
+
+            greenBar.Width = (int)Health;
+
 
             Move(backSpeed);
         }
-        
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            
-            if (_attack == "true")
-                spriteBatch.Draw(_meleeTextures[(int)Math.Round(_meleeSpeed)], _location, Color.White);
-            else if (HSpeed > 0)
-                spriteBatch.Draw(_walkingTextures[(int)Math.Round(_walkingSpeed)], _location, Color.White);
-          
-            else
-                spriteBatch.Draw(_standingTextures[(int)Math.Round(_standingSpeed)], _location, Color.White);
 
-            
+        public void Draw(SpriteBatch spriteBatch, Texture2D rectTexture)
+        {
+            SpriteEffects direction;
+
+            if (HSpeed < 0)
+            {
+                direction = SpriteEffects.FlipHorizontally;
+
+
+            }
+            else
+                direction = SpriteEffects.None;
+
+
+
+            if (_attack == "true")
+            {
+                spriteBatch.Draw(_meleeTextures[(int)Math.Round(_meleeSpeed)], _location, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
+
+                //spriteBatch.Draw(_meleeTextures[(int)Math.Round(_meleeSpeed)], _location, Color.White);
+            }
+
+
+            else if (HSpeed != 0)
+            {
+                spriteBatch.Draw(_walkingTextures[(int)Math.Round(_walkingSpeed)], _location, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
+                //  spriteBatch.Draw(_walkingTextures[(int)Math.Round(_walkingSpeed)], _location, Color.White);
+            }
+
+
+
+            else
+            {
+                spriteBatch.Draw(_standingTextures[(int)Math.Round(_standingSpeed)], _location, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
+                //  spriteBatch.Draw(_standingTextures[(int)Math.Round(_standingSpeed)], _location, Color.White);
+            }
+
+            spriteBatch.Draw(rectTexture, redBar, Color.Red);
+            spriteBatch.Draw(rectTexture, greenBar, Color.Green);
+
         }
         public void DrawDamage(SpriteBatch spriteBatch, SpriteFont FontText, int userDamage)
         {
             if (_drawingDamage == "true")
-                 spriteBatch.DrawString(FontText, $"{userDamage}",new Vector2 (_location.X, _location.Y), Color.White);
+                spriteBatch.DrawString(FontText, $"{userDamage}", new Vector2(_location.X, _location.Y), Color.White);
         }
 
 

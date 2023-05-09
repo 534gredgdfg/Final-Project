@@ -21,7 +21,7 @@ namespace Final_Project
         Rectangle cooldownBarRed, cooldownBarWhite;
        
 
-        Texture2D rectangleTexture, arrowTexture,AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture,stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture,laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
+        Texture2D rectangleTexture, lightningTexture1, lightningTexture2, lightningTexture3,arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture,stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture,laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
         Vector2 backroundSpeed;
 
         int mainGameWidth = 1400;
@@ -67,6 +67,11 @@ namespace Final_Project
         List<Texture2D> AiArcherLeftList;
         List<Texture2D> AiArcherMeleeRightList;
 
+        List<Texture2D> LightningShotList1;
+        List<Texture2D> LightningShotList2;
+        List<Texture2D> LightningShotList3;
+
+        List<Texture2D> ArrowShotList;
 
         List<Barriers> barriersList = new List<Barriers>();
         List<Player> stormtrooperlist = new List<Player>();
@@ -107,20 +112,8 @@ namespace Final_Project
 
            
            
-            userRightList = new List<Texture2D>();
-            userLeftList = new List<Texture2D>();
-            userAttackList = new List<Texture2D>();
-            userAttackLeftList = new List<Texture2D>();
-            userIdleList = new List<Texture2D>();
-            userIdleLeftList = new List<Texture2D>();
 
-            AiRightList = new List<Texture2D>();
-            AiLeftList = new List<Texture2D>();
-            AiMeleeRightList = new List<Texture2D>();
 
-            
-           
-            
 
 
             base.Initialize();
@@ -167,8 +160,10 @@ namespace Final_Project
 
             userIdleLeftTexture = Content.Load<Texture2D>("NightBorne IdleLeft Scaled");
             
-            laserTexture = Content.Load<Texture2D>("Ice Shot");
-            arrowTexture = Content.Load<Texture2D>("ArcherArrow_scaled");
+            lightningTexture1 = Content.Load<Texture2D>("lightning1");
+            lightningTexture2 = Content.Load<Texture2D>("lightning2");
+            lightningTexture3 = Content.Load<Texture2D>("lightning3");
+            arrowTexture = Content.Load<Texture2D>("ArrowMove");
 
             static void ReapetingAnimation(GraphicsDevice graphicsDevice, Texture2D _texture, List<Texture2D> _textureList, int _diffImages)
             {
@@ -198,23 +193,29 @@ namespace Final_Project
                 
 
             }
-          
-            ReapetingAnimation(GraphicsDevice, userWalkingRight, userRightList,6);
-            ReapetingAnimation(GraphicsDevice, userWalkingLeft, userLeftList, 6);
-            ReapetingAnimation(GraphicsDevice, userAttackRightTexture, userAttackList, 7);
-            ReapetingAnimation(GraphicsDevice, userAttackLeftTexture, userAttackLeftList, 7);
-            ReapetingAnimation(GraphicsDevice, userIdleTexture, userIdleList, 5);
 
-            ReapetingAnimation(GraphicsDevice, AiWalkingRight, AiRightList, 8);
-            ReapetingAnimation(GraphicsDevice, AiWalkingLeft, AiLeftList, 8);
-            ReapetingAnimation(GraphicsDevice, AiMeleeRightTexture, AiMeleeRightList, 8);
+            
+      
+
+            ReapetingAnimation(GraphicsDevice, userWalkingRight, userRightList = new List<Texture2D>(), 6);
+            ReapetingAnimation(GraphicsDevice, userWalkingLeft, userLeftList = new List<Texture2D>(), 6);
+            ReapetingAnimation(GraphicsDevice, userAttackRightTexture, userAttackList = new List<Texture2D>(), 7);
+            ReapetingAnimation(GraphicsDevice, userAttackLeftTexture, userAttackLeftList = new List<Texture2D>(), 7);
+            ReapetingAnimation(GraphicsDevice, userIdleTexture, userIdleList = new List<Texture2D>(), 5);
+
+            ReapetingAnimation(GraphicsDevice, AiWalkingRight, AiRightList = new List<Texture2D>(), 8);
+            ReapetingAnimation(GraphicsDevice, AiWalkingLeft, AiLeftList = new List<Texture2D>(), 8);
+            ReapetingAnimation(GraphicsDevice, AiMeleeRightTexture, AiMeleeRightList = new List<Texture2D>(), 8);
 
             ReapetingAnimation(GraphicsDevice, AiArcherWalkingRight, AiArcherRightList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, AiArcherWalkingLeft, AiArcherLeftList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, AiArcherMeleeRightTexture, AiArcherMeleeRightList = new List<Texture2D>(), 6);
 
+            ReapetingAnimation(GraphicsDevice, lightningTexture1, LightningShotList1 = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, lightningTexture2, LightningShotList2 = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, lightningTexture3, LightningShotList3 = new List<Texture2D>(), 4);
 
-
+            ReapetingAnimation(GraphicsDevice, arrowTexture, ArrowShotList = new List<Texture2D>(), 4);
         }
         //-----------------------------------------------------------------------Update--------------------------------------------------------------------------------------
         protected override void Update(GameTime gameTime)
@@ -481,8 +482,13 @@ namespace Final_Project
                     }
                     else if (mouseState.LeftButton == ButtonState.Pressed)
                     {
+                        if (user.HSpeed >= 0)
+                            playerPosition = new Vector2(user.XLocationRight, user.YLocation);
+                        else
+                            playerPosition = new Vector2(user.XLocation, user.YLocation);
+
                         lastShotTime = DateTime.Now; // update last shot time
-                        laserList.Add(new LaserClass(rectangleTexture, playerPosition, playerRotation, new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 30, 30)));
+                        laserList.Add(new LaserClass(LightningShotList2, playerPosition, playerRotation, new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 30, 30)));
                         user.Attack();
 
 
@@ -516,7 +522,7 @@ namespace Final_Project
                         if (troops.WeaponType == "arrow")
                         {                          
                            
-                            enemyLaserList.Add(new LaserClass(rectangleTexture, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 30, 8)));
+                            enemyLaserList.Add(new LaserClass(ArrowShotList, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 30, 8)));
                             troops.ArrowAttack();
                         }
 
@@ -722,7 +728,7 @@ namespace Final_Project
             {
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOliveGreen);
 
-                user.Draw(_spriteBatch);
+                user.Draw(_spriteBatch, rectangleTexture);
 
                 foreach (Barriers barrier in barriersList)
                     barrier.Draw(_spriteBatch);
@@ -734,7 +740,7 @@ namespace Final_Project
                 
                 foreach (Player ai in stormtrooperlist)
                 {
-                    ai.Draw(_spriteBatch);
+                    ai.Draw(_spriteBatch, rectangleTexture);
                     ai.DrawDamage(_spriteBatch, healthFont, (int)user.WeaponDamage);
                 }              
                     
