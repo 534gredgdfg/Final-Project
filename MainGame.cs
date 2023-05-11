@@ -13,15 +13,15 @@ namespace Final_Project
         DateTime cooldownTime = DateTime.MinValue;
         DateTime cooldownTimeBar = DateTime.MinValue;
         DateTime cooldownTimeAi = DateTime.MinValue;
-        DateTime lastShotTimeAi = DateTime.MinValue; 
+        DateTime lastShotTimeAi = DateTime.MinValue;
         DateTime lastMeleeTimeAi = DateTime.MinValue;
         private SpriteBatch _spriteBatch;
         Player user;
         Animation AnimationClass;
         Rectangle cooldownBarRed, cooldownBarWhite;
-       
 
-        Texture2D rectangleTexture, lightningTexture1, lightningTexture2, lightningTexture3,arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture,stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture,laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
+
+        Texture2D rectangleTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture, stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture, laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
         Vector2 backroundSpeed;
 
         int mainGameWidth = 1400;
@@ -30,9 +30,10 @@ namespace Final_Project
         int mainScreenHeight = 1000;
         int movedDistanceX = 0;
         int movedDistanceY = 0;
-      
+
         bool UserFacingRight = true;
         bool userSwingAttack = false;
+        bool done = false;
         string enemyDirection;
 
         bool goingUp = false;
@@ -40,24 +41,27 @@ namespace Final_Project
         bool cooldownTimer = false;
         int firedShotsAi = 0;
 
-        float damgaeMultiplyer = 0.0f;
-        float seconds; 
+        double damgaeMultiplyer = 0.0;
+        float seconds;
         float startTime;
-        
+
         private float playerRotation;
         private float enemyRotation;
-        private Vector2 playerPosition; 
+        private Vector2 playerPosition;
         private Vector2 enemyPosition;
         private SpriteFont healthFont;
 
 
-      
+
         List<Texture2D> userRightList;
         List<Texture2D> userLeftList;
         List<Texture2D> userAttackList;
         List<Texture2D> userAttackLeftList;
         List<Texture2D> userIdleList;
         List<Texture2D> userIdleLeftList;
+
+        List<Texture2D> userSheildWalkList;
+        List<Texture2D> userSheildIdleList;
 
         List<Texture2D> AiRightList;
         List<Texture2D> AiLeftList;
@@ -102,7 +106,7 @@ namespace Final_Project
         {
             // TODO: Add your initialization logic here
             screen = Screen.TitleScreen;
-            
+
             _graphics.PreferredBackBufferWidth = 800; // Sets the width of the window
             _graphics.PreferredBackBufferHeight = 600; // Sets the height of the window
             _graphics.ApplyChanges(); // Applies the new dimensions
@@ -110,25 +114,25 @@ namespace Final_Project
             cooldownBarRed = new Rectangle(160, mainScreenHeight - 50, 0, 25);
             cooldownBarWhite = new Rectangle(160, mainScreenHeight - 50, 200, 25);
 
-           
-           
+
+
 
 
 
 
             base.Initialize();
             //Texture, x, y, width, health, heatup amount, firable shots
-            user = new Player(new Rectangle( 500, 500, 150, 130), 1000000, "melee", "normal", userRightList, userIdleList, userAttackList);
-           
+            user = new Player(new Rectangle(500, 500, 150, 130), 1000000, "melee", "normal", userRightList, userIdleList, userSheildWalkList, userSheildIdleList, userAttackList);
+
 
             //Top Wall
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth *3,60)));
+            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, 60)));
             //Left Wall
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight,60, mainGameHeight*3)));
+            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, 60, mainGameHeight * 3)));
             //Bottom Wall
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, mainGameHeight*2- 60, mainGameWidth*3, 60)));
+            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, mainGameHeight * 2 - 60, mainGameWidth * 3, 60)));
             //Right Wall
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(mainGameWidth*2 - 60, -mainGameHeight, 60, mainGameHeight*3)));
+            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(mainGameWidth * 2 - 60, -mainGameHeight, 60, mainGameHeight * 3)));
 
 
         }
@@ -141,15 +145,21 @@ namespace Final_Project
             // TODO: use this.Content to load your game content here
             rectangleTexture = Content.Load<Texture2D>("rectangle");
 
+            emptyGreenBarTexture = Content.Load<Texture2D>("EmptyGreenBar");
+            healthGreenBarTexture = Content.Load<Texture2D>("HealhGreenBar");
+
             healthFont = Content.Load<SpriteFont>("HealthFont");
 
-            
+
             userWalkingRight = Content.Load<Texture2D>("spritesheet (2)");
-            userWalkingLeft = Content.Load<Texture2D>("spritesheet (6)");
+            userWalkingLeft = Content.Load<Texture2D>("spritesheet (2)");
             userAttackRightTexture = Content.Load<Texture2D>("spritesheet (5)");
             userAttackLeftTexture = Content.Load<Texture2D>("spritesheet (5)L");
             userIdleTexture = Content.Load<Texture2D>("spritesheet (1)");
-            
+
+            userSheildWalkTexture = Content.Load<Texture2D>("UserSheildWalkSprite");
+            userSheildIdleTexture = Content.Load<Texture2D>("UserSheildIdleSprite");
+
             AiWalkingRight = Content.Load<Texture2D>("Goblin Running Right");
             AiWalkingLeft = Content.Load<Texture2D>("Goblin Running Left");
             AiMeleeRightTexture = Content.Load<Texture2D>("Attack");
@@ -159,7 +169,7 @@ namespace Final_Project
             AiArcherMeleeRightTexture = Content.Load<Texture2D>("AttackArcher_scaled");
 
             userIdleLeftTexture = Content.Load<Texture2D>("NightBorne IdleLeft Scaled");
-            
+
             lightningTexture1 = Content.Load<Texture2D>("lightning1");
             lightningTexture2 = Content.Load<Texture2D>("lightning2");
             lightningTexture3 = Content.Load<Texture2D>("lightning3");
@@ -188,20 +198,24 @@ namespace Final_Project
                     cropTexture.SetData(data);
 
                     _textureList.Add(cropTexture);
-                    
+
                 }
-                
+
 
             }
 
-            
-      
+
+
 
             ReapetingAnimation(GraphicsDevice, userWalkingRight, userRightList = new List<Texture2D>(), 6);
             ReapetingAnimation(GraphicsDevice, userWalkingLeft, userLeftList = new List<Texture2D>(), 6);
             ReapetingAnimation(GraphicsDevice, userAttackRightTexture, userAttackList = new List<Texture2D>(), 7);
             ReapetingAnimation(GraphicsDevice, userAttackLeftTexture, userAttackLeftList = new List<Texture2D>(), 7);
             ReapetingAnimation(GraphicsDevice, userIdleTexture, userIdleList = new List<Texture2D>(), 5);
+
+            ReapetingAnimation(GraphicsDevice, userSheildWalkTexture, userSheildWalkList = new List<Texture2D>(), 6);
+            ReapetingAnimation(GraphicsDevice, userSheildIdleTexture, userSheildIdleList = new List<Texture2D>(), 5);
+
 
             ReapetingAnimation(GraphicsDevice, AiWalkingRight, AiRightList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, AiWalkingLeft, AiLeftList = new List<Texture2D>(), 8);
@@ -240,9 +254,9 @@ namespace Final_Project
                     _graphics.PreferredBackBufferHeight = mainScreenHeight; // Sets the height of the window
                     _graphics.ApplyChanges(); // Applies the new dimensions
                     //Texture, x, y, width, height, speed, health, weapon type
-                    stormtrooperlist.Add(new Player( new Rectangle(100, 100, 200, 100), 100 , "melee", "slow", AiRightList, AiRightList, AiMeleeRightList));
-                    stormtrooperlist.Add(new Player(new Rectangle(500, 300, 200, 100), 150 , "melee", "fast", AiRightList, AiRightList, AiMeleeRightList));
-                    stormtrooperlist.Add(new Player(new Rectangle(800, 400, 175, 125), 90, "arrow", "slow", AiArcherRightList, AiArcherRightList, AiArcherMeleeRightList));
+                    stormtrooperlist.Add(new Player(new Rectangle(100, 100, 200, 100), 100, "goblin melee", "slow", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList));
+                    stormtrooperlist.Add(new Player(new Rectangle(500, 300, 200, 100), 150, "goblin melee", "fast", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList));
+                    stormtrooperlist.Add(new Player(new Rectangle(800, 400, 175, 125), 90, "arrow", "slow", AiArcherRightList, AiRightList, AiRightList, AiRightList, AiArcherMeleeRightList));
                 }
 
 
@@ -254,21 +268,21 @@ namespace Final_Project
 
                 for (int i = 0; barriersList.Count <= 35; i++)
                 {
-                    barriersList.Add(new Barriers(rectangleTexture, new Rectangle(rand.Next(-mainGameWidth, mainGameWidth*2), rand.Next(-mainGameHeight, mainGameHeight*2), rand.Next(50, 200), rand.Next(50, 200))));
+                    barriersList.Add(new Barriers(rectangleTexture, new Rectangle(rand.Next(-mainGameWidth, mainGameWidth * 2), rand.Next(-mainGameHeight, mainGameHeight * 2), rand.Next(50, 200), rand.Next(50, 200))));
                 }
-                    
 
-              
 
-                var distance = new Vector2(mouseState.X  - playerPosition.X, mouseState.Y -playerPosition.Y );
+
+
+                var distance = new Vector2(mouseState.X - playerPosition.X, mouseState.Y - playerPosition.Y);
 
                 playerRotation = (float)Math.Atan2(distance.Y, distance.X);
                 playerPosition = new Vector2(user.XLocationRight, user.YLocation);
-                
-                seconds = (float)gameTime.TotalGameTime.TotalSeconds;
-                
+
+
+
                 //Move user if barrier spawned in them
-                if (seconds <= 1)
+                while (done == false)
                 {
 
                     for (int i = barriersList.Count - 1; i >= 0; i--)
@@ -292,57 +306,79 @@ namespace Final_Project
                             }
                         }
                     }
-                       
+                    done = true;
                 }
-                
+
+
+
                 //Make user move
 
                 if (keyboardState.IsKeyDown(Keys.D))
                 {
-                    user.HSpeed = 3;
-                    UserFacingRight = true;
+                    if(user.Sheilding == "false")
+                        user.HSpeed = 3;
+                    else
+                        user.HSpeed = 2;
+
 
 
 
                 }
-                    
+
                 else if (keyboardState.IsKeyDown(Keys.A))
                 {
-                    user.HSpeed = -3;
-                    UserFacingRight = false;
+                    
+
+                    if (user.Sheilding == "false")
+                        user.HSpeed = -3;
+                    else
+                        user.HSpeed = -2;
 
                 }
 
 
                 else
                 {
-                 
-                    
+
+
                     user.HSpeed = 0;
                 }
-                    
+
 
                 if (keyboardState.IsKeyDown(Keys.W))
                 {
-                    
-                    
-                    user.VSpeed = -3;
+
+
+                    if (user.Sheilding == "false")
+                        user.VSpeed = -3;
+                    else
+                        user.VSpeed = -2;
+
                 }
-                    
+                
+                
+
                 else if (keyboardState.IsKeyDown(Keys.S))
                 {
-                   
-                    
-                    user.VSpeed = 3;
+
+
+                    if (user.Sheilding == "false")
+                        user.VSpeed = 3;
+                    else
+                        user.VSpeed = 2;
                 }
-                    
+
                 else
                 {
-                   
-                    
+
+
                     user.VSpeed = 0;
                 }
-             
+                if (keyboardState.IsKeyDown(Keys.Space))
+                    user.Sheild();
+                else if (keyboardState.IsKeyUp(Keys.Space))
+                    user.UnSheild();
+
 
 
 
@@ -354,7 +390,7 @@ namespace Final_Project
                     troops.TroopsSpeed(user.Hitbox());
 
                 }
-                
+
 
 
 
@@ -373,7 +409,7 @@ namespace Final_Project
                     else
                         backroundSpeed.Y = 0;
                 }
-                                
+
 
                 if (user.YLocation <= mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.W))
                 {
@@ -383,7 +419,7 @@ namespace Final_Project
                     else
                         backroundSpeed.Y = 0;
                 }
-                                
+
 
                 if (user.XLocationRight >= mainGameWidth - mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.D))
                 {
@@ -394,7 +430,7 @@ namespace Final_Project
                         backroundSpeed.X = 0;
 
                 }
-                                
+
 
                 if (user.XLocation <= mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.A))
                 {
@@ -432,13 +468,13 @@ namespace Final_Project
                         backroundSpeed.Y = 0;
                         user.UndoMove();
                     }
-                
+
 
 
                 foreach (Player troops in stormtrooperlist)
                 {
                     troops.Update(backroundSpeed);
-                  
+
 
                 }
                 foreach (Barriers barrier in barriersList)
@@ -446,123 +482,128 @@ namespace Final_Project
                     barrier.Update(backroundSpeed);
 
                 }
-                
+
 
                 //User Shots
                 TimeSpan timeSinceLastShot = DateTime.Now - lastShotTime;
 
-                if (timeSinceLastShot.TotalSeconds >= user.GunInterval )
+                if (timeSinceLastShot.TotalSeconds >= user.GunInterval && user.Sheilding == "false")
                 {
-                      
+
 
                     if (mouseState.RightButton == ButtonState.Pressed)
                     {
+                        user.WeaponType = "melee";
                         lastShotTime = DateTime.Now; // update last shot time
-                        
-
-                            if (user.Collide(user.GetBoundingBox()))
-                            {
-                                user.Attack();
-                            }
 
 
-                            foreach (Player troops in stormtrooperlist)
-                            {
-                                if (user.LightSaberHitBoxRight().Intersects(troops.Hitbox()))
-                                    troops.Health -= user.WeaponDamage;
+                        if (user.Collide(user.GetBoundingBox()))
+                        {
+                            user.Attack();
+                        }
 
 
-                                else if (user.LightSaberHitBoxLeft().Intersects(troops.Hitbox()))
-                                    troops.Health -= user.WeaponDamage;
+                        foreach (Player troops in stormtrooperlist)
+                        {
+                            if (user.LightSaberHitBoxRight().Intersects(troops.Hitbox()))
+                                troops.Health -= user.WeaponDamage;
 
-                            }
 
-                        
-                        
+                            else if (user.LightSaberHitBoxLeft().Intersects(troops.Hitbox()))
+                                troops.Health -= user.WeaponDamage;
+
+                        }
+
+
+
                     }
                     else if (mouseState.LeftButton == ButtonState.Pressed)
                     {
+                        user.WeaponType = "wizard ball";
                         if (user.HSpeed >= 0)
                             playerPosition = new Vector2(user.XLocationRight, user.YLocation);
                         else
                             playerPosition = new Vector2(user.XLocation, user.YLocation);
 
                         lastShotTime = DateTime.Now; // update last shot time
-                        laserList.Add(new LaserClass(LightningShotList2, playerPosition, playerRotation, new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 30, 30)));
+                        laserList.Add(new LaserClass(LightningShotList2, playerPosition, playerRotation, new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 25, 20)));
                         user.Attack();
 
 
                     }
                 }
-                
-                        
-              
+
+
+
 
                 //Ai Shots
                 TimeSpan timeSinceLastShotAi = DateTime.Now - lastShotTimeAi;
-                
-                
+                TimeSpan timeSinceLastMelee = DateTime.Now - lastMeleeTimeAi;
+
                 foreach (Player troops in stormtrooperlist)
                 {
 
-                   
+
 
                     if (timeSinceLastShotAi.TotalSeconds >= troops.GunInterval)
                     {
                         troops.ResetEnemyHit();
-                        if (troops.HSpeed > 0)
-                            enemyPosition = new Vector2(troops.XLocationRight, troops.YLocation);
-                        else
-                            enemyPosition = new Vector2(troops.XLocation, troops.YLocation);
-
-                        float missingRange = rand.Next(-75, 75);
-                        var enemydistance = new Vector2(playerPosition.X + missingRange - enemyPosition.X, playerPosition.Y + missingRange - enemyPosition.Y);
-                        enemyRotation = (float)Math.Atan2(enemydistance.Y, enemydistance.X);
 
                         if (troops.WeaponType == "arrow")
-                        {                          
-                           
+                        {
+                                if (troops.HSpeed > 0)
+                                enemyPosition = new Vector2(troops.XLocationRight, troops.YLocation);
+                            else
+                                enemyPosition = new Vector2(troops.XLocation, troops.YLocation);
+
+                            float missingRange = rand.Next(-75, 75);
+                            var enemydistance = new Vector2(playerPosition.X + missingRange - enemyPosition.X, playerPosition.Y + missingRange - enemyPosition.Y);
+                            enemyRotation = (float)Math.Atan2(enemydistance.Y, enemydistance.X);
+
+                        
+
                             enemyLaserList.Add(new LaserClass(ArrowShotList, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 30, 8)));
-                            troops.ArrowAttack();
+                            troops.Attack();
+                            lastShotTimeAi = DateTime.Now; // update last shot time 
                         }
 
-                        lastShotTimeAi = DateTime.Now; // update last shot time 
-                           
-
-                    }                  
+                        
 
 
-                }
-                // AI Melee
-                TimeSpan timeSinceLastMelee = DateTime.Now - lastMeleeTimeAi;
-                foreach (Player troops in stormtrooperlist)
-                {
                     
+                       
+                    }
                     if (timeSinceLastMelee.TotalSeconds >= troops.GunInterval)
                     {
-                        if (troops.WeaponType == "melee")
+                        if (troops.WeaponType == "goblin melee")
                         {
-                            
+
                             if (troops.Collide(user.GetBoundingBox()))
                             {
                                 troops.Attack();
 
                                 lastMeleeTimeAi = DateTime.Now; // update last shot time 
+                                if (user.Sheilding == "false")
+                                {
 
-                                if (troops.LightSaberHitBoxRight().Intersects(user.Hitbox()))
-                                    user.Health -= troops.WeaponDamage;
+                                    if (troops.LightSaberHitBoxRight().Intersects(user.Hitbox()))
+                                        user.Health -= troops.WeaponDamage;
 
 
-                                else if (troops.LightSaberHitBoxLeft().Intersects(user.Hitbox()))
-                                    user.Health -= troops.WeaponDamage;
+                                    else if (troops.LightSaberHitBoxLeft().Intersects(user.Hitbox()))
+                                        user.Health -= troops.WeaponDamage;
+                                }
+
+
 
                             }
                         }
                     }
                 }
+               
 
 
-                
+
                 //Update User Laser
                 foreach (LaserClass bullet in laserList)
                 {
@@ -586,7 +627,7 @@ namespace Final_Project
 
                     foreach (Barriers barrier in barriersList)
                     {
-                        if (barrier.GetBoundingBox().Intersects(troops.EnemyHitbox()))
+                        if (barrier.GetBoundingBox().Intersects(troops.Hitbox()))
                         {
                             troops.UndoMove();
                             break;
@@ -602,31 +643,31 @@ namespace Final_Project
                 user.ChoosingWeapon();
                 //If ai gets shot
                 for (int i = laserList.Count - 1; i >= 0; i--)
-                { 
-                                       
-                   LaserClass laser = laserList[i];
+                {
+
+                    LaserClass laser = laserList[i];
                     foreach (Player troops in stormtrooperlist)
                     {
-                        if (troops.EnemyHitbox().Contains(laser.GetBoundingBox()))
+                        if (troops.Hitbox().Contains(laser.GetBoundingBox()))
                         {
-                            damgaeMultiplyer = 1f;
-                            if (troops.HeadShotBox().Contains(laser.GetBoundingBox()))
+                            damgaeMultiplyer = 1;
+                            if (troops.HeadShotBox().Intersects(laser.GetBoundingBox()))
                             {
                                 damgaeMultiplyer = 1.5f;
-                                
+
                             }
-                            
-                            troops.Health -= user.WeaponDamage * damgaeMultiplyer;
+
+                            troops.Health -= user.WeaponDamage * (float)damgaeMultiplyer;
                             troops.EnemyHit();
                             laserList.RemoveAt(i);
                             break;
                         }
 
-                        
-                                
-                        
+
+
+
                     }
-                    
+
                 }
                 //If user gets Shot
                 for (int i = enemyLaserList.Count - 1; i >= 0; i--)
@@ -636,14 +677,14 @@ namespace Final_Project
                         foreach (LaserClass bullet in enemyLaserList)
                         {
 
-                            if (bullet.GetBoundingBox().Intersects(user.Hitbox()))
+                            if (bullet.GetBoundingBox().Intersects(user.Hitbox()) && user.Sheilding == "false")
                             {
                                 user.Health -= troops.WeaponDamage;
                                 enemyLaserList.RemoveAt(i);
                                 break;
                             }
-                                
-                                
+
+
 
                         }
 
@@ -675,7 +716,7 @@ namespace Final_Project
                         }
                     }
                 }
-               
+
                 //Detect user dealth
                 if (user.Health <= 0)
                 {
@@ -693,7 +734,7 @@ namespace Final_Project
                     }
                 }
 
-                
+
 
 
             }
@@ -728,7 +769,8 @@ namespace Final_Project
             {
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOliveGreen);
 
-                user.Draw(_spriteBatch, rectangleTexture);
+                user.Draw(_spriteBatch);
+
 
                 foreach (Barriers barrier in barriersList)
                     barrier.Draw(_spriteBatch);
@@ -736,25 +778,26 @@ namespace Final_Project
                 //Draw all the bullets
 
                 foreach (LaserClass bullet in laserList)
-                    bullet.Draw(_spriteBatch, laserTexture);              
-                
+                    bullet.Draw(_spriteBatch, laserTexture);
+
                 foreach (Player ai in stormtrooperlist)
                 {
-                    ai.Draw(_spriteBatch, rectangleTexture);
-                    ai.DrawDamage(_spriteBatch, healthFont, (int)user.WeaponDamage);
-                }              
-                    
-                                                 
-                foreach (LaserClass bullet in enemyLaserList)                
+                    ai.Draw(_spriteBatch);
+                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture);
+                    ai.DrawDamage(_spriteBatch, healthFont, (int)user.WeaponDamage, damgaeMultiplyer);
+                }
+
+
+                foreach (LaserClass bullet in enemyLaserList)
                     bullet.Draw(_spriteBatch, arrowTexture);
 
-                
+
                 //Hud               
 
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
-                _spriteBatch.DrawString(healthFont,  $"{user.Health}", new Vector2(550, 900), Color.White);
-               
-               
+                _spriteBatch.DrawString(healthFont, $"{user.Health}", new Vector2(550, 900), Color.White);
+
+
             }
             else if (screen == Screen.PauseScreen)
             {
