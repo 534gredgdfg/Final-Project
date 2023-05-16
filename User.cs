@@ -226,7 +226,7 @@ namespace Final_Project
                 _gunInterval = 2.3f;
             }
         }
-       
+
         public Rectangle GetBoundingBox()
         {
             return new Rectangle(_location.X, _location.Y, _location.Width, _location.Height);
@@ -238,22 +238,22 @@ namespace Final_Project
             {
                 if (Hitbox().Intersects(barrier.GetBoundingBox()))
                     UndoMoveH();
-                
 
-              
+
+
             }
 
             _location.Y += (int)_speed.Y + (int)backSpeed.Y;
 
             foreach (Barriers barrier in barriers)
             {
-                if (Hitbox().Intersects(barrier.GetBoundingBox()))                
+                if (Hitbox().Intersects(barrier.GetBoundingBox()))
                     UndoMoveV();
-                    
-                
-                    
+
+
+
             }
-            
+
         }
 
         public void UndoMove()
@@ -277,12 +277,12 @@ namespace Final_Project
         {
             _drawSheild = "false";
         }
-      
+
 
         public void UserAttackMelee(List<Player> enemys, Player user, List<Barriers> barriers)
         {
-            
-       
+
+
             Attack();
             foreach (Player troops in enemys)
             {
@@ -296,7 +296,7 @@ namespace Final_Project
             }
             foreach (Barriers barrier in barriers)
             {
-                       
+
 
                 if (LightSaberHitBoxRight().Intersects(barrier.Rect()))
                     barrier.Health -= (int)WeaponDamage;
@@ -308,8 +308,8 @@ namespace Final_Project
 
             }
 
-            
-            
+
+
 
         }
         public void EnemyAttackMelee(List<Player> enemys, Player user, List<Barriers> barriers)
@@ -384,7 +384,7 @@ namespace Final_Project
         }
         public Rectangle Barrierbox()
         {
-            return new Rectangle(_location.X + _location.Width / 3, _location.Y + _location.Height / 3, _location.Width - 2*_location.Width / 3, _location.Height - 2*_location.Height / 3);
+            return new Rectangle(_location.X + _location.Width / 3, _location.Y + _location.Height / 3, _location.Width - 2 * _location.Width / 3, _location.Height - 2 * _location.Height / 3);
         }
 
         public Rectangle Largebox()
@@ -403,7 +403,7 @@ namespace Final_Project
         {
             _attack = "true";
         }
-       
+
 
         public void EnemyHit()
         {
@@ -461,20 +461,34 @@ namespace Final_Project
         {
             SpriteEffects direction;
 
-            if (HSpeed < 0 )
+            
+            if (HSpeed < 0 && mouseX < _location.X)
             {
                 direction = SpriteEffects.FlipHorizontally;
 
 
             }
-            //stuff
+            else if (HSpeed > 0)
+            {
+                direction = SpriteEffects.None;
+
+            }
+            else if (HSpeed < 0)
+            {
+                direction = SpriteEffects.FlipHorizontally;
+
+
+            }
             else if (mouseX < _location.X)
             {
+                
                 direction = SpriteEffects.FlipHorizontally;
 
 
             }
-            else
+
+
+            else 
                 direction = SpriteEffects.None;
 
 

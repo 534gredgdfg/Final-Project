@@ -17,8 +17,8 @@ namespace Final_Project
         DateTime lastMeleeTimeAi = DateTime.MinValue;
         private SpriteBatch _spriteBatch;
         Player user;
-        Animation AnimationClass;
-        Rectangle cooldownBarRed, cooldownBarWhite;
+
+        Waves WaveClass;
 
 
         Texture2D rectangleTexture, darkTreeTexture,grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture, stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture, laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
@@ -111,8 +111,7 @@ namespace Final_Project
             _graphics.PreferredBackBufferHeight = 600; // Sets the height of the window
             _graphics.ApplyChanges(); // Applies the new dimensions
 
-            cooldownBarRed = new Rectangle(160, mainScreenHeight - 50, 0, 25);
-            cooldownBarWhite = new Rectangle(160, mainScreenHeight - 50, 200, 25);
+         
 
 
 
@@ -207,7 +206,7 @@ namespace Final_Project
 
 
             }
-
+            
 
 
 
@@ -238,6 +237,17 @@ namespace Final_Project
         //-----------------------------------------------------------------------Update--------------------------------------------------------------------------------------
         protected override void Update(GameTime gameTime)
         {
+            static void AddGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList)
+            {
+                enemys.Add(new Player(new Rectangle(100, 100, 200, 100), 100, "goblin melee", "slow", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList));
+
+            }
+            static void AddArcher(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList)
+            {
+                enemys.Add(new Player(new Rectangle(100, 100, 200, 100), 100, "arrow", "slow", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList));
+
+            }
+
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -285,7 +295,21 @@ namespace Final_Project
                     }
                     wave = 1;
                 }
-                
+
+
+                if (stormtrooperlist.Count == 0)
+                {
+                    wave++;
+
+                    for (int i = 0; wave <= 3; i++)
+                    {
+                        AddGoblin(stormtrooperlist, AiRightList, AiMeleeRightList);
+                    }
+                }
+              
+
+
+              
 
        
 
