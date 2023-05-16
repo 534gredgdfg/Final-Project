@@ -467,6 +467,7 @@ namespace Final_Project
 
 
             }
+            //stuff
             else if (mouseX < _location.X)
             {
                 direction = SpriteEffects.FlipHorizontally;
