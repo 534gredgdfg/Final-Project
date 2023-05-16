@@ -272,7 +272,7 @@
 /processorParam:TextureFormat=Color
 /build:lightning3.png
 
-#begin NightBorne Attacking Right Scaled.png
+#begin NatureSprite-Dark-Tree.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,255,255,255
@@ -282,9 +282,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:NightBorne Attacking Right Scaled.png
+/build:NatureSprite-Dark-Tree.png
 
-#begin NightBorne IdleLeft Scaled.png
+#begin NatureSprite-Darker-Tree.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,255,255,255
@@ -294,9 +294,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:NightBorne IdleLeft Scaled.png
+/build:NatureSprite-Darker-Tree.png
 
-#begin NightBorne IdleRight Scaled.png
+#begin NatureSprite-Gray-Rock.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,255,255,255
@@ -306,31 +306,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:NightBorne IdleRight Scaled.png
-
-#begin NightBorne Running Left Scaled.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:NightBorne Running Left Scaled.png
-
-#begin NightBorne Running Right Scaled.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:NightBorne Running Right Scaled.png
+/build:NatureSprite-Gray-Rock.png
 
 #begin rectangle.png
 /importer:TextureImporter
@@ -344,6 +320,18 @@
 /processorParam:TextureFormat=Color
 /build:rectangle.png
 
+#begin spritesheet (10).png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spritesheet (10).png
+
 #begin spritesheet (5)L.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -355,4 +343,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:spritesheet (5)L.png
+
+#begin spritesheet (9).png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spritesheet (9).png
 

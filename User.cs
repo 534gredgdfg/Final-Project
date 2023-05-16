@@ -16,6 +16,7 @@ namespace Final_Project
         private Rectangle redBar;
         private Rectangle grayBar;
         private Rectangle whiteBar;
+        private DateTime lastMeleeTime = DateTime.MinValue;
         private Vector2 _speed;
         private int _health;
         private int height;
@@ -222,17 +223,37 @@ namespace Final_Project
             else if (_weapontype == "goblin melee")
             {
                 _damage = 17;
-                _gunInterval = 1.8f;
+                _gunInterval = 2.3f;
             }
         }
+       
         public Rectangle GetBoundingBox()
         {
             return new Rectangle(_location.X, _location.Y, _location.Width, _location.Height);
         }
-        private void Move(Vector2 backSpeed)
+        private void Move(Vector2 backSpeed, List<Barriers> barriers)
         {
             _location.X += (int)_speed.X + (int)backSpeed.X;
+            foreach (Barriers barrier in barriers)
+            {
+                if (Hitbox().Intersects(barrier.GetBoundingBox()))
+                    UndoMoveH();
+                
+
+              
+            }
+
             _location.Y += (int)_speed.Y + (int)backSpeed.Y;
+
+            foreach (Barriers barrier in barriers)
+            {
+                if (Hitbox().Intersects(barrier.GetBoundingBox()))                
+                    UndoMoveV();
+                    
+                
+                    
+            }
+            
         }
 
         public void UndoMove()
@@ -256,6 +277,89 @@ namespace Final_Project
         {
             _drawSheild = "false";
         }
+      
+
+        public void UserAttackMelee(List<Player> enemys, Player user, List<Barriers> barriers)
+        {
+            
+       
+            Attack();
+            foreach (Player troops in enemys)
+            {
+
+                if (LightSaberHitBoxRight().Intersects(troops.Hitbox()))
+                    troops.Health -= WeaponDamage;
+
+
+                else if (LightSaberHitBoxLeft().Intersects(troops.Hitbox()))
+                    troops.Health -= WeaponDamage;
+            }
+            foreach (Barriers barrier in barriers)
+            {
+                       
+
+                if (LightSaberHitBoxRight().Intersects(barrier.Rect()))
+                    barrier.Health -= (int)WeaponDamage;
+
+
+                else if (LightSaberHitBoxLeft().Intersects(barrier.Rect()))
+                    barrier.Health -= (int)WeaponDamage;
+
+
+            }
+
+            
+            
+
+        }
+        public void EnemyAttackMelee(List<Player> enemys, Player user, List<Barriers> barriers)
+        {
+            TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
+
+
+            if (timeSinceLastAttack.TotalSeconds >= GunInterval)
+            {
+                if (enemys == null)
+                {
+
+                    foreach (Barriers barrier in barriers)
+                    {
+                        if (_location.Intersects(barrier.GetBoundingBox()))
+                        {
+                            Attack();
+                            lastMeleeTime = DateTime.Now; // update last shot time 
+
+                            if (LightSaberHitBoxRight().Intersects(barrier.Rect()))
+                                barrier.BarrierHit((int)WeaponDamage);
+
+
+                            else if (LightSaberHitBoxLeft().Intersects(barrier.Rect()))
+                                barrier.BarrierHit((int)WeaponDamage);
+                        }
+
+                    }
+                }
+                else if (_location.Intersects(user.GetBoundingBox()))
+                {
+                    Attack();
+                    lastMeleeTime = DateTime.Now; // update last shot time 
+
+
+                    if (LightSaberHitBoxRight().Intersects(user.Hitbox()))
+                        user.Health -= WeaponDamage;
+
+
+                    else if (LightSaberHitBoxLeft().Intersects(user.Hitbox()))
+                        user.Health -= WeaponDamage;
+
+
+                }
+
+            }
+
+
+        }
+
         public string Sheilding
         {
             get { return _drawSheild; }
@@ -278,7 +382,11 @@ namespace Final_Project
         {
             return new Rectangle(_location.X + _location.Width / 3, _location.Y, _location.Width - _location.Width / 2, _location.Height);
         }
-      
+        public Rectangle Barrierbox()
+        {
+            return new Rectangle(_location.X + _location.Width / 3, _location.Y + _location.Height / 3, _location.Width - 2*_location.Width / 3, _location.Height - 2*_location.Height / 3);
+        }
+
         public Rectangle Largebox()
         {
             return new Rectangle(_location.X - 30, _location.Y - 30, _location.Width + 60, _location.Height + 60);
@@ -311,7 +419,7 @@ namespace Final_Project
             _location.Y = rand.Next(225, 675 - height);
         }
 
-        public void Update(Vector2 backSpeed)
+        public void Update(Vector2 backSpeed, List<Barriers> barriers)
         {
 
             if (_attack == "true")
@@ -323,8 +431,10 @@ namespace Final_Project
                 _attack = "false";
             }
 
-
-            _walkingSpeed += 0.1;
+            if (_drawSheild == "true")
+                _walkingSpeed += 0.07;
+            else
+                _walkingSpeed += 0.1;
             if (_walkingSpeed >= _walkingTextures.Count - 0.5)
             {
                 _walkingSpeed = 0;
@@ -344,18 +454,20 @@ namespace Final_Project
                 greenBar.Width -= 1;
 
 
-
-
-
-
-            Move(backSpeed);
+            Move(backSpeed, barriers);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, int mouseX)
         {
             SpriteEffects direction;
 
-            if (HSpeed < 0)
+            if (HSpeed < 0 )
+            {
+                direction = SpriteEffects.FlipHorizontally;
+
+
+            }
+            else if (mouseX < _location.X)
             {
                 direction = SpriteEffects.FlipHorizontally;
 

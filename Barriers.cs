@@ -10,13 +10,14 @@ namespace Final_Project
         private Texture2D _texture;
         private Vector2 _speed;
         private Rectangle _rect;
+        private int _health;
 
-
-        public Barriers(Texture2D texture, Rectangle rect)
+        public Barriers(Texture2D texture, Rectangle rect, int health)
         {
             _texture = texture;
             _rect = rect;
             _speed = new Vector2();
+            _health = health;
         }
         public float HSpeed
         {
@@ -28,14 +29,38 @@ namespace Final_Project
             get { return _speed.Y; }
             set { _speed.Y = value; }
         }
-        private void Move(Vector2 backSpeed)
+        public int Health
+        {
+            get { return _health; }
+            set { _health = value; }
+        }
+        public Rectangle Rect()
+        {
+            return new Rectangle(_rect.X , _rect.Y , _rect.Width, _rect.Height);
+        }
+        private void Move(Vector2 backSpeed, List<Barriers> barriers)
         {
             _rect.X += (int)_speed.X + (int)backSpeed.X;
+            
             _rect.Y += (int)_speed.Y + (int)backSpeed.Y;
+            
+          
         }
-        public void Update(Vector2 backSpeed)
+        public void UndoMoveH()
         {
-            Move(backSpeed);
+            _rect.X -= (int)_speed.X;
+        }
+        public void UndoMoveV()
+        {
+            _rect.Y -= (int)_speed.Y;
+        }
+        public void Update(Vector2 backSpeed, List<Barriers> barriers)
+        {
+            Move(backSpeed, barriers);
+        }
+        public void BarrierHit(int damage)
+        {
+            _health -= damage;
         }
 
         public Rectangle GetBoundingBox()
@@ -44,7 +69,7 @@ namespace Final_Project
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, _rect, Color.Black);
+            spriteBatch.Draw(_texture, _rect, Color.White);
         }
     }
 }
