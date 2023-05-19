@@ -49,7 +49,7 @@
 /processorParam:TextureFormat=Color
 /build:ArrowMove.png
 
-#begin C:/Users/owenr/Downloads/Attack.png
+#begin Attack_Goblin.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,255,255,255
@@ -59,7 +59,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:C:/Users/owenr/Downloads/Attack.png;Attack.png
+/build:Attack_Goblin.png
+
+#begin Attack_Skel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Attack_Skel.png
 
 #begin C:/Users/owenr/Downloads/AttackArcher_scaled.png
 /importer:TextureImporter
@@ -169,6 +181,18 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/spritesheet (6).png;spritesheet (6).png
 
+#begin C:/Users/owenr/Downloads/Take Hit_Skel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Take Hit_Skel.png;Take Hit_Skel.png
+
 #begin C:/Users/owenr/Downloads/UserSheildIdleSprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -192,6 +216,13 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/UserSheildWalkSprite.png;UserSheildWalkSprite.png
+
+#begin DamageText.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:DamageText.spritefont
 
 #begin EmptyGreenBar.png
 /importer:TextureImporter
@@ -355,4 +386,52 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:spritesheet (9).png
+
+#begin Take Hit_Archer.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Take Hit_Archer.png
+
+#begin Take Hit_Goblin.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Take Hit_Goblin.png
+
+#begin Walk_Skel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Walk_Skel.png
+
+#begin WizardCrosshair.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:WizardCrosshair.png
 

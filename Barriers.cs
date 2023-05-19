@@ -17,7 +17,7 @@ namespace Final_Project
             _texture = texture;
             _rect = rect;
             _speed = new Vector2();
-            _health = health;
+            _health = rect.Width + rect.Height;
         }
         public float HSpeed
         {

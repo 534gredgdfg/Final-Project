@@ -25,18 +25,7 @@ namespace Final_Project
             set { waveNumber = (int)value; }
         }
        
-      /*
-        public void AddGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList)
-        {
-            enemys.Add(new Player(new Rectangle(100, 100, 200, 100), 100, "goblin melee", "slow", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList));
-
-        }
-        public void AddArcher(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList)
-        {
-            enemys.Add(new Player(new Rectangle(100, 100, 200, 100), 100, "arrow", "slow", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList));
-
-        }
-      */
+    
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, _rect, Color.White);
