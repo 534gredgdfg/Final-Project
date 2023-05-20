@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:Attack_Skel.png
 
+#begin Attack_Worm.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Attack_Worm.png
+
 #begin C:/Users/owenr/Downloads/AttackArcher_scaled.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -303,6 +315,18 @@
 /processorParam:TextureFormat=Color
 /build:lightning3.png
 
+#begin Move_Fire_Ball.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Move_Fire_Ball.png
+
 #begin NatureSprite-Dark-Tree.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -411,6 +435,18 @@
 /processorParam:TextureFormat=Color
 /build:Take Hit_Goblin.png
 
+#begin Take Hit_Worm.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Take Hit_Worm.png
+
 #begin Walk_Skel.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -422,6 +458,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Walk_Skel.png
+
+#begin Walk_Worm.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Walk_Worm.png
+
+#begin Wizard_Skill_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Wizard_Skill_1.png
 
 #begin WizardCrosshair.png
 /importer:TextureImporter

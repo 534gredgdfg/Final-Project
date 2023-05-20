@@ -69,7 +69,12 @@ namespace Final_Project
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, _rect, Color.White);
+            if (_health > (_rect.Width + _rect.Height)/2)
+                spriteBatch.Draw(_texture, _rect, Color.White);
+            else if (_health < (_rect.Width + _rect.Height)/2 && _health > (_rect.Width + _rect.Height) / 4)
+                spriteBatch.Draw(_texture, _rect, Color.LightGray);
+            else
+                spriteBatch.Draw(_texture, _rect, Color.Gray);
         }
     }
 }
