@@ -11,13 +11,18 @@ namespace Final_Project
         private Vector2 _speed;
         private Rectangle _rect;
         private int _health;
-
-        public Barriers(Texture2D texture, Rectangle rect, int health)
+        private Color _color;
+        private string _brakable;
+        private string _blocking;
+        public Barriers(Texture2D texture, Rectangle rect, int health, Color color, string brakable, string blocking)
         {
             _texture = texture;
             _rect = rect;
             _speed = new Vector2();
             _health = rect.Width + rect.Height;
+            _color = color;
+            _brakable = brakable;
+            _blocking = blocking;
         }
         public float HSpeed
         {
@@ -34,6 +39,16 @@ namespace Final_Project
             get { return _health; }
             set { _health = value; }
         }
+        public string Breakable
+        {
+            get { return _brakable; }
+            set { _brakable = value; }
+        }
+        public string Blocking
+        {
+            get { return _blocking; }
+            set { _blocking = value; }
+        }
         public Rectangle Rect()
         {
             return new Rectangle(_rect.X , _rect.Y , _rect.Width, _rect.Height);
@@ -46,9 +61,17 @@ namespace Final_Project
             
           
         }
+        
         public void UndoMoveH()
         {
             _rect.X -= (int)_speed.X;
+        }
+        public void TakeHit(int damage)
+        {
+            if (_brakable == "true" )
+            {
+                _health -= damage;
+            }
         }
         public void UndoMoveV()
         {
@@ -58,11 +81,7 @@ namespace Final_Project
         {
             Move(backSpeed, barriers);
         }
-        public void BarrierHit(int damage)
-        {
-            _health -= damage;
-        }
-
+       
         public Rectangle GetBoundingBox()
         {
             return new Rectangle(_rect.X, _rect.Y, _rect.Width, _rect.Height);
@@ -70,7 +89,7 @@ namespace Final_Project
         public void Draw(SpriteBatch spriteBatch)
         {
             if (_health > (_rect.Width + _rect.Height)/2)
-                spriteBatch.Draw(_texture, _rect, Color.White);
+                spriteBatch.Draw(_texture, _rect, _color);
             else if (_health < (_rect.Width + _rect.Height)/2 && _health > (_rect.Width + _rect.Height) / 4)
                 spriteBatch.Draw(_texture, _rect, Color.LightGray);
             else

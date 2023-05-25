@@ -39,7 +39,7 @@ namespace Final_Project
         {
 
             velocity = new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation)) * 5f;
-            velocity = velocity * 3;
+            velocity = velocity * 2;
 
             position += velocity;
             rect.X = (int)position.X ;

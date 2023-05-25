@@ -85,6 +85,18 @@
 /processorParam:TextureFormat=Color
 /build:Attack_Worm.png
 
+#begin Blacksmith_Working.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Blacksmith_Working.png
+
 #begin C:/Users/owenr/Downloads/AttackArcher_scaled.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -267,6 +279,30 @@
 /processorParam:TextureFormat=Color
 /build:Goblin Running Left.png
 
+#begin Grass_Sample.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Grass_Sample.png
+
+#begin Herbale_Maker.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Herbale_Maker.png
+
 #begin Ice Shot.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -363,6 +399,18 @@
 /processorParam:TextureFormat=Color
 /build:NatureSprite-Gray-Rock.png
 
+#begin Postion_Maker.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Postion_Maker.png
+
 #begin rectangle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -374,6 +422,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:rectangle.png
+
+#begin Speed_Maker.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Speed_Maker.png
 
 #begin spritesheet (10).png
 /importer:TextureImporter
