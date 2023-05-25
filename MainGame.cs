@@ -22,7 +22,7 @@ namespace Final_Project
       
 
 
-        Texture2D rectangleTexture, grassTexture,AiSkelHitTexture, AiGoblinHitTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture, stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture, laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
+        Texture2D rectangleTexture, hutBlueTexture,hutTexture, grassTexture, AiSkelHitTexture, AiGoblinHitTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture, stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture, laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
         Vector2 backroundSpeed;
         int userspeed = 2;
         int damageBoost = 0;
@@ -34,9 +34,10 @@ namespace Final_Project
         int movedDistanceX = 0;
         int movedDistanceY = 0;
         int wave = 0;
-        
+        Color dimScreenColor;
         bool RespawnMethold = false;
         bool boost = false;
+        bool fading;
 
         
 
@@ -120,10 +121,10 @@ namespace Final_Project
             // TODO: Add your initialization logic here
             screen = Screen.TitleScreen;
 
-            _graphics.PreferredBackBufferWidth = 800; // Sets the width of the window
-            _graphics.PreferredBackBufferHeight = 600; // Sets the height of the window
+            _graphics.PreferredBackBufferWidth = mainGameWidth; // Sets the width of the window
+            _graphics.PreferredBackBufferHeight = mainScreenHeight; // Sets the height of the window
             _graphics.ApplyChanges(); // Applies the new dimensions
-
+            dimScreenColor = new Color(0, 0, 0, 0);
             base.Initialize();
             //Texture, x, y, width, health, heatup amount, firable shots
             user = new Player(new Rectangle(500, 500, 150, 130), 1000, "melee", "normal", userRightList, userIdleList, userSheildWalkList, userSheildIdleList, userAttackList, AiRightList, userSkillSheildList);
@@ -135,15 +136,15 @@ namespace Final_Project
             npcList.Add(new Npc(new Rectangle(990, 770, 50, 90), merchantList));
 
             //Buttons
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(100, 150, 150, 150), Color.Yellow, "health"));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(100, 150, 150, 150), Color.DarkSlateGray, "health"));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 150, 150, 150), Color.Blue, "sheild time"));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 150, 150, 150), Color.DarkSlateGray, "sheild time"));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 750, 150, 150), Color.Red, "speed boost"));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 750, 150, 150), Color.DarkSlateGray, "speed boost"));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(100, 750, 150, 150), Color.Orange, "damage boost"));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(100, 750, 150, 150), Color.DarkSlateGray, "damage boost"));
 
-            //Top Walldw
+            //Top Wall
             barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, 60), 10000, Color.Black, "false", "true"));
             //Left Wall
             barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, 60, mainGameHeight * 3), 10000, Color.Black, "false", "true"));
@@ -167,7 +168,7 @@ namespace Final_Project
             emptyGreenBarTexture = Content.Load<Texture2D>("EmptyGreenBar");
             healthGreenBarTexture = Content.Load<Texture2D>("HealhGreenBar");
 
-            healthFont = Content.Load<SpriteFont>("HealthFont");
+            healthFont = Content.Load<SpriteFont>("Good");
             damageFont = Content.Load<SpriteFont>("DamageText");
 
             wizardCrosshair = Content.Load<Texture2D>("WizardCrosshair");
@@ -207,6 +208,8 @@ namespace Final_Project
             Texture2D herbaleTexture = Content.Load<Texture2D>("Herbale_Maker");
             Texture2D merchantTexture = Content.Load<Texture2D>("Speed_Maker");
             grassTexture = Content.Load<Texture2D>("Grass_Sample");
+            hutTexture = Content.Load<Texture2D>("Decorations_Hut");
+            hutBlueTexture = Content.Load<Texture2D>("Decorations_Bluehut");
             //Projectiles
             Texture2D fireBallTexture = Content.Load<Texture2D>("Move_Fire_Ball");
             lightningTexture1 = Content.Load<Texture2D>("lightning1");
@@ -287,6 +290,8 @@ namespace Final_Project
         //-----------------------------------------------------------------------Update--------------------------------------------------------------------------------------
         protected override void Update(GameTime gameTime)
         {
+            mouseState = Mouse.GetState();
+            keyboardState = Keyboard.GetState();
             static void AddGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
@@ -369,13 +374,35 @@ namespace Final_Project
 
                     user.VSpeed = 0;
 
+            }
+            static void DimingScreen(ref bool fading, KeyboardState keyboardState, ref Color dimScreenColor, ref Player user, ref Screen screen)
+            {
+                if (keyboardState.IsKeyDown(Keys.Tab))               
+                    fading = true;
+                
+                if (fading)                
+                    dimScreenColor.A = (byte)Math.Min(dimScreenColor.A + 5, 255);
+                
+                if (dimScreenColor.A >= 255)
+                {
+                    if (screen == Screen.TitleScreen)                   
+                        screen = Screen.MainScreen;
+                    
+                    else if (screen == Screen.MainScreen)                    
+                        screen = Screen.PauseScreen;
+                    
+                    else if (screen == Screen.PauseScreen)                  
+                        screen = Screen.MainScreen;
+                    
 
-
+                    fading = false;
+                    dimScreenColor.A = 0;
+                    user.XLocation = 600;
+                    user.YLocation =450;
+                    
+                }
             }
 
-
-            mouseState = Mouse.GetState();
-            keyboardState = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -384,19 +411,7 @@ namespace Final_Project
 
             if (screen == Screen.TitleScreen)
             {
-
-
-                if (keyboardState.IsKeyDown(Keys.S))
-                {
-                    screen = Screen.MainScreen;
-
-                    _graphics.PreferredBackBufferWidth = mainGameWidth; // Sets the width of the window
-                    _graphics.PreferredBackBufferHeight = mainScreenHeight; // Sets the height of the window
-                    _graphics.ApplyChanges(); // Applies the new dimensions
-
-                }
-
-
+                DimingScreen(ref fading,  keyboardState, ref dimScreenColor, ref user, ref screen);
 
             }
             else if (screen == Screen.MainScreen)
@@ -451,13 +466,12 @@ namespace Final_Project
                             }
                         }
                     }
-                    else if (keyboardState.IsKeyDown(Keys.O))
-                    {
-                        
-                        user.XLocation = 50;
-                        user.YLocation = 300;
-                        screen = Screen.PauseScreen;
-                    }
+                    else
+                        DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen);
+
+
+
+
                 }
 
                 var distance = new Vector2(mouseState.X - playerPosition.X, mouseState.Y - playerPosition.Y);
@@ -635,7 +649,7 @@ namespace Final_Project
                     {
                         troops.DrawEnemyAttackMelee(user);
                         if (troops.Attacking == "false")
-                            troops.EnemyAttackMelee(stormtrooperlist, user, barriersList, null, new Vector2(0, 0), null, null);
+                            troops.EnemyAttackMelee(user, barriersList, null, new Vector2(0, 0), null, null);
                     }
                     //Enemy Shoot
 
@@ -643,7 +657,7 @@ namespace Final_Project
                     {
                         troops.DrawEnemyAttackMelee(null);
                         if (troops.Attacking == "false")
-                            troops.EnemyAttackMelee(stormtrooperlist, user, barriersList, enemyLaserList, playerPosition, fireBallList, ArrowShotList);
+                            troops.EnemyAttackMelee(user, barriersList, enemyLaserList, playerPosition, fireBallList, ArrowShotList);
 
                     }
 
@@ -657,7 +671,7 @@ namespace Final_Project
                         {
                             
                             if (troops.Attacking == "false")
-                                troops.EnemyAttackMelee(null, null, barriersList, null, new Vector2(0, 0), null, null);
+                                troops.EnemyAttackMelee(null, barriersList, null, new Vector2(0, 0), null, null);
                         }
 
 
@@ -812,11 +826,11 @@ namespace Final_Project
             else if (screen == Screen.PauseScreen)
             {
                 seconds = user.SheildSeconds;
-                if (keyboardState.IsKeyDown(Keys.I))
-                {
-                    screen = Screen.MainScreen;
+                
+                
+                 DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen);
 
-                }
+                
 
                 MoveingUser(user, userspeed, keyboardState);
 
@@ -868,7 +882,8 @@ namespace Final_Project
 
 
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOrange);
-
+                // - screen fade
+                _spriteBatch.Draw(rectangleTexture, new Rectangle(0,0,_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), dimScreenColor);
             }
             else if (screen == Screen.MainScreen)
             {
@@ -908,28 +923,40 @@ namespace Final_Project
 
 
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
-
+                // - screen fade
+                _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), dimScreenColor);
             }
             else if (screen == Screen.PauseScreen)
             {
-                _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.ForestGreen);
-                //Hud               
+                //Backround
+                _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOliveGreen);
+                //Buttons
+                foreach (Buttons button in buttonList)
+                {
+                    button.Draw(_spriteBatch);
+                }
+                
+                //Structures Far
+                _spriteBatch.Draw(hutBlueTexture, new Rectangle(66  , 0, 240, 200), Color.White);
+                foreach (Npc npc in npcList)
+                    npc.Draw(_spriteBatch);
 
+                _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
+                user.Draw(_spriteBatch, mouseState.X);
+
+                //Structures Close
+                _spriteBatch.Draw(hutTexture, new Rectangle(162, 660, 200,200), Color.White);
+                
+
+                //Hud               
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
                 _spriteBatch.DrawString(healthFont, $"{user.Health}", new Vector2(550, 900), Color.White);
                 _spriteBatch.DrawString(healthFont, $"{wave}", new Vector2(400, 900), Color.White);
                 _spriteBatch.DrawString(healthFont, $"{user.Points}", new Vector2(800, 900), Color.White);
                 _spriteBatch.DrawString(healthFont, (seconds).ToString("0.0"), new Vector2(1000, 900), Color.CornflowerBlue);
 
-                
-                foreach (Buttons button in buttonList)
-                {
-                    button.Draw(_spriteBatch);
-                }
-                foreach (Npc npc in npcList)
-                    npc.Draw(_spriteBatch);
-                _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
-                user.Draw(_spriteBatch, mouseState.X);
+                // - screen fade
+                _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), dimScreenColor);
             }
             else if (screen == Screen.OutroScreen)
             {

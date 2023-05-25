@@ -115,16 +115,7 @@ namespace Final_Project
             get { return _location.Right; }
             set { _location.X = (int)value; }
         }
-        public float Width
-        {
-            get { return width; }
-            set { width = (int)value; }
-        }
-        public float Height
-        {
-            get { return height; }
-            set { height = (int)value; }
-        }
+        
         public float YLocationBottom
         {
             get { return _location.Bottom; }
@@ -253,32 +244,32 @@ namespace Final_Project
             }
             else if (_weapontype == "sheild melee")
             {
-                _damage = 89 + boostDamage;
+                _damage = 80 + boostDamage;
                 _gunInterval = 0f;
             }
             else if (_weapontype == "arrow")
             {
                 _damage = 38;
-                _gunInterval = 2f;
+                _gunInterval = 2.3f;
                 _killpoints = 60;
             }
             else if (_weapontype == "goblin melee")
             {
-                _damage = 17;
-                _gunInterval = 2.3f;
+                _damage = 18;
+                _gunInterval = 2.4f;
                 _killpoints = 50;
             }
             else if (_weapontype == "fast goblin melee")
             {
-                _damage = 13;
-                _gunInterval = 1.9f;
+                _damage = 9;
+                _gunInterval = 1.2f;
                 _killpoints = 55;
             }
             else if (_weapontype == "skel melee")
             {
-                _damage = 26;
-                _gunInterval = 3.5f;
-                _killpoints = 45;
+                _damage = 40;
+                _gunInterval = 5f;
+                _killpoints = 55;
             }
             else if (_weapontype == "fire ball")
             {
@@ -405,7 +396,7 @@ namespace Final_Project
                         playerPosition = new Vector2(XLocationRight, YLocation);
                     else
                         playerPosition = new Vector2(XLocation, YLocation);
-                    laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 25, 20)));
+                    laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 30, 25)));
                 }
             }
                
@@ -441,7 +432,7 @@ namespace Final_Project
             }
            
         }
-        public void EnemyAttackMelee(List<Player> enemys, Player user, List<Barriers> barriers, List<LaserClass> enemyLaserList, Vector2 playerPositions, List<Texture2D> texture1, List<Texture2D> texture2)
+        public void EnemyAttackMelee( Player user, List<Barriers> barriers, List<LaserClass> enemyLaserList, Vector2 playerPositions, List<Texture2D> texture1, List<Texture2D> texture2)
         {
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
 
@@ -471,6 +462,7 @@ namespace Final_Project
                 else if (_location.Intersects(user.GetBoundingBox()))
                 {
                    
+
                     lastMeleeTime = DateTime.Now; // update last shot time 
 
                     if (LightSaberHitBoxRight().Intersects(user.Hitbox()))
@@ -718,10 +710,10 @@ namespace Final_Project
             {
                 _damageTextLocation.X += (int)_damageTextVector.X + (int)backSpeed.X;
                 _damageTextLocation.Y += (int)_damageTextVector.Y + (int)backSpeed.Y;
-                if (userWeapon == "wizard ball")
+                if (headshotMultiplyer != 1)
                     spriteBatch.DrawString(FontText, $"{userDamage * headshotMultiplyer}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.Yellow);
                 else
-                    spriteBatch.DrawString(FontText, $"{userDamage}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.Yellow);
+                    spriteBatch.DrawString(FontText, $"{userDamage}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.White);
             }
 
         }

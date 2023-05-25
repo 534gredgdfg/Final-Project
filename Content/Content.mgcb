@@ -248,6 +248,30 @@
 /processorParam:TextureFormat=Compressed
 /build:DamageText.spritefont
 
+#begin Decorations_BlueHut.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Decorations_BlueHut.png
+
+#begin Decorations_Hut.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Decorations_Hut.png
+
 #begin EmptyGreenBar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -278,6 +302,13 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Goblin Running Left.png
+
+#begin Good.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Good.spritefont
 
 #begin Grass_Sample.png
 /importer:TextureImporter
