@@ -133,6 +133,30 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/HealhGreenbar.png;HealhGreenbar.png
 
+#begin C:/Users/owenr/Downloads/Intro_Final_Project.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Intro_Final_Project.png;Intro_Final_Project.png
+
+#begin C:/Users/owenr/Downloads/Minotaur_Walk.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Minotaur_Walk.png;Minotaur_Walk.png
+
 #begin C:/Users/owenr/Downloads/RunArcher_scaled.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -381,6 +405,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:lightning3.png
+
+#begin Minotaur_Attack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Minotaur_Attack.png
+
+#begin Minotaur_Hit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Minotaur_Hit.png
 
 #begin Move_Fire_Ball.png
 /importer:TextureImporter

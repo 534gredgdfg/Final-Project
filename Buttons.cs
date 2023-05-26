@@ -44,7 +44,7 @@ namespace Final_Project
                 user.BoostSpeed += 1;
                
             }
-            else if (user.Points >= 300)
+            else if (_type == "damage boost" && user.Points >= 300)
             {
                 user.Points -= 300;
                 user.BoostDamage += 4;
@@ -53,9 +53,14 @@ namespace Final_Project
             
                 
         }
-       
-    
-       
+        public string Type
+        {
+            get { return _type; }
+            set { _type = value; }
+        }
+
+
+
         public bool Contains(Rectangle item)
         {
             return _rect.Intersects(item);

@@ -22,7 +22,7 @@ namespace Final_Project
       
 
 
-        Texture2D rectangleTexture, hutBlueTexture,hutTexture, grassTexture, AiSkelHitTexture, AiGoblinHitTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture, stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture, laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
+        Texture2D rectangleTexture, introBackroundTexture, hutBlueTexture,hutTexture, grassTexture, AiSkelHitTexture, AiGoblinHitTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture, stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture, laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
         Vector2 backroundSpeed;
         int userspeed = 2;
         int damageBoost = 0;
@@ -38,7 +38,7 @@ namespace Final_Project
         bool RespawnMethold = false;
         bool boost = false;
         bool fading;
-
+        bool bossBattle = false;
         
 
         double damgaeMultiplyer = 1;
@@ -75,7 +75,11 @@ namespace Final_Project
         List<Texture2D> AiSkelRightList;
         List<Texture2D> AiSkelMeleeRightList;
         List<Texture2D> AiSkelHitList;
-        
+
+        List<Texture2D> minoRightList;
+        List<Texture2D> minoMeleeRightList;
+        List<Texture2D> minoHitList;
+
         List<Texture2D> blacksmithList;
         List<Texture2D> postionList;
         List<Texture2D> herbaleList;
@@ -104,7 +108,8 @@ namespace Final_Project
         {
             TitleScreen,
             MainScreen,
-            PauseScreen,
+            StoreScreen,
+            
             OutroScreen
         }
         Screen screen;
@@ -127,7 +132,7 @@ namespace Final_Project
             dimScreenColor = new Color(0, 0, 0, 0);
             base.Initialize();
             //Texture, x, y, width, health, heatup amount, firable shots
-            user = new Player(new Rectangle(500, 500, 150, 130), 1000, "melee", "normal", userRightList, userIdleList, userSheildWalkList, userSheildIdleList, userAttackList, AiRightList, userSkillSheildList);
+            user = new Player(new Rectangle(500, 500, 150, 130), 1000, "melee", 2, userRightList, userIdleList, userSheildWalkList, userSheildIdleList, userAttackList, AiRightList, userSkillSheildList);
 
             //Add Npc
             npcList.Add(new Npc(new Rectangle(150, 100, 70, 100), herbaleList));
@@ -143,6 +148,8 @@ namespace Final_Project
             buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 750, 150, 150), Color.DarkSlateGray, "speed boost"));
 
             buttonList.Add(new Buttons(rectangleTexture, new Rectangle(100, 750, 150, 150), Color.DarkSlateGray, "damage boost"));
+
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 350, 160, 160), Color.DarkRed, "boss battle"));
 
             //Top Wall
             barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, 60), 10000, Color.Black, "false", "true"));
@@ -163,7 +170,9 @@ namespace Final_Project
 
 
             // TODO: use this.Content to load your game content here
+            
             rectangleTexture = Content.Load<Texture2D>("rectangle");
+            introBackroundTexture = Content.Load<Texture2D>("Intro_Final_Project");
             //Hud
             emptyGreenBarTexture = Content.Load<Texture2D>("EmptyGreenBar");
             healthGreenBarTexture = Content.Load<Texture2D>("HealhGreenBar");
@@ -202,6 +211,10 @@ namespace Final_Project
             Texture2D AiWormMeleeRightTexture = Content.Load<Texture2D>("Attack_Worm"); 
             Texture2D AiWormHitTexture = Content.Load<Texture2D>("Take Hit_Worm");
 
+            //Bosses
+            Texture2D minoWalkTexture = Content.Load<Texture2D>("Minotaur_Walk");
+            Texture2D minoMeleeTexture = Content.Load<Texture2D>("Minotaur_Attack");
+            Texture2D minoHitTexture = Content.Load<Texture2D>("Minotaur_Hit");
             //Npc's
             Texture2D blacksmithTexture = Content.Load<Texture2D>("Blacksmith_Working"); 
             Texture2D postionTexture = Content.Load<Texture2D>("Postion_Maker");
@@ -273,6 +286,11 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, AiWormWalkingRight, AiWormRightList = new List<Texture2D>(), 9);
             ReapetingAnimation(GraphicsDevice, AiWormMeleeRightTexture, AiWormMeleeRightList = new List<Texture2D>(), 16);
             ReapetingAnimation(GraphicsDevice, AiWormHitTexture, AiWormHitList = new List<Texture2D>(), 3);
+
+            //Bosses
+            ReapetingAnimation(GraphicsDevice, minoWalkTexture, minoRightList = new List<Texture2D>(), 8);
+            ReapetingAnimation(GraphicsDevice, minoMeleeTexture, minoMeleeRightList = new List<Texture2D>(), 9);
+            ReapetingAnimation(GraphicsDevice, minoHitTexture, minoHitList = new List<Texture2D>(), 3);
             //Npc
             ReapetingAnimation(GraphicsDevice, blacksmithTexture, blacksmithList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, postionTexture, postionList = new List<Texture2D>(), 19);
@@ -295,32 +313,38 @@ namespace Final_Project
             static void AddGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 200, 100), 100, "goblin melee", "slow", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 200, 100), 100, "goblin melee", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void AddFastGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 180, 90), 80, "fast goblin melee", "fast", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 180, 90), 80, "fast goblin melee", 2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
 
             static void AddSkel(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 250, 125), 130, "skel melee", "slow", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 250, 125), 130, "skel melee",1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void AddArcher(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 200, 100), 95, "arrow", "slow", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 200, 100), 95, "arrow", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void AddWorm(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 220, 100), 175, "fire ball", "slow", AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 220, 100), 175, "fire ball", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+
+            }
+            static void AddMinotaur(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
+            {
+                Random rand = new Random();
+                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 150, 140), 450, "minotaur", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void MoveingUser(Player user, int userspeed, KeyboardState keyboardState)
@@ -332,7 +356,7 @@ namespace Final_Project
                     if (user.Sheilding == "false")
                         user.HSpeed = userspeed + user.BoostSpeed;
                     else
-                        user.HSpeed = 2;
+                        user.HSpeed = (userspeed + user.BoostSpeed )/ 2;
                 }
 
                 else if (keyboardState.IsKeyDown(Keys.A))
@@ -342,7 +366,7 @@ namespace Final_Project
                     if (user.Sheilding == "false")
                         user.HSpeed = -userspeed - user.BoostSpeed;
                     else
-                        user.HSpeed = -2;
+                        user.HSpeed = (-userspeed - user.BoostSpeed) / 2;
 
                 }
 
@@ -356,7 +380,7 @@ namespace Final_Project
                     if (user.Sheilding == "false")
                         user.VSpeed = -userspeed - user.BoostSpeed;
                     else
-                        user.VSpeed = -2;
+                        user.VSpeed = (-userspeed - user.BoostSpeed) / 2;
 
                 }
 
@@ -367,7 +391,7 @@ namespace Final_Project
                     if (user.Sheilding == "false")
                         user.VSpeed = userspeed + user.BoostSpeed;
                     else
-                        user.VSpeed = 2;
+                        user.VSpeed = (userspeed +   user.BoostSpeed) / 2;
                 }
 
                 else
@@ -375,11 +399,13 @@ namespace Final_Project
                     user.VSpeed = 0;
 
             }
-            static void DimingScreen(ref bool fading, KeyboardState keyboardState, ref Color dimScreenColor, ref Player user, ref Screen screen)
+            static void DimingScreen(ref bool fading, KeyboardState keyboardState, ref Color dimScreenColor, ref Player user, ref Screen screen, string type)
             {
-                if (keyboardState.IsKeyDown(Keys.Tab))               
-                    fading = true;
                 
+                
+                if (keyboardState.IsKeyDown(Keys.Tab))
+                    fading = true;
+
                 if (fading)                
                     dimScreenColor.A = (byte)Math.Min(dimScreenColor.A + 5, 255);
                 
@@ -389,11 +415,15 @@ namespace Final_Project
                         screen = Screen.MainScreen;
                     
                     else if (screen == Screen.MainScreen)                    
-                        screen = Screen.PauseScreen;
+                        screen = Screen.StoreScreen;
                     
-                    else if (screen == Screen.PauseScreen)                  
-                        screen = Screen.MainScreen;
+                    else if (screen == Screen.StoreScreen)
+                    {                      
+                            screen = Screen.MainScreen;
+                    }               
+                        
                     
+
 
                     fading = false;
                     dimScreenColor.A = 0;
@@ -411,7 +441,7 @@ namespace Final_Project
 
             if (screen == Screen.TitleScreen)
             {
-                DimingScreen(ref fading,  keyboardState, ref dimScreenColor, ref user, ref screen);
+                DimingScreen(ref fading,  keyboardState, ref dimScreenColor, ref user, ref screen, "title");
 
             }
             else if (screen == Screen.MainScreen)
@@ -443,31 +473,40 @@ namespace Final_Project
                     {
                         wave += 1;
                         RespawnMethold = false;
-                        for (int i = 0; stormtrooperlist.Count <= rand.Next(0, wave); i++)
+                        if  (bossBattle == true)
                         {
-                            enemyType = rand.Next(0, 6);
-                            switch (enemyType)
+                            AddMinotaur(stormtrooperlist, minoRightList, minoMeleeRightList, minoHitList);
+                        }
+                        else
+                        {
+                            for (int i = 0; stormtrooperlist.Count <= rand.Next(0, wave); i++)
                             {
-                                case 1:
-                                    AddArcher(stormtrooperlist, AiArcherRightList, AiArcherMeleeRightList, AiArcherHitList);
-                                    break;
-                                case 2:
-                                    AddFastGoblin(stormtrooperlist, AiRightList, AiMeleeRightList, AiGoblinHitList);
-                                    break;
-                                case 3:
-                                    AddGoblin(stormtrooperlist, AiRightList, AiMeleeRightList, AiGoblinHitList);
-                                    break;
-                                case 4:
-                                    AddWorm(stormtrooperlist, AiWormRightList, AiWormMeleeRightList, AiWormHitList);
-                                    break;
-                                case 5:
-                                    AddSkel(stormtrooperlist, AiSkelRightList, AiSkelMeleeRightList, AiSkelHitList);
-                                    break;
+
+                                enemyType = rand.Next(0, 6);
+                                switch (enemyType)
+                                {
+                                    case 1:
+                                        AddArcher(stormtrooperlist, AiArcherRightList, AiArcherMeleeRightList, AiArcherHitList);
+                                        break;
+                                    case 2:
+                                        AddFastGoblin(stormtrooperlist, AiRightList, AiMeleeRightList, AiGoblinHitList);
+                                        break;
+                                    case 3:
+                                        AddGoblin(stormtrooperlist, AiRightList, AiMeleeRightList, AiGoblinHitList);
+                                        break;
+                                    case 4:
+                                        AddWorm(stormtrooperlist, AiWormRightList, AiWormMeleeRightList, AiWormHitList);
+                                        break;
+                                    case 5:
+                                        AddSkel(stormtrooperlist, AiSkelRightList, AiSkelMeleeRightList, AiSkelHitList);
+                                        break;
+                                }
                             }
                         }
+                        
                     }
                     else
-                        DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen);
+                        DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "main");
 
 
 
@@ -651,6 +690,12 @@ namespace Final_Project
                         if (troops.Attacking == "false")
                             troops.EnemyAttackMelee(user, barriersList, null, new Vector2(0, 0), null, null);
                     }
+                    else if (troops.WeaponType == "minotaur" && (troops.Attacking == "false"))
+                    {
+                        troops.DrawEnemyAttackMelee(user);
+                        
+                        troops.EnemyAttackMelee(user, barriersList, null, new Vector2(0, 0), null, null);
+                    }
                     //Enemy Shoot
 
                     else if (troops.WeaponType == "arrow" || troops.WeaponType == "fire ball")
@@ -666,21 +711,13 @@ namespace Final_Project
                     foreach (Barriers barrier in barriersList)
                     {
 
-
-                        if (troops.Hitbox().Intersects(barrier.GetBoundingBox()))
-                        {
-                            
+                        if (troops.Largebox().Intersects(barrier.GetBoundingBox()))
+                        {                                
                             if (troops.Attacking == "false")
-                                troops.EnemyAttackMelee(null, barriersList, null, new Vector2(0, 0), null, null);
+                                troops.EnemyAttackMelee(user, barriersList, null, new Vector2(0, 0), null, null);
                         }
 
-
-
                     }
-
-                    
-
-
 
                 }
                 //Update User Laser
@@ -805,6 +842,10 @@ namespace Final_Project
                     {
                         stormtrooperlist.RemoveAt(i);
                         user.Points += troops.PointsOnKill;
+                        if (bossBattle == true)
+                        {
+                            bossBattle = false;                           
+                        }
                     }
                 }
                 //Detect barrier dealth
@@ -823,15 +864,10 @@ namespace Final_Project
 
 
             }
-            else if (screen == Screen.PauseScreen)
+            else if (screen == Screen.StoreScreen)
             {
                 seconds = user.SheildSeconds;
-                
-                
-                 DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen);
-
-                
-
+ 
                 MoveingUser(user, userspeed, keyboardState);
 
                 foreach(Npc npc in npcList)
@@ -843,24 +879,29 @@ namespace Final_Project
                 }
                 foreach ( Buttons button in buttonList)
                 {
-                    if (keyboardState.IsKeyDown(Keys.B))
+                    
+                    if (button.Contains(user.Hitbox()))
                     {
-                        if (boost == true)
+                        if (keyboardState.IsKeyDown(Keys.B))
                         {
-
-                            if (button.Contains(user.Hitbox()))
+                            if (boost == true)
                             {
                                 button.Boosts(user, (int)user.WeaponDamage);
                                 boost = false;
                             }
-                            
-
                         }
-                    }
-                   
 
+                        if (button.Type == "boss battle")
+                        {
+                            bossBattle = true;
+                            //DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "boss");
+                        }
+
+                    }
                 }
+                DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "store");
             }
+            
             else if (screen == Screen.OutroScreen)
             {
 
@@ -881,16 +922,13 @@ namespace Final_Project
             {
 
 
-                _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOrange);
+                _spriteBatch.Draw(introBackroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
                 // - screen fade
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0,0,_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), dimScreenColor);
             }
             else if (screen == Screen.MainScreen)
             {
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOliveGreen);
-
-
-
 
 
                 foreach (Barriers barrier in barriersList)
@@ -904,7 +942,7 @@ namespace Final_Project
                 foreach (Player ai in stormtrooperlist)
                 {
                     ai.Draw(_spriteBatch, 100000);
-                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture);
+                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle);
                     ai.DrawDamage(_spriteBatch, damageFont, (int)user.WeaponDamage, damgaeMultiplyer, backroundSpeed, user.WeaponType);
                 }
                 user.Draw(_spriteBatch, mouseState.X);
@@ -926,7 +964,7 @@ namespace Final_Project
                 // - screen fade
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), dimScreenColor);
             }
-            else if (screen == Screen.PauseScreen)
+            else if (screen == Screen.StoreScreen)
             {
                 //Backround
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOliveGreen);
@@ -958,10 +996,10 @@ namespace Final_Project
                 // - screen fade
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), dimScreenColor);
             }
+           
             else if (screen == Screen.OutroScreen)
             {
-                _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOrange);
-
+                _spriteBatch.Draw(introBackroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
 
 
             }

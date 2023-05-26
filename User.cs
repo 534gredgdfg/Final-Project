@@ -19,6 +19,7 @@ namespace Final_Project
         private DateTime lastMeleeTime = DateTime.MinValue;
         private DateTime lastMeleeTimes = DateTime.MinValue;
         private Vector2 _speed;
+        private Vector2 _realSpeed;
         private Vector2 _damageTextVector;
         private Vector2 playerPosition;
         private Vector2 enemyPosition;
@@ -62,14 +63,16 @@ namespace Final_Project
 
         List<Texture2D> _hitTextures;
         Random rand = new Random();
-        public Player(Rectangle location, int health, string weapontype, string enemyType, List<Texture2D> walkingTextures, List<Texture2D> standingTextures, List<Texture2D> walkingSheildTextures, List<Texture2D> standingSheildTextures, List<Texture2D> meleeTextures, List<Texture2D> AiHitTextures, List<Texture2D> TransSheildTextures)
+        public Player(Rectangle location, int health, string weapontype, int speed, List<Texture2D> walkingTextures, List<Texture2D> standingTextures, List<Texture2D> walkingSheildTextures, List<Texture2D> standingSheildTextures, List<Texture2D> meleeTextures, List<Texture2D> AiHitTextures, List<Texture2D> TransSheildTextures)
         {
 
             _location = location;
-            _speed = new Vector2();
+            _realSpeed.X = speed;
+            _realSpeed.Y = speed;
+            _speed = new Vector2(0, 0);
             _damageTextLocation = new Rectangle(_location.X, location.Y, 120, 120);
             _health = health;
-            _enemyType = enemyType;
+            
 
             _attack = "false";
             _hit = "false";
@@ -197,34 +200,22 @@ namespace Final_Project
         public void TroopsSpeed(Rectangle user)
         {
             if (user.Y + user.Height / 2 > _location.Bottom)
-            {
-                if (_enemyType == "fast")
-                    _speed.Y = 2;
-                else
-                    _speed.Y = 1;
+            {               
+                    _speed.Y = _realSpeed.Y;
 
             }
             if (user.Bottom - user.Height / 2 < _location.Y)
             {
-                if (_enemyType == "fast")
-                    _speed.Y = -2;
-                else
-                    _speed.Y = -1;
+                _speed.Y = -_realSpeed.Y;
             }
             if (user.X + user.Width / 2 > _location.Right)
             {
-                if (_enemyType == "fast")
-                    _speed.X = 2;
-                else
-                    _speed.X = 1;
+                _speed.X = _realSpeed.X;
 
             }
             if (user.Right - user.Width / 2 < _location.X)
             {
-                if (_enemyType == "fast")
-                    _speed.X = -2;
-                else
-                    _speed.X = -1;
+                _speed.X = -_realSpeed.X;
 
             }
         }
@@ -276,6 +267,14 @@ namespace Final_Project
                 _damage = 54;
                 _gunInterval = 6f;
                 _killpoints = 70;
+            }
+            else if (_weapontype == "minotaur")
+            {
+                _damage = 112;
+                _gunInterval = 2.6f;
+                _killpoints = 300;
+                if (_health <= 250)
+                    _realSpeed = new Vector2(2,2);
             }
         }
 
@@ -432,7 +431,7 @@ namespace Final_Project
             }
            
         }
-        public void EnemyAttackMelee( Player user, List<Barriers> barriers, List<LaserClass> enemyLaserList, Vector2 playerPositions, List<Texture2D> texture1, List<Texture2D> texture2)
+        public void EnemyAttackMelee(Player user, List<Barriers> barriers, List<LaserClass> enemyLaserList, Vector2 playerPositions, List<Texture2D> texture1, List<Texture2D> texture2)
         {
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
 
@@ -717,9 +716,18 @@ namespace Final_Project
             }
 
         }
-        public void DrawHealth(SpriteBatch spriteBatch, Texture2D emptytTexture, Texture2D fullTexture)
+        public void DrawHealth(SpriteBatch spriteBatch, Texture2D emptytTexture, Texture2D fullTexture, bool bossBattle)
         {
-
+            if (bossBattle == true)
+            {
+                redBar.X = 1400/2-redBar.Width/2;
+                redBar.Y = 50;
+                greenBar.X = 1400 / 2 - redBar.Width / 2;
+                greenBar.Y = 50;
+                redBar.Height = 18;
+                greenBar.Height = 18;
+            }
+            
             spriteBatch.Draw(emptytTexture, redBar, Color.White);
             spriteBatch.Draw(fullTexture, greenBar, Color.White);
 
