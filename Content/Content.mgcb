@@ -109,6 +109,18 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/AttackArcher_scaled.png;AttackArcher_scaled.png
 
+#begin C:/Users/owenr/Downloads/Evil_Move.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Evil_Move.png;Evil_Move.png
+
 #begin C:/Users/owenr/Downloads/Goblin Running Right.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -121,17 +133,41 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Goblin Running Right.png;Goblin Running Right.png
 
-#begin C:/Users/owenr/Downloads/HealhGreenbar.png
+#begin C:/Users/owenr/Downloads/Health_Empty_Boss.png
 /importer:TextureImporter
 /processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyColor=255,255,255,255
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:C:/Users/owenr/Downloads/HealhGreenbar.png;HealhGreenbar.png
+/build:C:/Users/owenr/Downloads/Health_Empty_Boss.png;Health_Empty_Boss.png
+
+#begin C:/Users/owenr/Downloads/Health_Empty.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Health_Empty.png;Health_Empty.png
+
+#begin C:/Users/owenr/Downloads/Health_Full.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Health_Full.png;Health_Full.png
 
 #begin C:/Users/owenr/Downloads/Intro_Final_Project.png
 /importer:TextureImporter
@@ -265,6 +301,54 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/UserSheildWalkSprite.png;UserSheildWalkSprite.png
 
+#begin Crusader_Attack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Crusader_Attack.png
+
+#begin Crusader_Idle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Crusader_Idle.png
+
+#begin Crusader_Run.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Crusader_Run.png
+
+#begin Crusader_Take_Hit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Crusader_Take_Hit.png
+
 #begin DamageText.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -307,6 +391,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:EmptyGreenBar.png
+
+#begin Evil_Attack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Evil_Attack.png
+
+#begin Evil_Take_Hit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Evil_Take_Hit.png
 
 #begin File.spritefont
 /importer:FontDescriptionImporter

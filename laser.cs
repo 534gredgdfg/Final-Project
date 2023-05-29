@@ -52,8 +52,6 @@ namespace Final_Project
                
             }
 
-
-
         }
         public Rectangle GetBoundingBox()
         {

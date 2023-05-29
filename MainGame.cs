@@ -9,24 +9,17 @@ namespace Final_Project
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        DateTime lastShotTime = DateTime.MinValue;
-        DateTime cooldownTime = DateTime.MinValue;
-        DateTime cooldownTimeBar = DateTime.MinValue;
-        DateTime cooldownTimeAi = DateTime.MinValue;
-        DateTime lastShotTimeAi = DateTime.MinValue;
-        DateTime lastMeleeTimeAi = DateTime.MinValue;
-        
+                
         private SpriteBatch _spriteBatch;
         Player user;
 
-      
-
-
         Texture2D rectangleTexture, introBackroundTexture, hutBlueTexture,hutTexture, grassTexture, AiSkelHitTexture, AiGoblinHitTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture, stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture, laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
         Vector2 backroundSpeed;
+        Rectangle targetedEnemy;
+        int t = 0;
         int userspeed = 2;
-        int damageBoost = 0;
-        int boostSpeed = 0;
+        int crusaders = 0;
+        int previousHealth = 0;
         int mainGameWidth = 1400;
         int mainGameHeight = 900;
         int enemyType = 0;
@@ -39,7 +32,8 @@ namespace Final_Project
         bool boost = false;
         bool fading;
         bool bossBattle = false;
-        
+        bool wizardBattle = false;
+        bool foundTarget = false;
 
         double damgaeMultiplyer = 1;
         float seconds;
@@ -75,10 +69,19 @@ namespace Final_Project
         List<Texture2D> AiSkelRightList;
         List<Texture2D> AiSkelMeleeRightList;
         List<Texture2D> AiSkelHitList;
+        
+        List<Texture2D> KnightRightList;
+        List<Texture2D> KnightMeleeRightList;
+        List<Texture2D> KnightIdleList;
+        List<Texture2D> KnightHitList;
 
         List<Texture2D> minoRightList;
         List<Texture2D> minoMeleeRightList;
         List<Texture2D> minoHitList;
+
+        List<Texture2D> wizardRightList;
+        List<Texture2D> wizardMeleeRightList;
+        List<Texture2D> wizardHitList;
 
         List<Texture2D> blacksmithList;
         List<Texture2D> postionList;
@@ -94,7 +97,8 @@ namespace Final_Project
         List<Texture2D> ArrowShotList;
 
         List<Barriers> barriersList = new List<Barriers>();
-        List<Player> stormtrooperlist = new List<Player>();
+        List<Player> enemylist = new List<Player>();
+        List<Player> allylist = new List<Player>();
         List<Npc> npcList = new List<Npc>();
 
         List<LaserClass> laserList = new List<LaserClass>();
@@ -132,7 +136,7 @@ namespace Final_Project
             dimScreenColor = new Color(0, 0, 0, 0);
             base.Initialize();
             //Texture, x, y, width, health, heatup amount, firable shots
-            user = new Player(new Rectangle(500, 500, 150, 130), 1000, "melee", 2, userRightList, userIdleList, userSheildWalkList, userSheildIdleList, userAttackList, AiRightList, userSkillSheildList);
+            user = new Player(new Vector2(500, 500),new Vector2( 126, 110), 1000, "melee", 2, userRightList, userIdleList, userSheildWalkList, userSheildIdleList, userAttackList, AiRightList, userSkillSheildList);
 
             //Add Npc
             npcList.Add(new Npc(new Rectangle(150, 100, 70, 100), herbaleList));
@@ -141,15 +145,19 @@ namespace Final_Project
             npcList.Add(new Npc(new Rectangle(990, 770, 50, 90), merchantList));
 
             //Buttons
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(100, 150, 150, 150), Color.DarkSlateGray, "health"));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(100, 150, 150, 150), Color.DarkSlateGray, "Health Potion", 50));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 150, 150, 150), Color.DarkSlateGray, "sheild time"));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 150, 150, 150), Color.DarkSlateGray, "Sheild Recovery Time Decrease", 250));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 750, 150, 150), Color.DarkSlateGray, "speed boost"));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 750, 150, 150), Color.DarkSlateGray, "Speed Boost", 500));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(100, 750, 150, 150), Color.DarkSlateGray, "damage boost"));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(100, 750, 150, 150), Color.DarkSlateGray, "Damage Boost", 300));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(900, 350, 160, 160), Color.DarkRed, "boss battle"));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(1100, 350, 160, 160), Color.DarkRed, "Minotaur Battle", 0));
+
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(1100, 600, 160, 160), Color.DarkBlue, "Wizard Battle" ,0));
+
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(450, 150, 160, 160), Color.DarkBlue, "Add Crusader", 300));
 
             //Top Wall
             barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, 60), 10000, Color.Black, "false", "true"));
@@ -174,8 +182,8 @@ namespace Final_Project
             rectangleTexture = Content.Load<Texture2D>("rectangle");
             introBackroundTexture = Content.Load<Texture2D>("Intro_Final_Project");
             //Hud
-            emptyGreenBarTexture = Content.Load<Texture2D>("EmptyGreenBar");
-            healthGreenBarTexture = Content.Load<Texture2D>("HealhGreenBar");
+            emptyGreenBarTexture = Content.Load<Texture2D>("Health_Empty");
+            healthGreenBarTexture = Content.Load<Texture2D>("Health_Full");
 
             healthFont = Content.Load<SpriteFont>("Good");
             damageFont = Content.Load<SpriteFont>("DamageText");
@@ -210,11 +218,20 @@ namespace Final_Project
             Texture2D AiWormWalkingRight = Content.Load<Texture2D>("Walk_Worm");
             Texture2D AiWormMeleeRightTexture = Content.Load<Texture2D>("Attack_Worm"); 
             Texture2D AiWormHitTexture = Content.Load<Texture2D>("Take Hit_Worm");
-
+            //Ally
+            Texture2D knightWalkingRight = Content.Load<Texture2D>("Crusader_Run");
+            Texture2D knightMeleeRightTexture = Content.Load<Texture2D>("Crusader_Attack");
+            Texture2D knightIdleTexture = Content.Load<Texture2D>("Crusader_Idle");
+            Texture2D knightHitTexture = Content.Load<Texture2D>("Crusader_Take_Hit");
             //Bosses
             Texture2D minoWalkTexture = Content.Load<Texture2D>("Minotaur_Walk");
             Texture2D minoMeleeTexture = Content.Load<Texture2D>("Minotaur_Attack");
             Texture2D minoHitTexture = Content.Load<Texture2D>("Minotaur_Hit");
+
+            Texture2D wizardWalkTexture = Content.Load<Texture2D>("Evil_Move");
+            Texture2D wizardMeleeTexture = Content.Load<Texture2D>("Evil_Attack");
+            Texture2D wizardHitTexture = Content.Load<Texture2D>("Evil_Take_Hit");
+
             //Npc's
             Texture2D blacksmithTexture = Content.Load<Texture2D>("Blacksmith_Working"); 
             Texture2D postionTexture = Content.Load<Texture2D>("Postion_Maker");
@@ -286,11 +303,19 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, AiWormWalkingRight, AiWormRightList = new List<Texture2D>(), 9);
             ReapetingAnimation(GraphicsDevice, AiWormMeleeRightTexture, AiWormMeleeRightList = new List<Texture2D>(), 16);
             ReapetingAnimation(GraphicsDevice, AiWormHitTexture, AiWormHitList = new List<Texture2D>(), 3);
-
+            //Ally
+            ReapetingAnimation(GraphicsDevice, knightWalkingRight, KnightRightList = new List<Texture2D>(), 6);
+            ReapetingAnimation(GraphicsDevice, knightMeleeRightTexture, KnightMeleeRightList = new List<Texture2D>(), 13);
+            ReapetingAnimation(GraphicsDevice, knightIdleTexture, KnightIdleList = new List<Texture2D>(), 6);
+            ReapetingAnimation(GraphicsDevice, knightHitTexture, KnightHitList = new List<Texture2D>(), 3);
             //Bosses
             ReapetingAnimation(GraphicsDevice, minoWalkTexture, minoRightList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, minoMeleeTexture, minoMeleeRightList = new List<Texture2D>(), 9);
             ReapetingAnimation(GraphicsDevice, minoHitTexture, minoHitList = new List<Texture2D>(), 3);
+
+            ReapetingAnimation(GraphicsDevice, wizardWalkTexture, wizardRightList = new List<Texture2D>(), 8);
+            ReapetingAnimation(GraphicsDevice, wizardMeleeTexture, wizardMeleeRightList = new List<Texture2D>(), 8);
+            ReapetingAnimation(GraphicsDevice, wizardHitTexture, wizardHitList = new List<Texture2D>(), 4);
             //Npc
             ReapetingAnimation(GraphicsDevice, blacksmithTexture, blacksmithList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, postionTexture, postionList = new List<Texture2D>(), 19);
@@ -313,39 +338,48 @@ namespace Final_Project
             static void AddGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 200, 100), 100, "goblin melee", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)),new Vector2( 200, 100), 100, "goblin melee", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void AddFastGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 180, 90), 80, "fast goblin melee", 2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(180, 90), 80, "fast goblin melee", 2.3, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
 
             static void AddSkel(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 250, 125), 130, "skel melee",1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(250, 125), 130, "skel melee", 0.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void AddArcher(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 200, 100), 95, "arrow", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(200, 100), 95, "arrow", 1.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void AddWorm(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 220, 100), 175, "fire ball", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(220, 100), 175, "fire ball", 1.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void AddMinotaur(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Rectangle(rand.Next(0, 1000), rand.Next(0, 300), 150, 140), 450, "minotaur", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
-
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(190, 170), 550, "minotaur", 1.7, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+            }
+            static void AddWizard(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
+            {
+                Random rand = new Random();
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 300, "wizard", 2.3, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+            }
+            static void AddAlly(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList,  List<Texture2D> AiIdleList)
+            {
+                Random rand = new Random();
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(120, 150), 250, "ally melee", 0.9, AiRightList, AiIdleList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
             }
             static void MoveingUser(Player user, int userspeed, KeyboardState keyboardState)
             {
@@ -354,9 +388,9 @@ namespace Final_Project
                 if (keyboardState.IsKeyDown(Keys.D))
                 {
                     if (user.Sheilding == "false")
-                        user.HSpeed = userspeed + user.BoostSpeed;
+                        user.HSpeed = userspeed + (float)user.BoostSpeed;
                     else
-                        user.HSpeed = (userspeed + user.BoostSpeed )/ 2;
+                        user.HSpeed = (userspeed + (float)user.BoostSpeed )/ 2;
                 }
 
                 else if (keyboardState.IsKeyDown(Keys.A))
@@ -364,9 +398,9 @@ namespace Final_Project
 
 
                     if (user.Sheilding == "false")
-                        user.HSpeed = -userspeed - user.BoostSpeed;
+                        user.HSpeed = -userspeed - (float)user.BoostSpeed;
                     else
-                        user.HSpeed = (-userspeed - user.BoostSpeed) / 2;
+                        user.HSpeed = (-userspeed - (float)user.BoostSpeed) / 2;
 
                 }
 
@@ -378,9 +412,9 @@ namespace Final_Project
                 if (keyboardState.IsKeyDown(Keys.W))
                 {
                     if (user.Sheilding == "false")
-                        user.VSpeed = -userspeed - user.BoostSpeed;
+                        user.VSpeed = -userspeed - (float)user.BoostSpeed;
                     else
-                        user.VSpeed = (-userspeed - user.BoostSpeed) / 2;
+                        user.VSpeed = (-userspeed - (float)user.BoostSpeed) / 2;
 
                 }
 
@@ -389,9 +423,9 @@ namespace Final_Project
 
 
                     if (user.Sheilding == "false")
-                        user.VSpeed = userspeed + user.BoostSpeed;
+                        user.VSpeed = userspeed + (float)user.BoostSpeed;
                     else
-                        user.VSpeed = (userspeed +   user.BoostSpeed) / 2;
+                        user.VSpeed = (userspeed + (float)user.BoostSpeed) / 2;
                 }
 
                 else
@@ -446,7 +480,7 @@ namespace Final_Project
             }
             else if (screen == Screen.MainScreen)
             {
-
+                
                 if (wave == 0)
                 {
                     for (int i = 0; barriersList.Count <= 30; i++)
@@ -465,40 +499,54 @@ namespace Final_Project
                 }
                 
                 seconds = (float)gameTime.TotalGameTime.TotalSeconds - sheildTime;
-                if (stormtrooperlist.Count == 0)
+                if (enemylist.Count == 0)
                 {
-                    
-                        
+                    //Make ai move
+                    foreach (Player troops in enemylist)
+                        troops.TroopsSpeed(new Rectangle(0,0,0,0));
+
+                    foreach (Player ally in allylist)
+                        ally.TroopsSpeed(new Rectangle(0, 0, 0, 0));
+                    while (t < crusaders)
+                    {
+                        AddAlly(allylist, KnightRightList, KnightMeleeRightList, KnightHitList,KnightIdleList);
+                        t++;
+                    }
+
                     if (keyboardState.IsKeyDown(Keys.P))
                     {
+   
                         wave += 1;
                         RespawnMethold = false;
                         if  (bossBattle == true)
                         {
-                            AddMinotaur(stormtrooperlist, minoRightList, minoMeleeRightList, minoHitList);
+                            if (wizardBattle == true)
+                                AddWizard(enemylist, wizardRightList,wizardMeleeRightList,wizardHitList);
+                            else
+                                AddMinotaur(enemylist, minoRightList, minoMeleeRightList, minoHitList);
                         }
                         else
                         {
-                            for (int i = 0; stormtrooperlist.Count <= rand.Next(0, wave); i++)
+                            for (int i = 0; enemylist.Count <= rand.Next(0, wave); i++)
                             {
 
                                 enemyType = rand.Next(0, 6);
                                 switch (enemyType)
                                 {
                                     case 1:
-                                        AddArcher(stormtrooperlist, AiArcherRightList, AiArcherMeleeRightList, AiArcherHitList);
+                                        AddArcher(enemylist, AiArcherRightList, AiArcherMeleeRightList, AiArcherHitList);
                                         break;
                                     case 2:
-                                        AddFastGoblin(stormtrooperlist, AiRightList, AiMeleeRightList, AiGoblinHitList);
+                                        AddFastGoblin(enemylist, AiRightList, AiMeleeRightList, AiGoblinHitList);
                                         break;
                                     case 3:
-                                        AddGoblin(stormtrooperlist, AiRightList, AiMeleeRightList, AiGoblinHitList);
+                                        AddGoblin(enemylist, AiRightList, AiMeleeRightList, AiGoblinHitList);
                                         break;
                                     case 4:
-                                        AddWorm(stormtrooperlist, AiWormRightList, AiWormMeleeRightList, AiWormHitList);
+                                        AddWorm(enemylist, AiWormRightList, AiWormMeleeRightList, AiWormHitList);
                                         break;
                                     case 5:
-                                        AddSkel(stormtrooperlist, AiSkelRightList, AiSkelMeleeRightList, AiSkelHitList);
+                                        AddSkel(enemylist, AiSkelRightList, AiSkelMeleeRightList, AiSkelHitList);
                                         break;
                                 }
                             }
@@ -508,13 +556,19 @@ namespace Final_Project
                     else
                         DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "main");
 
+                }
+                else
+                {
+                    //Make ai move
+                    foreach (Player troops in enemylist)
+                        troops.TroopsSpeed(user.Hitbox());
 
-
-
+                    foreach (Player ally in allylist)
+                        ally.TroopsSpeed(targetedEnemy);
                 }
 
                 var distance = new Vector2(mouseState.X - playerPosition.X, mouseState.Y - playerPosition.Y);
-                
+                previousHealth = (int)user.Health;
                 playerRotation = (float)Math.Atan2(distance.Y, distance.X);
                 playerPosition = new Vector2(user.XLocationRight, user.YLocation);
 
@@ -533,7 +587,7 @@ namespace Final_Project
                             break;
                         }
                     }
-                    foreach (Player troops in stormtrooperlist)
+                    foreach (Player troops in enemylist)
                     {
                         for (int i = barriersList.Count - 1; i >= 0; i--)
                         {
@@ -550,14 +604,32 @@ namespace Final_Project
                     RespawnMethold = true;
                 }
 
+                //Define Ally Target
 
+                foreach (Player troops in enemylist)
+                {
+                    if (mouseState.RightButton == ButtonState.Pressed)
+                    {
+                        if (troops.Collide(new Rectangle(mouseState.X, mouseState.Y, 50, 50)))
+                            troops.Target = "target";
+                    }
+                    if (troops.Target == "target")
+                    {
+                        targetedEnemy = new Rectangle((int)troops.XLocation, (int)troops.YLocation, 100, 100);
+                        foreach (Player ally in allylist)
+                        {
+                            foreach (Barriers barrier in barriersList)
+                                if (ally.Collide(barrier.GetBoundingBox()))
+                                    ally.UserAttackMelee(enemylist, barriersList, null, null, 0);
+                                if (ally.Collide(troops.Hitbox()))
+                                    ally.UserAttackMelee(enemylist, barriersList, null, null, 0);
+                        }
+                    }
+                }
 
                 //Make user move
                 MoveingUser(user, userspeed, keyboardState);
 
-                
-                
-                    
                 if (keyboardState.IsKeyDown(Keys.Space))
                 {
                     if (seconds >= user.SheildSeconds && user.Sheilding == "false")
@@ -565,7 +637,7 @@ namespace Final_Project
 
                         user.WeaponType = "sheild melee";
                         
-                        user.UserAttackMelee(stormtrooperlist, barriersList, null, null, 0);
+                        user.UserAttackMelee(enemylist, barriersList, null, null, 0);
                         user.Sheild();
                     }
 
@@ -580,18 +652,6 @@ namespace Final_Project
                 }
                 if (seconds >= user.SheildSeconds)
                     seconds = user.SheildSeconds;
-
-
-
-
-
-                //Make ai move
-                foreach (Player troops in stormtrooperlist)
-                {
-
-                    troops.TroopsSpeed(user.Hitbox());
-
-                }
 
                 backroundSpeed.X = 0;
                 backroundSpeed.Y = 0;
@@ -636,37 +696,34 @@ namespace Final_Project
                         backroundSpeed.X = 0;
 
                 }
-
-
                 movedDistanceX -= (int)backroundSpeed.X;
                 movedDistanceY -= (int)backroundSpeed.Y;
+
+                
+               
 
                 //Update User
                 user.Update(new Vector2(0, 0), barriersList, "main game");
 
-
-
-
-                foreach (Player troops in stormtrooperlist)
-                {
+                foreach (Player ally in allylist)
+                
+                    ally.Update(backroundSpeed, barriersList, "main game");
+                
+                foreach (Player troops in enemylist)
+                
                     troops.Update(backroundSpeed, barriersList, "main game");
-
-
-                }
+                
                 foreach (Barriers barrier in barriersList)
-                {
+                
                     barrier.Update(backroundSpeed, barriersList);
 
-                }
-
                 //User Shots
-               
 
-                if (mouseState.RightButton == ButtonState.Pressed)
+                if (keyboardState.IsKeyDown(Keys.X))                    
                 {
                     user.WeaponType = "melee";
 
-                    user.UserAttackMelee(stormtrooperlist, barriersList, null, null, 0);
+                    user.UserAttackMelee(enemylist, barriersList, null, null, 0);
 
                 }
 
@@ -676,46 +733,38 @@ namespace Final_Project
                     user.WeaponType = "wizard ball";
 
 
-                    user.UserAttackMelee(stormtrooperlist, barriersList, laserList, LightningShotList2, playerRotation);
+                    user.UserAttackMelee(enemylist, barriersList, laserList, LightningShotList2, playerRotation);
 
                 }
                 //Ai Shots
-
-                foreach (Player troops in stormtrooperlist)
+                
+                foreach (Player troops in enemylist)
                 {
                  //Enemy Melee user
-                    if (user.Sheilding == "false" && troops.WeaponType == "goblin melee" || troops.WeaponType == "fast goblin melee" || troops.WeaponType == "skel melee")
+                    
+                    
+                    if (troops.WeaponType == "goblin melee" || troops.WeaponType == "fast goblin melee" || troops.WeaponType == "skel melee")
                     {
                         troops.DrawEnemyAttackMelee(user);
                         if (troops.Attacking == "false")
-                            troops.EnemyAttackMelee(user, barriersList, null, new Vector2(0, 0), null, null);
+                            troops.EnemyAttackMelee(user, barriersList, allylist,enemyLaserList, new Vector2(0, 0), null, null);
                     }
-                    else if (troops.WeaponType == "minotaur" && (troops.Attacking == "false"))
+                    else if ((troops.WeaponType == "minotaur" || troops.WeaponType == "wizard") && troops.Attacking == "false")
                     {
                         troops.DrawEnemyAttackMelee(user);
-                        
-                        troops.EnemyAttackMelee(user, barriersList, null, new Vector2(0, 0), null, null);
+
+                        troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, new Vector2(0, 0), null, null);
                     }
+
+                    
+                    
                     //Enemy Shoot
 
                     else if (troops.WeaponType == "arrow" || troops.WeaponType == "fire ball")
                     {
                         troops.DrawEnemyAttackMelee(null);
                         if (troops.Attacking == "false")
-                            troops.EnemyAttackMelee(user, barriersList, enemyLaserList, playerPosition, fireBallList, ArrowShotList);
-
-                    }
-
-
-                    //Enemy Melee Barrier
-                    foreach (Barriers barrier in barriersList)
-                    {
-
-                        if (troops.Largebox().Intersects(barrier.GetBoundingBox()))
-                        {                                
-                            if (troops.Attacking == "false")
-                                troops.EnemyAttackMelee(user, barriersList, null, new Vector2(0, 0), null, null);
-                        }
+                            troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList);
 
                     }
 
@@ -736,7 +785,7 @@ namespace Final_Project
                 }
 
 
-                foreach (Player troops in stormtrooperlist)
+                foreach (Player troops in enemylist)
                 {
                     troops.ChoosingWeapon();
                 }
@@ -746,7 +795,7 @@ namespace Final_Project
                 {
 
                     LaserClass laser = laserList[i];
-                    foreach (Player troops in stormtrooperlist)
+                    foreach (Player troops in enemylist)
                     {
                         if (troops.Hitbox().Contains(laser.GetBoundingBox()))
                         {
@@ -776,9 +825,9 @@ namespace Final_Project
                     foreach (LaserClass bullet in enemyLaserList)
                     {
 
-                        if (bullet.GetBoundingBox().Intersects(user.Hitbox()) && user.Sheilding == "false")
+                        if (bullet.GetBoundingBox().Intersects(user.Hitbox()))
                         {
-                            foreach (Player troops in stormtrooperlist)
+                            foreach (Player troops in enemylist)
                             {
                                 user.Health -= troops.WeaponDamage;
                             }
@@ -816,7 +865,7 @@ namespace Final_Project
                     {
                         if (t.Collide(barrier.GetBoundingBox()))
                         {
-                            foreach (Player troops in stormtrooperlist)
+                            foreach (Player troops in enemylist)
                                 barrier.TakeHit((int)troops.WeaponDamage);
                             if (barrier.Blocking == "true")
                             {
@@ -827,25 +876,34 @@ namespace Final_Project
                         }
                     }
                 }
-
+                if (user.Sheilding == "true")
+                    user.Health = previousHealth;
                 //Detect user dealth
-                if (user.Health <= 0)
-                {
+                if (user.Health <= 0)               
                     screen = Screen.OutroScreen;
-                }
-                //Detect ai dealth
-                for (int i = stormtrooperlist.Count - 1; i >= 0; i--)
+
+                //Detect ally dealth
+                for (int i = allylist.Count - 1; i >= 0; i--)
                 {
-                    Player troops = stormtrooperlist[i];
+                    Player ally = allylist[i];
+                    if (ally.Health <= 0)                    
+                        allylist.RemoveAt(i);                                         
+                }
+
+                //Detect ai dealth
+                for (int i = enemylist.Count - 1; i >= 0; i--)
+                {
+                    Player troops = enemylist[i];
 
                     if (troops.Health <= 0)
                     {
-                        stormtrooperlist.RemoveAt(i);
+                        enemylist.RemoveAt(i);
                         user.Points += troops.PointsOnKill;
-                        if (bossBattle == true)
-                        {
-                            bossBattle = false;                           
-                        }
+                        
+                       
+                        bossBattle = false;
+                        wizardBattle = false;
+                        
                     }
                 }
                 //Detect barrier dealth
@@ -882,22 +940,35 @@ namespace Final_Project
                     
                     if (button.Contains(user.Hitbox()))
                     {
+                        button.Hovering = "true";
                         if (keyboardState.IsKeyDown(Keys.B))
                         {
                             if (boost == true)
                             {
-                                button.Boosts(user, (int)user.WeaponDamage);
+                                button.Boosts(user, ref crusaders);
                                 boost = false;
                             }
                         }
 
-                        if (button.Type == "boss battle")
+                        if (button.Type == "Minotaur Battle")
                         {
                             bossBattle = true;
-                            //DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "boss");
+                            
                         }
+                        else if (button.Type == "Wizard Battle")
+                        {
+                            bossBattle = true;
+                            wizardBattle = true;
+                           
+                        }
+                       
 
                     }
+                    else
+                    {
+                        button.Hovering = "false";
+                    }
+                        
                 }
                 DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "store");
             }
@@ -939,18 +1010,26 @@ namespace Final_Project
                 foreach (LaserClass bullet in laserList)
                     bullet.Draw(_spriteBatch, laserTexture);
 
-                foreach (Player ai in stormtrooperlist)
+                foreach(Player ally in allylist)
+                {
+                    ally.Draw(_spriteBatch, 100000);
+                }
+                foreach (Player ai in enemylist)
                 {
                     ai.Draw(_spriteBatch, 100000);
                     ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle);
-                    ai.DrawDamage(_spriteBatch, damageFont, (int)user.WeaponDamage, damgaeMultiplyer, backroundSpeed, user.WeaponType);
+                    foreach (Player ally in allylist)
+                        ai.DrawDamage(_spriteBatch, damageFont, (int)user.WeaponDamage, (int)ally.WeaponDamage,damgaeMultiplyer, backroundSpeed, user.WeaponType);
                 }
                 user.Draw(_spriteBatch, mouseState.X);
 
                 foreach (LaserClass bullet in enemyLaserList)
                     bullet.Draw(_spriteBatch, arrowTexture);
 
-
+                if (wizardBattle == true)
+                    _spriteBatch.DrawString(damageFont, "Fire Wizard", new Vector2(mainGameWidth/2 - 80, 0), Color.White);
+                else if (bossBattle == true)
+                    _spriteBatch.DrawString(damageFont, "Minotaur", new Vector2(mainGameWidth / 2 - 80, 0), Color.White);
                 //Hud               
 
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
@@ -969,16 +1048,18 @@ namespace Final_Project
                 //Backround
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOliveGreen);
                 //Buttons
-                foreach (Buttons button in buttonList)
-                {
+                foreach (Buttons button in buttonList)                
                     button.Draw(_spriteBatch);
-                }
                 
                 //Structures Far
-                _spriteBatch.Draw(hutBlueTexture, new Rectangle(66  , 0, 240, 200), Color.White);
+                _spriteBatch.Draw(hutBlueTexture, new Rectangle(66, 0, 240, 200), Color.White);
                 foreach (Npc npc in npcList)
                     npc.Draw(_spriteBatch);
 
+                //Button text
+                foreach (Buttons button in buttonList)             
+                    button.DrawText(_spriteBatch, damageFont);
+                
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
                 user.Draw(_spriteBatch, mouseState.X);
 
