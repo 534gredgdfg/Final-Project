@@ -27,8 +27,10 @@ namespace Final_Project
         private Vector2 enemyPosition;
         private Rectangle _damageTextLocation;
         private int _health;
+        private double animationSpeed = 0.1;
         private int height;
         private int width;
+        private int previousHealth;
         private int _AicooldownTime;
         private int _AiFireableShots;
         private int _damage;
@@ -84,8 +86,7 @@ namespace Final_Project
             _drawSheild = "false";
             _drawingDamage = "false";
         
-            _damageTextVector = new Vector2(rand.Next(-2, 2), rand.Next(-2, -1));
-            _targeted = "not a target";
+           
             _weapontype = weapontype;
             _walkingTextures = walkingTextures;
             _standingTextures = standingTextures;
@@ -155,6 +156,11 @@ namespace Final_Project
         {
             get { return _weapontype; }
             set { _weapontype = value; }
+        }
+        public string EnemyType
+        {
+            get { return _enemyType; }
+            set { _enemyType = value; }
         }
 
         public float WeaponDamage
@@ -262,6 +268,7 @@ namespace Final_Project
             {
                 _damage = 12 + boostDamage;
                 _gunInterval = 3.4f;
+                animationSpeed = 0.08;
             }
 
             //Enemy Traits
@@ -270,42 +277,59 @@ namespace Final_Project
                 _damage = 38;
                 _gunInterval = 2.3f;
                 _killpoints = 60;
+                animationSpeed = 0.09;
+                _enemyType = "shoter";
             }
             else if (_weapontype == "goblin melee")
             {
                 _damage = 18;
                 _gunInterval = 2.4f;
                 _killpoints = 50;
-                
+                _enemyType = "melee";
+
             }
             else if (_weapontype == "fast goblin melee")
             {
                 _damage = 9;
                 _gunInterval = 1.2f;
                 _killpoints = 55;
+                animationSpeed = 0.14;
+                _enemyType = "melee";
             }
             else if (_weapontype == "skel melee")
             {
                 _damage = 40;
                 _gunInterval = 5f;
                 _killpoints = 55;
+                animationSpeed = 0.08;
+                _enemyType = "melee";
             }
             else if (_weapontype == "fire ball")
             {
                 _damage = 54;
                 _gunInterval = 6f;
                 _killpoints = 70;
+                _enemyType = "shoter";
+            }
+            else if (_weapontype == "bat")
+            {
+                _damage = 33;
+                _gunInterval = 1.1f;
+                _killpoints = 68;
+                animationSpeed = 0.12;
+                _enemyType = "melee";
             }
             else if (_weapontype == "minotaur")
             {
                 _damage = 160;
                 _gunInterval = 2.6f;
                 _killpoints = 450;
+                _enemyType = "melee";
                 if (_health <= 200)
                 {
                     _damage = 180;
                     _gunInterval = 2.0f;
-                    _speed = 2.3;
+                    _speed = 3.3;
                     otherColor = Color.Red;
                     hitColor = Color.DarkRed;
                 }   
@@ -316,15 +340,25 @@ namespace Final_Project
                 _damage = 99;
                 _gunInterval = 1.2f;
                 _killpoints = 450;
+                _enemyType = "melee";
                 if (_health <= 150)
                 {
                     _damage = 139;
                     _gunInterval = 0.8f;
-                    _speed = 3.3;
+                    _speed = 4;
                     otherColor = Color.Red;
                     hitColor = Color.DarkRed;
                 }
             }
+            else if (_weapontype == "death")
+            {
+                _damage = 5;
+                _gunInterval = 2.6f;
+                _killpoints = 10000;
+                _enemyType = "both";
+                animationSpeed = 0.09;
+            }
+            
         }
         
         public Rectangle GetBoundingBox()
@@ -333,6 +367,8 @@ namespace Final_Project
         }
         private void Move(Vector2 backSpeed, List<Barriers> barriers, string screen)
         {
+            if (_drawingDamage == "false")
+                previousHealth = _health;
             _location.X += _velocity.X + (int)backSpeed.X ;
             _location.Y += _velocity.Y + (int)backSpeed.Y ;
 
@@ -347,10 +383,7 @@ namespace Final_Project
                         if (Hitbox().Intersects(barrier.GetBoundingBox()))
                             UndoMoveH();
                     }
-
-
                 }
-
                 foreach (Barriers barrier in barriers)
                 {
                     if (barrier.Blocking == "true")
@@ -359,16 +392,11 @@ namespace Final_Project
                             UndoMoveV();
                     }
 
-
-
-
                 }
             }
-           
-
+         
         }
-
-       
+     
         public void UndoMoveH()
         {
             _location.X -= _velocity.X;
@@ -473,14 +501,29 @@ namespace Final_Project
               
            
         }
-        public void EnemyAttackMelee(Player user, List<Barriers> barriers, List<Player> allylist, List<LaserClass> enemyLaserList, Vector2 playerPositions, List<Texture2D> texture1, List<Texture2D> texture2)
+        public void EnemyAttackMelee(Player user, List<Barriers> barriers, List<Player> allylist, List<LaserClass> enemyLaserList, Vector2 playerPositions, List<Texture2D> texture1, List<Texture2D> texture2, List<Texture2D> texture3)
         {
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
 
             if (timeSinceLastAttack.TotalSeconds >= GunInterval)
             {
-                
-                if (WeaponType == "arrow" || WeaponType == "fire ball")
+
+                if (_enemyType == "melee" || _enemyType == "both")
+                {
+                    if (_rectangle.Intersects(user.GetBoundingBox()))
+                    {
+                        lastMeleeTime = DateTime.Now; // update last shot time 
+                        if (LightSaberHitBoxRight().Intersects(user.Hitbox()))
+
+                            user.Health -= _damage;
+
+                        else if (LightSaberHitBoxLeft().Intersects(user.Hitbox()))
+                            user.Health -= _damage;
+                    }
+                    
+
+                }
+                if (_enemyType == "shoter" || EnemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
                 {
                     if (HSpeed > 0)
                         enemyPosition = new Vector2(XLocationRight, YLocation);
@@ -493,56 +536,42 @@ namespace Final_Project
 
 
                     if (WeaponType == "fire ball")
-                        enemyLaserList.Add(new LaserClass(texture1, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 35)));
-                    else
+                        enemyLaserList.Add(new LaserClass(texture1, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 35)));                    
+                    else if(WeaponType == "arrow")
                         enemyLaserList.Add(new LaserClass(texture2, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 30, 8)));
-             
+                    else 
+                        enemyLaserList.Add(new LaserClass(texture3, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 140)));
                     lastMeleeTime = DateTime.Now; // update last shot time  
                 }
                 
-                else if (_rectangle.Intersects(user.GetBoundingBox()))
-                {
-                    lastMeleeTime = DateTime.Now; // update last shot time 
-                    if (LightSaberHitBoxRight().Intersects(user.Hitbox()))
-                    
-                        user.Health -= _damage;
-                                              
-                    else if (LightSaberHitBoxLeft().Intersects(user.Hitbox()))                    
-                    user.Health -= _damage;
-
-                    
-                }
-
                 foreach (Player ally in allylist)
-                {
-
-                    if (GetBoundingBox().Intersects(ally.GetBoundingBox()))
                     {
-                        DrawEnemyAttackMelee(null);
-                        ally.Health -= _damage;
 
-                        lastMeleeTime = DateTime.Now; // update last shot time 
+                        if (GetBoundingBox().Intersects(ally.GetBoundingBox()))
+                        {
+                            DrawEnemyAttackMelee(null);
+                            ally.Health -= _damage;
+
+                            lastMeleeTime = DateTime.Now; // update last shot time 
+
+                        }
+
+                    }
+                    foreach (Barriers barrier in barriers)
+                    {
+
+                        if (GetBoundingBox().Intersects(barrier.GetBoundingBox()))
+                        {
+                            DrawEnemyAttackMelee(null);
+                            barrier.TakeHit((int)_damage);
+
+                            lastMeleeTime = DateTime.Now; // update last shot time 
+
+                        }
 
                     }
 
-                }
-                foreach (Barriers barrier in barriers)
-                {
-
-                    if (GetBoundingBox().Intersects(barrier.GetBoundingBox()))
-                    {
-                        DrawEnemyAttackMelee(null);
-                        barrier.TakeHit((int)_damage);
-
-                        lastMeleeTime = DateTime.Now; // update last shot time 
-
-                    }
-
-                }
                 
-                    
-
-
             }
 
         }
@@ -613,7 +642,7 @@ namespace Final_Project
             if (_attack == "true" && WeaponType == "fire worm")
                 _meleeSpeed += 0.2;
             else if (_attack == "true")
-                _meleeSpeed += 0.1;
+                _meleeSpeed += animationSpeed;
 
             if (_meleeSpeed >= _meleeTextures.Count - 0.5)
             {
@@ -643,10 +672,9 @@ namespace Final_Project
 
             if (_drawSheild == "true")
                 _walkingSpeed += 0.07;
-            else if (WeaponType == "fast goblin melee")
-                _walkingSpeed += 0.15;
+            
             else
-                _walkingSpeed += 0.1;
+                _walkingSpeed += animationSpeed;
 
             if (_walkingSpeed >= _walkingTextures.Count - 0.5)
             {
@@ -752,24 +780,30 @@ namespace Final_Project
 
 
         }
-        public void DrawDamage(SpriteBatch spriteBatch, SpriteFont FontText, int userDamage, int allyDamge,double headshotMultiplyer, Vector2 backSpeed, string userWeapon)
+        public void DrawDamage(SpriteBatch spriteBatch, SpriteFont FontText,double headshotMultiplyer, Vector2 backSpeed, string userWeapon)
         {
 
-
+            _damageTextLocation.X += (int)_damageTextVector.X + (int)backSpeed.X;
+            _damageTextLocation.Y += (int)_damageTextVector.Y + (int)backSpeed.Y;
             if (!_damageTextLocation.Intersects(Hitbox()))
             {
+                _damageTextVector = new Vector2(rand.Next(-2, 2), rand.Next(-2, -1));
+                if (_damageTextVector.X == 0)
+                    _damageTextVector.X = 2;
+
                 ResetEnemyHit();
-                _damageTextLocation.X = Hitbox().X + 50 ;
-                _damageTextLocation.Y = Hitbox().Y + 50;
+                _damageTextLocation.X = Hitbox().X + 50;
+                _damageTextLocation.Y = Hitbox().Y;
             }
             else if (_drawingDamage == "true")
             {
-                _damageTextLocation.X += (int)_damageTextVector.X + (int)backSpeed.X;
-                _damageTextLocation.Y += (int)_damageTextVector.Y + (int)backSpeed.Y;
+                
+                _targeted = "not a target";
+                
                 if (headshotMultiplyer != 1)
-                    spriteBatch.DrawString(FontText, $"{userDamage * headshotMultiplyer}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.Yellow);
+                    spriteBatch.DrawString(FontText, $"{(previousHealth - _health)* headshotMultiplyer}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.Yellow);
                 else
-                    spriteBatch.DrawString(FontText, $"{userDamage}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.White);
+                    spriteBatch.DrawString(FontText, $"{previousHealth - _health}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.White);
             }
 
         }

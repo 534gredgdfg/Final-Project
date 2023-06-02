@@ -13,7 +13,7 @@ namespace Final_Project
         private SpriteBatch _spriteBatch;
         Player user;
 
-        Texture2D rectangleTexture, introBackroundTexture, hutBlueTexture,hutTexture, grassTexture, AiSkelHitTexture, AiGoblinHitTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherWalkingLeft, AiArcherMeleeRightTexture, stormtroperAimingLeft, AiWalkingRight, AiWalkingLeft, AiMeleeRightTexture, laserTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture, userIdleLeftTexture;
+        Texture2D rectangleTexture, introBackroundTexture, hutBlueTexture,hutTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
         Vector2 backroundSpeed;
         Rectangle targetedEnemy;
         int t = 0;
@@ -66,6 +66,10 @@ namespace Final_Project
         List<Texture2D> AiWormMeleeRightList;
         List<Texture2D> AiWormHitList;
 
+        List<Texture2D> BatRightList;
+        List<Texture2D> BatMeleeRightList;
+        List<Texture2D> BatHitList;
+
         List<Texture2D> AiSkelRightList;
         List<Texture2D> AiSkelMeleeRightList;
         List<Texture2D> AiSkelHitList;
@@ -83,6 +87,11 @@ namespace Final_Project
         List<Texture2D> wizardMeleeRightList;
         List<Texture2D> wizardHitList;
 
+        List<Texture2D> deathRightList;
+        List<Texture2D> deathMeleeRightList;
+       
+        List<Texture2D> deathSpellList;
+
         List<Texture2D> blacksmithList;
         List<Texture2D> postionList;
         List<Texture2D> herbaleList;
@@ -95,6 +104,7 @@ namespace Final_Project
         List<Texture2D> LightningShotList3;
 
         List<Texture2D> ArrowShotList;
+        List<Texture2D> DeathShotList;
 
         List<Barriers> barriersList = new List<Barriers>();
         List<Player> enemylist = new List<Player>();
@@ -195,7 +205,7 @@ namespace Final_Project
             darkerTreeTexture = Content.Load<Texture2D>("NatureSprite-Darker-Tree");
             //User
             userWalkingRight = Content.Load<Texture2D>("spritesheet (2)");
-            userWalkingLeft = Content.Load<Texture2D>("spritesheet (2)");
+            
             userAttackRightTexture = Content.Load<Texture2D>("spritesheet (5)");
             userAttackLeftTexture = Content.Load<Texture2D>("spritesheet (5)L");
             userIdleTexture = Content.Load<Texture2D>("spritesheet (10)");
@@ -203,21 +213,25 @@ namespace Final_Project
             userSheildWalkTexture = Content.Load<Texture2D>("UserSheildWalkSprite");
             userSheildIdleTexture = Content.Load<Texture2D>("UserSheildIdleSprite");
             //Ai
-            AiWalkingRight = Content.Load<Texture2D>("Goblin Running Right");            
-            AiMeleeRightTexture = Content.Load<Texture2D>("Attack");
-            AiGoblinHitTexture = Content.Load<Texture2D>("Take Hit_Goblin");
+            Texture2D AiWalkingRight = Content.Load<Texture2D>("Goblin Running Right");
+            Texture2D AiMeleeRightTexture = Content.Load<Texture2D>("Attack");
+            Texture2D AiGoblinHitTexture = Content.Load<Texture2D>("Take Hit_Goblin");
 
-            AiArcherWalkingRight = Content.Load<Texture2D>("RunArcher_scaled");          
-            AiArcherMeleeRightTexture = Content.Load<Texture2D>("AttackArcher_scaled");
+            Texture2D AiArcherWalkingRight = Content.Load<Texture2D>("RunArcher_scaled");
+            Texture2D AiArcherMeleeRightTexture = Content.Load<Texture2D>("AttackArcher_scaled");
             Texture2D AiArcherHitTexture = Content.Load<Texture2D>("Take Hit_Archer");
 
-            AiSkelWalkingRight = Content.Load<Texture2D>("Walk_Skel");           
-            AiSkelMeleeRightTexture = Content.Load<Texture2D>("Attack_Skel");
-            AiSkelHitTexture = Content.Load<Texture2D>("Take Hit_Skel");
+            Texture2D AiSkelWalkingRight = Content.Load<Texture2D>("Walk_Skel");
+            Texture2D AiSkelMeleeRightTexture = Content.Load<Texture2D>("Attack_Skel");
+            Texture2D AiSkelHitTexture = Content.Load<Texture2D>("Take Hit_Skel");
 
             Texture2D AiWormWalkingRight = Content.Load<Texture2D>("Walk_Worm");
             Texture2D AiWormMeleeRightTexture = Content.Load<Texture2D>("Attack_Worm"); 
             Texture2D AiWormHitTexture = Content.Load<Texture2D>("Take Hit_Worm");
+
+            Texture2D BatWalkingRight = Content.Load<Texture2D>("Bat_Fly");
+            Texture2D BatMeleeRightTexture = Content.Load<Texture2D>("Bat_Attack");
+            Texture2D BatHitTexture = Content.Load<Texture2D>("Bat_Take_Hit");
             //Ally
             Texture2D knightWalkingRight = Content.Load<Texture2D>("Crusader_Run");
             Texture2D knightMeleeRightTexture = Content.Load<Texture2D>("Crusader_Attack");
@@ -232,12 +246,16 @@ namespace Final_Project
             Texture2D wizardMeleeTexture = Content.Load<Texture2D>("Evil_Attack");
             Texture2D wizardHitTexture = Content.Load<Texture2D>("Evil_Take_Hit");
 
+            Texture2D deathWalkTexture = Content.Load<Texture2D>("Reaper_Walk");
+            Texture2D deathMeleeTexture = Content.Load<Texture2D>("Reaper_Attack");           
+            Texture2D deathSpellTexture = Content.Load<Texture2D>("Reaper_Shot");
+            
             //Npc's
             Texture2D blacksmithTexture = Content.Load<Texture2D>("Blacksmith_Working"); 
             Texture2D postionTexture = Content.Load<Texture2D>("Postion_Maker");
             Texture2D herbaleTexture = Content.Load<Texture2D>("Herbale_Maker");
             Texture2D merchantTexture = Content.Load<Texture2D>("Speed_Maker");
-            grassTexture = Content.Load<Texture2D>("Grass_Sample");
+            
             hutTexture = Content.Load<Texture2D>("Decorations_Hut");
             hutBlueTexture = Content.Load<Texture2D>("Decorations_Bluehut");
             //Projectiles
@@ -246,6 +264,7 @@ namespace Final_Project
             lightningTexture2 = Content.Load<Texture2D>("lightning2");
             lightningTexture3 = Content.Load<Texture2D>("lightning3");
             arrowTexture = Content.Load<Texture2D>("ArrowMove");
+            Texture2D deathTexture = Content.Load<Texture2D>("Reaper_Summon");
 
             static void ReapetingAnimation(GraphicsDevice graphicsDevice, Texture2D _texture, List<Texture2D> _textureList, int _diffImages)
             {
@@ -303,6 +322,10 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, AiWormWalkingRight, AiWormRightList = new List<Texture2D>(), 9);
             ReapetingAnimation(GraphicsDevice, AiWormMeleeRightTexture, AiWormMeleeRightList = new List<Texture2D>(), 16);
             ReapetingAnimation(GraphicsDevice, AiWormHitTexture, AiWormHitList = new List<Texture2D>(), 3);
+
+            ReapetingAnimation(GraphicsDevice, BatWalkingRight, BatRightList = new List<Texture2D>(), 8);
+            ReapetingAnimation(GraphicsDevice, BatMeleeRightTexture, BatMeleeRightList = new List<Texture2D>(), 8);
+            ReapetingAnimation(GraphicsDevice, BatHitTexture, BatHitList = new List<Texture2D>(), 4);
             //Ally
             ReapetingAnimation(GraphicsDevice, knightWalkingRight, KnightRightList = new List<Texture2D>(), 6);
             ReapetingAnimation(GraphicsDevice, knightMeleeRightTexture, KnightMeleeRightList = new List<Texture2D>(), 13);
@@ -316,6 +339,11 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, wizardWalkTexture, wizardRightList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, wizardMeleeTexture, wizardMeleeRightList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, wizardHitTexture, wizardHitList = new List<Texture2D>(), 4);
+
+            ReapetingAnimation(GraphicsDevice, deathWalkTexture, deathRightList = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, deathMeleeTexture, deathMeleeRightList = new List<Texture2D>(), 6);            
+            ReapetingAnimation(GraphicsDevice, deathSpellTexture, deathSpellList = new List<Texture2D>(), 4);
+
             //Npc
             ReapetingAnimation(GraphicsDevice, blacksmithTexture, blacksmithList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, postionTexture, postionList = new List<Texture2D>(), 19);
@@ -329,6 +357,8 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, lightningTexture3, LightningShotList3 = new List<Texture2D>(), 4);
 
             ReapetingAnimation(GraphicsDevice, arrowTexture, ArrowShotList = new List<Texture2D>(), 4);
+
+            ReapetingAnimation(GraphicsDevice, deathTexture, DeathShotList = new List<Texture2D>(), 4);
         }
         //-----------------------------------------------------------------------Update--------------------------------------------------------------------------------------
         protected override void Update(GameTime gameTime)
@@ -338,7 +368,7 @@ namespace Final_Project
             static void AddGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)),new Vector2( 200, 100), 100, "goblin melee", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)),new Vector2( 200, 100), 100, "goblin melee", 1.5, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void AddFastGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
@@ -363,18 +393,29 @@ namespace Final_Project
             static void AddWorm(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(220, 100), 175, "fire ball", 1.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(220, 100), 175, "fire ball", 1.4, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+
+            }
+            static void AddBat(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
+            {
+                Random rand = new Random();
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(125, 90), 75, "bat", 2.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
 
             }
             static void AddMinotaur(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(190, 170), 550, "minotaur", 1.7, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(190, 170), 550, "minotaur", 2.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
             }
             static void AddWizard(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 300, "wizard", 2.3, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 300, "wizard", 3.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList));
+            }
+            static void AddBringerOfDeath(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList)
+            {
+                Random rand = new Random();
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 800, "death", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiRightList, AiRightList));
             }
             static void AddAlly(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList,  List<Texture2D> AiIdleList)
             {
@@ -530,7 +571,8 @@ namespace Final_Project
                             for (int i = 0; enemylist.Count <= rand.Next(0, wave); i++)
                             {
 
-                                enemyType = rand.Next(0, 6);
+                                //enemyType = rand.Next(0,7);
+                                enemyType =7;
                                 switch (enemyType)
                                 {
                                     case 1:
@@ -547,6 +589,12 @@ namespace Final_Project
                                         break;
                                     case 5:
                                         AddSkel(enemylist, AiSkelRightList, AiSkelMeleeRightList, AiSkelHitList);
+                                        break;
+                                    case 6:
+                                        AddBat(enemylist, BatRightList, BatMeleeRightList, BatHitList);
+                                        break;
+                                    case 7:
+                                        AddBringerOfDeath(enemylist, deathRightList, deathMeleeRightList);
                                         break;
                                 }
                             }
@@ -743,31 +791,31 @@ namespace Final_Project
                  //Enemy Melee user
                     
                     
-                    if (troops.WeaponType == "goblin melee" || troops.WeaponType == "fast goblin melee" || troops.WeaponType == "skel melee")
+                    if (troops.EnemyType == "melee" || troops.EnemyType == "both" || troops.EnemyType == "shoter")
                     {
                         troops.DrawEnemyAttackMelee(user);
                         if (troops.Attacking == "false")
-                            troops.EnemyAttackMelee(user, barriersList, allylist,enemyLaserList, new Vector2(0, 0), null, null);
+                            troops.EnemyAttackMelee(user, barriersList, allylist,enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
                     }
                     else if ((troops.WeaponType == "minotaur" || troops.WeaponType == "wizard") && troops.Attacking == "false")
                     {
                         troops.DrawEnemyAttackMelee(user);
 
-                        troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, new Vector2(0, 0), null, null);
+                        troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, new Vector2(0, 0), null, null, null);
                     }
 
                     
-                    
+                    /*
                     //Enemy Shoot
 
-                    else if (troops.WeaponType == "arrow" || troops.WeaponType == "fire ball")
+                    else if (troops.EnemyType == "shoter")
                     {
                         troops.DrawEnemyAttackMelee(null);
                         if (troops.Attacking == "false")
-                            troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList);
+                            troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
 
                     }
-
+                    */
                 }
                 //Update User Laser
                 foreach (LaserClass bullet in laserList)
@@ -1006,22 +1054,21 @@ namespace Final_Project
                     barrier.Draw(_spriteBatch);
 
                 //Draw all the bullets
-
                 foreach (LaserClass bullet in laserList)
-                    bullet.Draw(_spriteBatch, laserTexture);
-
-                foreach(Player ally in allylist)
+                    bullet.Draw(_spriteBatch, lightningTexture2);
+                user.Draw(_spriteBatch, mouseState.X);
+                foreach (Player ally in allylist)
                 {
                     ally.Draw(_spriteBatch, 100000);
+                   
                 }
                 foreach (Player ai in enemylist)
                 {
                     ai.Draw(_spriteBatch, 100000);
-                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle);
-                    foreach (Player ally in allylist)
-                        ai.DrawDamage(_spriteBatch, damageFont, (int)user.WeaponDamage, (int)ally.WeaponDamage,damgaeMultiplyer, backroundSpeed, user.WeaponType);
+                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle);                   
+                    ai.DrawDamage(_spriteBatch, damageFont,damgaeMultiplyer, backroundSpeed, user.WeaponType);
                 }
-                user.Draw(_spriteBatch, mouseState.X);
+               
 
                 foreach (LaserClass bullet in enemyLaserList)
                     bullet.Draw(_spriteBatch, arrowTexture);
