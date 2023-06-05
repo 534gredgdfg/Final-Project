@@ -429,7 +429,7 @@ namespace Final_Project
             static void AddAlly(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList,  List<Texture2D> AiIdleList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(120, 150), 250, "ally melee", 0.9, AiRightList, AiIdleList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(120, 150), 250, "ally melee", 0.9 , AiRightList, AiIdleList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
             }
             static void MakeSpwanPoints(int mainGameWidth, int mainGameHeight, ref Vector2 spawnPoint)
             {
@@ -540,8 +540,10 @@ namespace Final_Project
                 DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "title");
 
             }
+            //------------------------------------------Main Screen Update------------------------------------------------
             else if (screen == Screen.MainScreen)
             {
+                
                 foreach (Player troops in enemylist)
                     if (troops.GetBoundingBox().Intersects(new Rectangle(0, 0, mainGameWidth, mainGameHeight)))
                         toStore = false;
@@ -558,13 +560,13 @@ namespace Final_Project
                 }
 
                 seconds = (float)gameTime.TotalGameTime.TotalSeconds - sheildTime;
-                if (bossBattle == true) 
+                if (bossBattle == true)
                 {
                     if (keyboardState.IsKeyDown(Keys.P) && enemylist.Count == 0)
                     {
                         wave += 1;
                         RespawnMethold = false;
-                        
+
 
                         if (wizardBattle == true)
                             AddWizard(enemylist, wizardRightList, wizardMeleeRightList, wizardHitList);
@@ -572,9 +574,9 @@ namespace Final_Project
                             AddBringerOfDeath(enemylist, deathRightList, deathMeleeRightList, deathSpellList);
                         else
                             AddMinotaur(enemylist, minoRightList, minoMeleeRightList, minoHitList);
-                        
+
                     }
-                    
+
                 }
                 else
                 {
@@ -604,13 +606,9 @@ namespace Final_Project
                                 break;
 
                         }
+                    }
                 }
-            }
-                    
-
-
-                
-
+    
                 while (t < crusaders)
                 {
                     AddAlly(allylist, KnightRightList, KnightMeleeRightList, KnightHitList,KnightIdleList);
@@ -623,15 +621,9 @@ namespace Final_Project
 
                 foreach (Player ally in allylist)
                     ally.TroopsSpeed(targetedEnemy);
-                
-
-                var distance = new Vector2(mouseState.X - playerPosition.X, mouseState.Y - playerPosition.Y);
+                               
                 previousHealth = (int)user.Health;
-                playerRotation = (float)Math.Atan2(distance.Y, distance.X);
-                playerPosition = new Vector2(user.XLocationRight, user.YLocation);
-
-
-
+                playerPosition = new Vector2(user.Userbox().X, user.Userbox().Y);
                 //Delte barrier is user spawns in it
                 while (RespawnMethold == false)
                 {
@@ -678,9 +670,9 @@ namespace Final_Project
                         {
                             foreach (Barriers barrier in barriersList)
                                 if (ally.Collide(barrier.GetBoundingBox()))
-                                    ally.UserAttackMelee(enemylist, barriersList, null, null, 0);
+                                    ally.UserAttackMelee(enemylist, barriersList, null, null, mouseState.X, mouseState.Y);
                                 if (ally.Collide(troops.Hitbox()))
-                                    ally.UserAttackMelee(enemylist, barriersList, null, null, 0);
+                                    ally.UserAttackMelee(enemylist, barriersList, null, null,  mouseState.X, mouseState.Y);
                         }
                     }
                 }
@@ -695,7 +687,7 @@ namespace Final_Project
 
                         user.WeaponType = "sheild melee";
                         
-                        user.UserAttackMelee(enemylist, barriersList, null, null, 0);
+                        user.UserAttackMelee(enemylist, barriersList, null, null,  mouseState.X, mouseState.Y);
                         user.Sheild();
                     }
 
@@ -786,15 +778,15 @@ namespace Final_Project
                
 
                 //Update User
-                user.Update(new Vector2(0, 0), barriersList, "main game");
+                user.Update(new Vector2(0, 0), barriersList, "main game", user.Userbox());
 
                 foreach (Player ally in allylist)
                 
-                    ally.Update(backroundSpeed, barriersList, "main game");
+                    ally.Update(backroundSpeed, barriersList, "main game", ally.Hitbox());
                 
                 foreach (Player troops in enemylist)
                 
-                    troops.Update(backroundSpeed, barriersList, "main game");
+                    troops.Update(backroundSpeed, barriersList, "main game", troops.Hitbox());
                 
                 foreach (Barriers barrier in barriersList)
                 
@@ -806,7 +798,7 @@ namespace Final_Project
                 {
                     user.WeaponType = "melee";
 
-                    user.UserAttackMelee(enemylist, barriersList, null, null, 0);
+                    user.UserAttackMelee(enemylist, barriersList, null, null,  mouseState.X, mouseState.Y);
 
                 }
 
@@ -816,14 +808,14 @@ namespace Final_Project
                     user.WeaponType = "wizard ball";
 
 
-                    user.UserAttackMelee(enemylist, barriersList, laserList, LightningShotList2, playerRotation);
+                    user.UserAttackMelee(enemylist, barriersList, laserList, LightningShotList2, mouseState.X, mouseState.Y);
 
                 }
                 else if (keyboardState.IsKeyDown(Keys.V))
                 {
 
                     user.WeaponType = "special";
-                    user.UserAttackMelee(enemylist, barriersList, laserList, LightningShotList2, playerRotation);
+                    user.UserAttackMelee(enemylist, barriersList, laserList, LightningShotList2, mouseState.X, mouseState.Y);
 
                 }
                 //Ai Shots
@@ -848,7 +840,7 @@ namespace Final_Project
 
                     //Enemy Shoot
 
-                    else if (troops.EnemyType == "shoter" && troops.GetBoundingBox().Intersects(new Rectangle(0, 0, mainGameWidth, mainGameHeight)))
+                    else if (troops.EnemyType == "shoter" && new Rectangle(0, 0, mainGameWidth, mainGameHeight).Contains(troops.GetBoundingBox()))
                     {
                         troops.DrawEnemyAttack(null);
                         if (troops.Attacking == "false")
@@ -899,20 +891,14 @@ namespace Final_Project
                             laserList.RemoveAt(i);
                             break;
                         }
-
-
-
-
                     }
 
                 }
                 //If user gets Shot
                 for (int i = enemyLaserList.Count - 1; i >= 0; i--)
                 {
-
                     foreach (LaserClass bullet in enemyLaserList)
                     {
-
                         if (bullet.GetBoundingBox().Intersects(user.Userbox()))
                         {
                             foreach (Player troops in enemylist)
@@ -922,12 +908,7 @@ namespace Final_Project
                             enemyLaserList.RemoveAt(i);
                             break;
                         }
-
-
-
                     }
-
-
                 }
                 //If laser hits barrier
                 for (int i = laserList.Count - 1; i >= 0; i--)
@@ -962,6 +943,11 @@ namespace Final_Project
                             }
                                 
                         }
+                    }
+                    if (!t.GetBoundingBox().Intersects(new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth*3, mainGameHeight * 3)))
+                    {
+                        enemyLaserList.RemoveAt(i);
+                        break;
                     }
                 }
                 if (user.Sheilding == "true")
@@ -1019,7 +1005,7 @@ namespace Final_Project
 
                 foreach(Npc npc in npcList)
                     npc.Update();
-                user.Update(new Vector2(0,0), barriersList, "not main game");
+                user.Update(new Vector2(0,0), barriersList, "not main game", user.Userbox());
                 if (keyboardState.IsKeyUp(Keys.B))
                 {
                     boost = true;

@@ -38,20 +38,15 @@ namespace Final_Project
         public void Update(GameTime gt, int projectileSpeed)
         {
 
-            velocity = new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation)) * projectileSpeed;
-            
-
+            velocity = new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation));
+            velocity *= projectileSpeed;
             position += velocity;
             rect.X = (int)position.X ;
-            rect.Y = (int)position.Y + 40 ;
+            rect.Y = (int)position.Y + 40;
 
             updateSpeed += 0.1;
             if (updateSpeed >= lightningTextures.Count - 0.5)
-            {
-                updateSpeed = 0;
-               
-            }
-
+                updateSpeed = 0;                          
         }
         public Rectangle GetBoundingBox()
         {

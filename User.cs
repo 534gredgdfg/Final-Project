@@ -243,8 +243,8 @@ namespace Final_Project
             }
             else if (_weapontype == "special")
             {
-                _damage = 180 + boostDamage;
-                _gunInterval = 1.0f;
+                _damage = 28 + boostDamage;
+                _gunInterval = 2.0f;
 
             }
             else if (_weapontype == "ally melee")
@@ -261,7 +261,7 @@ namespace Final_Project
                 _gunInterval = 2.3f;
                 _killpoints = 60;
                 animationSpeed = 0.09;
-                _projectileSpeed = 9;
+                _projectileSpeed = 7;
                 _enemyType = "shoter";
             }
             else if (_weapontype == "goblin melee")
@@ -294,7 +294,7 @@ namespace Final_Project
                 _gunInterval = 6f;
                 _killpoints = 70;
                 _enemyType = "shoter";
-                _projectileSpeed = 8;
+                _projectileSpeed = 5;
             }
             else if (_weapontype == "bat")
             {
@@ -379,7 +379,7 @@ namespace Final_Project
         }
 
         
-        private void Move(Vector2 backSpeed, List<Barriers> barriers, string screen)
+        private void Move(Vector2 backSpeed, List<Barriers> barriers, string screen, Rectangle Box)
         {
             if (_drawingDamage == "false")
                 previousHealth = _health;
@@ -403,7 +403,7 @@ namespace Final_Project
                 {
                     if (barrier.Blocking == "true")
                     {
-                        if (Userbox().Intersects(barrier.GetBoundingBox()))
+                        if (Box.Intersects(barrier.GetBoundingBox()))
                             UndoMoveH();
                     }
                 }
@@ -411,7 +411,7 @@ namespace Final_Project
                 {
                     if (barrier.Blocking == "true")
                     {
-                        if (Userbox().Intersects(barrier.GetBoundingBox()))
+                        if (Box.Intersects(barrier.GetBoundingBox()))
                             UndoMoveV();
                     }
 
@@ -442,14 +442,15 @@ namespace Final_Project
         }
         
 
-        public void UserAttackMelee(List<Player> enemys, List<Barriers> barriers,  List<LaserClass> laserList, List<Texture2D>  texture, float playerRotation)
+        public void UserAttackMelee(List<Player> enemys, List<Barriers> barriers,  List<LaserClass> laserList, List<Texture2D>  texture, float mouseStateX, float mouseStateY)
         {
 
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
-
+            
             ChoosingWeapon();
             if (timeSinceLastAttack.TotalSeconds >= GunInterval && _drawSheild == "false")
             {
+             
                 if (WeaponType == "special")
                     SpecialAttack();
                 else
@@ -489,24 +490,22 @@ namespace Final_Project
 
                 else if (WeaponType == "special")
                 {
-                    foreach (Player troops in enemys)
+                    for (int i = 0; i <= 4; i++)
                     {
-                        if (Largebox().Intersects(troops.Hitbox()))
-                        {
-                            troops.Health -= _damage;
-                            troops.EnemyHit();
-                        }
+                        playerPosition = new Vector2(rand.Next(200, 800), -70);
+                        var distance = new Vector2(mouseStateX - playerPosition.X, mouseStateY - playerPosition.Y);
+                        float playerRotation = (float)Math.Atan2(distance.Y, distance.X);
+                        laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 30, 25)));                      
                     }
-                        
                 }
-
                 else
                 {
-
                     if (direction == SpriteEffects.None)
                         playerPosition = new Vector2(Userbox().Right, Userbox().Y);
                     else
                         playerPosition = new Vector2(Userbox().X, Userbox().Y);
+                    var distance = new Vector2(mouseStateX - playerPosition.X, mouseStateY - playerPosition.Y);
+                    float playerRotation = (float)Math.Atan2(distance.Y, distance.X);
                     laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 30, 25)));
                 }
             }
@@ -525,19 +524,13 @@ namespace Final_Project
                         Attack();
                         lastMeleeTimes = DateTime.Now; // update last shot time 
                     }   
-                }
-               
+                }           
                 else 
                 {
                     Attack();
                     lastMeleeTimes = DateTime.Now; // update last shot time 
                 }
-
-
             }
-        
-              
-           
         }
         public void EnemyAttackMelee(Player user, List<Barriers> barriers, List<Player> allylist, List<LaserClass> enemyLaserList, Vector2 playerPositions, List<Texture2D> texture1, List<Texture2D> texture2, List<Texture2D> texture3)
         {
@@ -688,7 +681,7 @@ namespace Final_Project
             _rectangle.Y = rand.Next(225, 675 - height);
         }
 
-        public void Update(Vector2 backSpeed, List<Barriers> barriers, string screen)
+        public void Update(Vector2 backSpeed, List<Barriers> barriers, string screen, Rectangle Box)
         {
 
             if (_attack == "true" && WeaponType == "fire worm")
@@ -757,7 +750,7 @@ namespace Final_Project
 
 
 
-            Move(backSpeed, barriers, screen);
+            Move(backSpeed, barriers, screen, Box);
         }
 
         public void Draw(SpriteBatch spriteBatch, int mouseX)
