@@ -16,6 +16,7 @@ namespace Final_Project
         Texture2D rectangleTexture, introBackroundTexture, hutBlueTexture,hutTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
         Vector2 backroundSpeed;
         Rectangle targetedEnemy;
+        Vector2 spawnPoint;
         int t = 0;
         int userspeed = 2;
         int crusaders = 0;
@@ -31,10 +32,11 @@ namespace Final_Project
         bool RespawnMethold = false;
         bool boost = false;
         bool fading;
+        bool toStore;
         bool bossBattle = false;
         bool wizardBattle = false;
         bool reaperBattle = false;
-        bool foundTarget = false;
+       
 
         double damgaeMultiplyer = 1;
         float seconds;
@@ -175,13 +177,13 @@ namespace Final_Project
             buttonList.Add(new Buttons(rectangleTexture, new Rectangle(450, 150, 160, 160), Color.DarkBlue, "Add Crusader", 300));
 
             //Top Wall
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, 60), 10000, Color.Black, "false", "true"));
+            //barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, 60), 10000, Color.Black, "false", "true"));
             //Left Wall
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, 60, mainGameHeight * 3), 10000, Color.Black, "false", "true"));
+            //barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, 60, mainGameHeight * 3), 10000, Color.Black, "false", "true"));
             //Bottom Wall
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, mainGameHeight * 2 - 60, mainGameWidth * 3, 60), 10000, Color.Black, "false", "true"));
+            //barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, mainGameHeight * 2 - 60, mainGameWidth * 3, 60), 10000, Color.Black, "false", "true"));
             //Right Wall
-            barriersList.Add(new Barriers(rectangleTexture, new Rectangle(mainGameWidth * 2 - 60, -mainGameHeight, 60, mainGameHeight * 3), 10000, Color.Black, "false", "true"));
+            //barriersList.Add(new Barriers(rectangleTexture, new Rectangle(mainGameWidth * 2 - 60, -mainGameHeight, 60, mainGameHeight * 3), 10000, Color.Black, "false", "true"));
 
 
 
@@ -372,41 +374,41 @@ namespace Final_Project
         {
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
-            static void AddGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
+            static void AddGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)),new Vector2( 200, 100), 100, "goblin melee", 1.5, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
+                enemys.Add(new Player(spawnPoint,new Vector2( 200, 100), 100, "goblin melee", 1.5, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
 
             }
-            static void AddFastGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
+            static void AddFastGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(180, 90), 80, "fast goblin melee", 2.3, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
+                enemys.Add(new Player(spawnPoint, new Vector2(180, 90), 80, "fast goblin melee", 2.3, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
 
             }
 
-            static void AddSkel(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
+            static void AddSkel(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(250, 125), 130, "skel melee", 0.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
+                enemys.Add(new Player(spawnPoint, new Vector2(250, 125), 130, "skel melee", 0.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
 
             }
-            static void AddArcher(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
+            static void AddArcher(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(200, 100), 95, "arrow", 1.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
+                enemys.Add(new Player(spawnPoint, new Vector2(200, 100), 95, "arrow", 1.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
 
             }
-            static void AddWorm(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
+            static void AddWorm(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(220, 100), 175, "fire ball", 1.4, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
+                enemys.Add(new Player(spawnPoint, new Vector2(220, 100), 175, "fire ball", 1.4, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
 
             }
-            static void AddBat(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
+            static void AddBat(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(170, 90), 75, "bat", 2.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
+                enemys.Add(new Player(spawnPoint, new Vector2(170, 90), 75, "bat", 2.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
 
             }
             static void AddMinotaur(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
@@ -428,6 +430,25 @@ namespace Final_Project
             {
                 Random rand = new Random();
                 enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(120, 150), 250, "ally melee", 0.9, AiRightList, AiIdleList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList));
+            }
+            static void MakeSpwanPoints(int mainGameWidth, int mainGameHeight, ref Vector2 spawnPoint)
+            {
+                Random rand = new Random();
+                switch (rand.Next(0, 5))
+                {
+                    case 1:
+                        //Left
+                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, 0), rand.Next(-mainGameHeight, mainGameHeight * 3)); break;
+                    case 2:
+                        //Top
+                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(-mainGameHeight, 0)); break;
+                    case 3:
+                        //Right
+                        spawnPoint = new Vector2(rand.Next(mainGameWidth, mainGameWidth * 2), rand.Next(-mainGameHeight, mainGameHeight * 3)); break;
+                    case 4:
+                        //Bottom
+                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(mainGameHeight, mainGameHeight * 2)); break;
+                }
             }
             static void MoveingUser(Player user, int userspeed, KeyboardState keyboardState)
             {
@@ -516,104 +537,93 @@ namespace Final_Project
 
             if (screen == Screen.TitleScreen)
             {
-                DimingScreen(ref fading,  keyboardState, ref dimScreenColor, ref user, ref screen, "title");
+                DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "title");
 
             }
             else if (screen == Screen.MainScreen)
             {
-                
-                if (wave == 0)
+                foreach (Player troops in enemylist)
+                    if (troops.GetBoundingBox().Intersects(new Rectangle(0, 0, mainGameWidth, mainGameHeight)))
+                        toStore = false;
+                    else toStore = true;
+                if (toStore == true)
                 {
-                    for (int i = 0; barriersList.Count <= 30; i++)
+                    DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "main");
+                    for (int i = enemylist.Count - 1; i >= 0; i--)
                     {
-                        barriersList.Add(new Barriers(grayRockTexture, new Rectangle(rand.Next(-mainGameWidth, mainGameWidth * 2), rand.Next(-mainGameHeight, mainGameHeight * 2), rand.Next(50, 80), rand.Next(50, 80)), 60, Color.White, "true", "true"));
+                        Player t = enemylist[i];
+                        enemylist.RemoveAt(i);
+                        break;
                     }
-                    for (int i = 0; barriersList.Count <= 50; i++)
-                    {
-                        barriersList.Add(new Barriers(darkTreeTexture, new Rectangle(rand.Next(-mainGameWidth, mainGameWidth * 2), rand.Next(-mainGameHeight, mainGameHeight * 2), rand.Next(120, 140), rand.Next(150, 180)), 80, Color.White, "true", "true"));
-                    }
-                    for (int i = 0; barriersList.Count <= 65; i++)
-                    {
-                        barriersList.Add(new Barriers(darkerTreeTexture, new Rectangle(rand.Next(-mainGameWidth, mainGameWidth * 2), rand.Next(-mainGameHeight, mainGameHeight * 2), rand.Next(120, 140), rand.Next(150, 180)), 100, Color.White, "true", "true"));
-                    }
-                    wave = 0;
                 }
-                
+
                 seconds = (float)gameTime.TotalGameTime.TotalSeconds - sheildTime;
-                if (enemylist.Count == 0)
+                if (bossBattle == true) 
                 {
-                    //Make ai move
-                    foreach (Player troops in enemylist)
-                        troops.TroopsSpeed(new Rectangle(0,0,0,0));
-
-                    foreach (Player ally in allylist)
-                        ally.TroopsSpeed(new Rectangle(0, 0, 0, 0));
-                    while (t < crusaders)
+                    if (keyboardState.IsKeyDown(Keys.P) && enemylist.Count == 0)
                     {
-                        AddAlly(allylist, KnightRightList, KnightMeleeRightList, KnightHitList,KnightIdleList);
-                        t++;
-                    }
-
-                    if (keyboardState.IsKeyDown(Keys.P))
-                    {
-   
                         wave += 1;
                         RespawnMethold = false;
-                        if  (bossBattle == true)
-                        {
-                            if (wizardBattle == true)
-                                AddWizard(enemylist, wizardRightList,wizardMeleeRightList,wizardHitList);
-                            else if (reaperBattle == true)
-                                AddBringerOfDeath(enemylist, deathRightList, deathMeleeRightList, deathSpellList);
-                            else
-                                AddMinotaur(enemylist, minoRightList, minoMeleeRightList, minoHitList);
-                        }
-                        else
-                        {
-                            for (int i = 0; enemylist.Count <= rand.Next(0, wave); i++)
-                            {
+                        
 
-                                enemyType = rand.Next(0,7);
-                                
-                                switch (enemyType)
-                                {
-                                    case 1:
-                                        AddArcher(enemylist, AiArcherRightList, AiArcherMeleeRightList, AiArcherHitList);
-                                        break;
-                                    case 2:
-                                        AddFastGoblin(enemylist, AiRightList, AiMeleeRightList, AiGoblinHitList);
-                                        break;
-                                    case 3:
-                                        AddGoblin(enemylist, AiRightList, AiMeleeRightList, AiGoblinHitList);
-                                        break;
-                                    case 4:
-                                        AddWorm(enemylist, AiWormRightList, AiWormMeleeRightList, AiWormHitList);
-                                        break;
-                                    case 5:
-                                        AddSkel(enemylist, AiSkelRightList, AiSkelMeleeRightList, AiSkelHitList);
-                                        break;
-                                    case 6:
-                                        AddBat(enemylist, BatRightList, BatMeleeRightList, BatHitList);
-                                        break;
-                                    
-                                }
-                            }
-                        }
+                        if (wizardBattle == true)
+                            AddWizard(enemylist, wizardRightList, wizardMeleeRightList, wizardHitList);
+                        else if (reaperBattle == true)
+                            AddBringerOfDeath(enemylist, deathRightList, deathMeleeRightList, deathSpellList);
+                        else
+                            AddMinotaur(enemylist, minoRightList, minoMeleeRightList, minoHitList);
                         
                     }
-                    else
-                        DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "main");
-
+                    
                 }
                 else
                 {
-                    //Make ai move
-                    foreach (Player troops in enemylist)
-                        troops.TroopsSpeed(user.Userbox());
+                    for (int i = 0; enemylist.Count <= 3; i++)
+                    {
+                        enemyType = rand.Next(1, 7);
+                        MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
+                        switch (enemyType)
+                        {
+                            case 1:
+                                AddArcher(enemylist, AiArcherRightList, AiArcherMeleeRightList, AiArcherHitList, spawnPoint);
+                                break;
+                            case 2:
+                                AddFastGoblin(enemylist, AiRightList, AiMeleeRightList, AiGoblinHitList, spawnPoint);
+                                break;
+                            case 3:
+                                AddGoblin(enemylist, AiRightList, AiMeleeRightList, AiGoblinHitList, spawnPoint);
+                                break;
+                            case 4:
+                                AddWorm(enemylist, AiWormRightList, AiWormMeleeRightList, AiWormHitList, spawnPoint);
+                                break;
+                            case 5:
+                                AddSkel(enemylist, AiSkelRightList, AiSkelMeleeRightList, AiSkelHitList, spawnPoint);
+                                break;
+                            case 6:
+                                AddBat(enemylist, BatRightList, BatMeleeRightList, BatHitList, spawnPoint);
+                                break;
 
-                    foreach (Player ally in allylist)
-                        ally.TroopsSpeed(targetedEnemy);
+                        }
                 }
+            }
+                    
+
+
+                
+
+                while (t < crusaders)
+                {
+                    AddAlly(allylist, KnightRightList, KnightMeleeRightList, KnightHitList,KnightIdleList);
+                    t++;
+                }
+
+                //Make ai move
+                foreach (Player troops in enemylist)
+                    troops.TroopsSpeed(user.Userbox());
+
+                foreach (Player ally in allylist)
+                    ally.TroopsSpeed(targetedEnemy);
+                
 
                 var distance = new Vector2(mouseState.X - playerPosition.X, mouseState.Y - playerPosition.Y);
                 previousHealth = (int)user.Health;
@@ -703,45 +713,70 @@ namespace Final_Project
 
                 backroundSpeed.X = 0;
                 backroundSpeed.Y = 0;
+                
+                for (int i = 0; barriersList.Count <= 80; i++)
+                {
 
+                    MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
+                    switch (rand.Next(1, 4))
+                    {
+                        case 1:
+                            barriersList.Add(new Barriers(grayRockTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(50, 80), rand.Next(50, 80)), 60, Color.White, "true", "true")); break;                        
+                        case 2:
+                            barriersList.Add(new Barriers(darkTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 80, Color.White, "true", "true")); break;
+                        case 3:
+                            barriersList.Add(new Barriers(darkerTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 100, Color.White, "true", "true")); break;
+                        
+                    }
+                    
+                }
+               
+
+                for (int i = barriersList.Count - 1; i >= 0; i--)
+                {
+                    Barriers t = barriersList[i];
+                    if (!t.GetBoundingBox().Intersects(new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, mainGameHeight * 3)))
+                    {
+                        barriersList.RemoveAt(i);
+                        break;
+                    }
+                }
+                for (int i = enemylist.Count - 1; i >= 0; i--)
+                {
+                    Player t = enemylist[i];
+                    if (!t.GetBoundingBox().Intersects(new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, mainGameHeight * 3)))
+                    {
+                        enemylist.RemoveAt(i);
+                        break;
+                    }
+                }
                 if (user.YLocationBottom >= mainGameHeight - mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.S))
                 {
-                    backroundSpeed.Y = user.VSpeed * -1;
-                    if (movedDistanceY < mainGameHeight)
-                        user.UndoMoveV();
-                    else
-                        backroundSpeed.Y = 0;
+                    backroundSpeed.Y = user.VSpeed * -1;                 
+                     user.UndoMoveV();                   
                 }
 
 
                 if (user.YLocation <= mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.W))
                 {
-                    backroundSpeed.Y = user.VSpeed * -1;
-                    if (movedDistanceY > -mainGameHeight)
-                        user.UndoMoveV();
-                    else
-                        backroundSpeed.Y = 0;
+                    backroundSpeed.Y = user.VSpeed * -1;                   
+                      user.UndoMoveV();                 
                 }
 
 
                 if (user.XLocationRight >= mainGameWidth - mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.D))
                 {
-                    backroundSpeed.X = user.HSpeed * -1;
-                    if (movedDistanceX < mainGameWidth)
-                        user.UndoMoveH();
-                    else
-                        backroundSpeed.X = 0;
-
+                    backroundSpeed.X = user.HSpeed * -1;                   
+                     user.UndoMoveH();                    
                 }
 
 
                 if (user.XLocation <= mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.A))
                 {
                     backroundSpeed.X = user.HSpeed * -1;
-                    if (movedDistanceX > -mainGameWidth)
-                        user.UndoMoveH();
-                    else
-                        backroundSpeed.X = 0;
+                   
+                    user.UndoMoveH();
+                    
 
                 }
                 movedDistanceX -= (int)backroundSpeed.X;
@@ -813,7 +848,7 @@ namespace Final_Project
 
                     //Enemy Shoot
 
-                    else if (troops.EnemyType == "shoter" )
+                    else if (troops.EnemyType == "shoter" && troops.GetBoundingBox().Intersects(new Rectangle(0, 0, mainGameWidth, mainGameHeight)))
                     {
                         troops.DrawEnemyAttack(null);
                         if (troops.Attacking == "false")
