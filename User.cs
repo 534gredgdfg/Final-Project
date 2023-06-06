@@ -14,14 +14,14 @@ namespace Final_Project
         private Vector2 _location;
         private Vector2 _dimentions;
         private Vector2 _velocity;
-        private Rectangle greenBar; 
-        private Rectangle redBar; 
+        private Rectangle greenBar;
+        private Rectangle redBar;
         private Rectangle _rectangle;
 
         private DateTime lastMeleeTime = DateTime.MinValue;
         private DateTime lastMeleeTimes = DateTime.MinValue;
         private double _speed;
-        
+
         private Vector2 _damageTextVector;
         private Vector2 playerPosition;
         private Vector2 enemyPosition;
@@ -44,6 +44,7 @@ namespace Final_Project
         private double _walkingSpeed;
         private double _standingSpeed;
         private double _hitSpeed;
+        private double _guardSpeed;
         private double _transSpeed;
         private double _specialSpeed;
 
@@ -53,10 +54,11 @@ namespace Final_Project
         private string _weapontype;
         private string _enemyType;
         private string _attack;
-    
+
         private string _hit;
         private string _trans;
         private string _special;
+        private string _guard;
         private string _drawSheild;
         private string _drawingDamage;
         private string _targeted;
@@ -72,40 +74,41 @@ namespace Final_Project
         List<Texture2D> _meleeTextures;
         List<Texture2D> _specialTextures;
         List<Texture2D> _hitTextures;
+        List<Texture2D> _guardTextures;
         Random rand = new Random();
-        public Player(Vector2 location, Vector2 dimentions, int health, string weapontype, double speed, List<Texture2D> walkingTextures, List<Texture2D> standingTextures, List<Texture2D> walkingSheildTextures, List<Texture2D> standingSheildTextures, List<Texture2D> meleeTextures, List<Texture2D> AiHitTextures, List<Texture2D> TransSheildTextures, List<Texture2D> specialTextures)
+        public Player(Vector2 location, Vector2 dimentions, int health, string weapontype, double speed, List<Texture2D> walkingTextures, List<Texture2D> standingTextures, List<Texture2D> walkingSheildTextures, List<Texture2D> standingSheildTextures, List<Texture2D> meleeTextures, List<Texture2D> AiHitTextures, List<Texture2D> TransSheildTextures, List<Texture2D> specialTextures, List<Texture2D> guardTextures)
         {
             _dimentions = dimentions;
             _location = location;
-            
+
             _speed = speed;
             _damageTextLocation = new Rectangle((int)_location.X, (int)_location.Y, 120, 120);
             _rectangle = new Rectangle((int)_location.X, (int)_location.Y, (int)_dimentions.X, (int)_dimentions.Y);
             _health = health;
-            _velocity = new Vector2(0,0);
+            _velocity = new Vector2(0, 0);
 
             _attack = "false";
             _hit = "false";
             _drawSheild = "false";
             _drawingDamage = "false";
-        
-           
+
+
             _weapontype = weapontype;
             _walkingTextures = walkingTextures;
             _standingTextures = standingTextures;
-            
+            _guardTextures = guardTextures;
             _walkingSheildTextures = walkingSheildTextures;
-            _standingSheildTextures = standingSheildTextures;          
+            _standingSheildTextures = standingSheildTextures;
             _meleeTextures = meleeTextures;
             _hitTextures = AiHitTextures;
             _transTextures = TransSheildTextures;
             _specialTextures = specialTextures;
             otherColor = Color.White;
             hitColor = Color.Gray;
-            redBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health + (int)Health/4, 10);
-            greenBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health,redBar.Height - redBar.Height / 5);
+            redBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health + (int)Health / 4, 10);
+            greenBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health, redBar.Height - redBar.Height / 5);
 
-            
+
 
         }
         public Texture2D Texture
@@ -128,7 +131,7 @@ namespace Final_Project
             get { return _rectangle.Right; }
             set { _rectangle.X = (int)value; }
         }
-        
+
         public float YLocationBottom
         {
             get { return _rectangle.Bottom; }
@@ -150,7 +153,7 @@ namespace Final_Project
             get { return _health; }
             set { _health = (int)value; }
         }
-        
+
         public float AICooldownTime
         {
             get { return _AicooldownTime; }
@@ -172,13 +175,13 @@ namespace Final_Project
             get { return _damage; }
             set { _damage = (int)value; }
         }
-        
+
         public float GunInterval
         {
             get { return (float)_gunInterval; }
             set { _gunInterval = value; }
         }
-      
+
         public string Attacking
         {
             get { return _attack; }
@@ -234,7 +237,7 @@ namespace Final_Project
             {
                 _damage = 26 + boostDamage;
                 _gunInterval = 1.0f;
-                
+
             }
             else if (_weapontype == "sheild melee")
             {
@@ -244,8 +247,8 @@ namespace Final_Project
             else if (_weapontype == "special")
             {
                 _damage = 28 + boostDamage;
-                _gunInterval = 2.0f;
-
+                _gunInterval = 6.0f;
+                _projectileSpeed = 8;
             }
             else if (_weapontype == "ally melee")
             {
@@ -318,8 +321,8 @@ namespace Final_Project
                     _speed = 3.3;
                     otherColor = Color.Red;
                     hitColor = Color.DarkRed;
-                }   
-                    
+                }
+
             }
             else if (_weapontype == "wizard")
             {
@@ -345,14 +348,13 @@ namespace Final_Project
                 animationSpeed = 0.11;
                 _projectileSpeed = 8;
             }
-            
+
         }
         public void TroopsSpeed(Rectangle user)
         {
             Random rand = new Random();
-            if (user.X == 0)
-                _velocity = new Vector2(0, 0);
-            else if (_hit == "false")
+
+            if (_hit == "false")
             {
                 if (user.Y + user.Height / 2 > _rectangle.Bottom + rand.Next(0, 100))
                 {
@@ -374,21 +376,17 @@ namespace Final_Project
 
                 }
             }
-          
-
         }
-
-        
-        private void Move(Vector2 backSpeed, List<Barriers> barriers, string screen, Rectangle Box)
+        private void Move(Vector2 backSpeed, List<Barriers> barriers, string screen, Rectangle Box, string type)
         {
             if (_drawingDamage == "false")
                 previousHealth = _health;
-            if (_hit == "false")
+            if (_hit == "false" || type == "user")
             {
                 _location.X += _velocity.X + (int)backSpeed.X;
                 _location.Y += _velocity.Y + (int)backSpeed.Y;
             }
-            else
+            else 
             {
                 _location.X +=  (int)backSpeed.X;
                 _location.Y += (int)backSpeed.Y;
@@ -441,8 +439,7 @@ namespace Final_Project
             _transSpeed = 0;
         }
         
-
-        public void UserAttackMelee(List<Player> enemys, List<Barriers> barriers,  List<LaserClass> laserList, List<Texture2D>  texture, float mouseStateX, float mouseStateY)
+        public void UserAttackMelee(List<Player> enemys, List<Barriers> barriers,  List<LaserClass> laserList, List<Texture2D> texture, float mouseStateX, float mouseStateY, List<Texture2D> shotTexture, List<Texture2D> fireList1, List<Texture2D> fireList2, List<Texture2D> iceList1, List<Texture2D> iceList2, List<Texture2D> thunderList1, List<Texture2D> thunderList2)
         {
 
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
@@ -487,15 +484,27 @@ namespace Final_Project
 
                     }
                 }
-
                 else if (WeaponType == "special")
                 {
-                    for (int i = 0; i <= 4; i++)
+                    for (int i = 0; i <= 9; i++)
                     {
-                        playerPosition = new Vector2(rand.Next(200, 800), -70);
-                        var distance = new Vector2(mouseStateX - playerPosition.X, mouseStateY - playerPosition.Y);
+                        switch (rand.Next(1, 4))
+                        {
+                            case 1: shotTexture = fireList2; break;
+                            case 2: shotTexture = iceList2; break;
+                            case 3: shotTexture = thunderList2; break;
+                                /*
+                            case 4: shotTexture = fireList1; break;
+                            
+                            case 5: shotTexture = iceList1; break;
+                            
+                            case 6: shotTexture = thunderList1; break;
+                            */
+                        }
+                        playerPosition = new Vector2(rand.Next(-200, 1600), -400);
+                        var distance = new Vector2(Userbox().X - playerPosition.X + rand.Next(-600, 600), Userbox().Y- playerPosition.Y);
                         float playerRotation = (float)Math.Atan2(distance.Y, distance.X);
-                        laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 30, 25)));                      
+                        laserList.Add(new LaserClass(shotTexture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 40, 35)));                      
                     }
                 }
                 else
@@ -545,11 +554,19 @@ namespace Final_Project
                     {
                         lastMeleeTime = DateTime.Now; // update last shot time 
                         if (LightSaberHitBoxRight().Intersects(user.Userbox()))
-
+                        {
                             user.Health -= _damage;
+                            user.UserHit();
+                        }
+
+                            
 
                         else if (LightSaberHitBoxLeft().Intersects(user.Userbox()))
+                        {
                             user.Health -= _damage;
+                            user.UserHit();
+                        }
+                            
                     }
                     
 
@@ -666,10 +683,12 @@ namespace Final_Project
         {
             _drawingDamage = "true";
             _hit = "true";
-
-       
         }
-       
+        public void UserHit()
+        {           
+            _hit = "true";
+        }
+
         public void ResetEnemyHit()
         {
             _drawingDamage = "false";
@@ -681,7 +700,7 @@ namespace Final_Project
             _rectangle.Y = rand.Next(225, 675 - height);
         }
 
-        public void Update(Vector2 backSpeed, List<Barriers> barriers, string screen, Rectangle Box)
+        public void Update(Vector2 backSpeed, List<Barriers> barriers, string screen, Rectangle Box, string type)
         {
 
             if (_attack == "true" && WeaponType == "fire worm")
@@ -724,6 +743,15 @@ namespace Final_Project
                 _special = "false";
             }
 
+            
+              _guardSpeed += 0.08;
+
+            if (_guardSpeed >= _guardTextures.Count - 0.5)
+            {
+                _guardSpeed = 0;
+                
+            }
+
             if (_drawSheild == "true")
                 _walkingSpeed += 0.07;
             
@@ -750,10 +778,10 @@ namespace Final_Project
 
 
 
-            Move(backSpeed, barriers, screen, Box);
+            Move(backSpeed, barriers, screen, Box, type);
         }
 
-        public void Draw(SpriteBatch spriteBatch, int mouseX)
+        public void Draw(SpriteBatch spriteBatch, int mouseX, Vector2 guardLocation)
         {
             
 
@@ -791,9 +819,8 @@ namespace Final_Project
             if (_drawSheild == "false")
             {
                 if (_hit == "true")
-                {
-                   
-                    spriteBatch.Draw(_hitTextures[(int)Math.Round(_hitSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                {                   
+                    spriteBatch.Draw(_walkingTextures[(int)Math.Round(_walkingSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
                 }
                 else if (_special == "true")
                 {
@@ -820,6 +847,10 @@ namespace Final_Project
             }
             else
             {
+                if (_hit == "true")
+                {                   
+                    spriteBatch.Draw(_guardTextures[(int)Math.Round(_guardSpeed)], new Rectangle((int)guardLocation.X, (int)guardLocation.Y, 30,30), null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                }
                 if (_trans == "true")
                     spriteBatch.Draw(_transTextures[(int)Math.Round(_transSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
 

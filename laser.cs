@@ -57,14 +57,9 @@ namespace Final_Project
             return rect.Intersects(item);
         }
 
-
-
         public void Draw(SpriteBatch sb, Texture2D texture)
         {
-
-
             sb.Draw(lightningTextures[(int)Math.Round(updateSpeed)], rect, null, Color.White, rotation, Vector2.Zero, SpriteEffects.None, 0f);
-
         }
 
 
