@@ -13,7 +13,8 @@ namespace Final_Project
         private SpriteBatch _spriteBatch;
         Player user;
 
-        Texture2D rectangleTexture, introBackroundTexture, hutBlueTexture,hutTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
+        Texture2D rectangleTexture, outroBackroundTexture,introBackroundTexture, hutBlueTexture,hutTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
+        Texture2D greenTreeTexture, redTreeTexture, brownTreeTexture, rock1Texture, rock2Texture, rock3Texture, grass1Texture, grass2Texture, grass3Texture, logTexture;
         Vector2 backroundSpeed;
         Rectangle targetedEnemy;
         Vector2 spawnPoint,guardLocation;
@@ -187,17 +188,20 @@ namespace Final_Project
 
             buttonList.Add(new Buttons(rectangleTexture, new Rectangle(450, 150, 160, 160), Color.DarkBlue, "Add Crusader", 300));
 
-            //Top Wall
-            //barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, 60), 10000, Color.Black, "false", "true"));
-            //Left Wall
-            //barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, -mainGameHeight, 60, mainGameHeight * 3), 10000, Color.Black, "false", "true"));
-            //Bottom Wall
-            //barriersList.Add(new Barriers(rectangleTexture, new Rectangle(-mainGameWidth, mainGameHeight * 2 - 60, mainGameWidth * 3, 60), 10000, Color.Black, "false", "true"));
-            //Right Wall
-            //barriersList.Add(new Barriers(rectangleTexture, new Rectangle(mainGameWidth * 2 - 60, -mainGameHeight, 60, mainGameHeight * 3), 10000, Color.Black, "false", "true"));
+            barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
 
-
-
+            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth/4 - 50, mainGameHeight-mainGameHeight/4 - 62, 125,150), 145, Color.White, "true", "true"));
+            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth /4- 50, mainGameHeight /4 - 62, 125, 150), 145, Color.White, "true", "true"));
+            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainGameHeight - mainGameHeight / 4 - 62, 125, 150), 145, Color.White, "true", "true"));
+            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainGameHeight/4 - 62, 125, 150), 145, Color.White, "true", "true"));
         }
         //----------------------------------------------------------------------LoadContent--------------------------------------------------------------------------------------
         protected override void LoadContent()
@@ -208,7 +212,8 @@ namespace Final_Project
             // TODO: use this.Content to load your game content here
             
             rectangleTexture = Content.Load<Texture2D>("rectangle");
-            introBackroundTexture = Content.Load<Texture2D>("Intro_Final_Project");
+            outroBackroundTexture = Content.Load<Texture2D>("Art_Screen");
+            introBackroundTexture = Content.Load<Texture2D>("Art_Intro");
             //Hud
             emptyGreenBarTexture = Content.Load<Texture2D>("Health_Empty");
             healthGreenBarTexture = Content.Load<Texture2D>("Health_Full");
@@ -221,6 +226,20 @@ namespace Final_Project
             grayRockTexture = Content.Load<Texture2D>("NatureSprite-Gray-Rock");
             darkTreeTexture = Content.Load<Texture2D>("NatureSprite-Dark-Tree");
             darkerTreeTexture = Content.Load<Texture2D>("NatureSprite-Darker-Tree");
+
+             greenTreeTexture = Content.Load<Texture2D>("Green_Tree");
+             redTreeTexture = Content.Load<Texture2D>("Red_Tree");
+             brownTreeTexture = Content.Load<Texture2D>("Brown_tree");
+
+             rock1Texture = Content.Load<Texture2D>("Rock1");
+             rock2Texture = Content.Load<Texture2D>("Rock2");
+             rock3Texture = Content.Load<Texture2D>("Rock3");
+
+             grass1Texture = Content.Load<Texture2D>("Grass1");
+             grass2Texture = Content.Load<Texture2D>("Grass2");
+             grass3Texture = Content.Load<Texture2D>("Grass3");
+
+             logTexture = Content.Load<Texture2D>("Log");
             //User
             userWalkingRight = Content.Load<Texture2D>("Wizard_Move");
             
@@ -468,20 +487,20 @@ namespace Final_Project
             static void MakeSpwanPoints(int mainGameWidth, int mainGameHeight, ref Vector2 spawnPoint)
             {
                 Random rand = new Random();
-                switch (rand.Next(0, 5))
+                switch (rand.Next(1, 5))
                 {
                     case 1:
                         //Left
-                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, 0), rand.Next(-mainGameHeight, mainGameHeight * 3)); break;
+                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, -150), rand.Next(-mainGameHeight, mainGameHeight * 3)); break;
                     case 2:
                         //Top
-                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(-mainGameHeight, 0)); break;
+                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(-mainGameHeight, -150)); break;
                     case 3:
                         //Right
-                        spawnPoint = new Vector2(rand.Next(mainGameWidth, mainGameWidth * 2), rand.Next(-mainGameHeight, mainGameHeight * 3)); break;
+                        spawnPoint = new Vector2(rand.Next(mainGameWidth + 150, mainGameWidth * 2), rand.Next(-mainGameHeight, mainGameHeight * 3)); break;
                     case 4:
                         //Bottom
-                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(mainGameHeight, mainGameHeight * 2)); break;
+                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(mainGameHeight +150, mainGameHeight * 2)); break;
                 }
             }
             static void MoveingUser(Player user, int userspeed, KeyboardState keyboardState)
@@ -577,31 +596,31 @@ namespace Final_Project
             //------------------------------------------Main Screen Update------------------------------------------------
             else if (screen == Screen.MainScreen)
             {
-                
+
                 foreach (Player troops in enemylist)
                     if (troops.GetBoundingBox().Intersects(new Rectangle(0, 0, mainGameWidth, mainGameHeight)))
                         toStore = false;
-                    else toStore = true;
-                if (toStore == true)
-                {
+                    else
+                        toStore = true;
+                 if (toStore)
                     DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "main");
-                    for (int i = enemylist.Count - 1; i >= 0; i--)
-                    {
-                        Player t = enemylist[i];
-                        enemylist.RemoveAt(i);
-                        break;
-                    }
-                }
 
                 seconds = (float)gameTime.TotalGameTime.TotalSeconds - sheildTime;
                 if (bossBattle == true)
                 {
+                    for (int i = enemylist.Count - 1; i >= 0; i--)
+                    {
+                        Player t = enemylist[i];
+                        if (t.WeaponType != "minotaur" && t.WeaponType != "wizard" && t.WeaponType != "death")
+                        {
+                            enemylist.RemoveAt(i);
+                            break;
+                        }                                         
+                    }
                     if (keyboardState.IsKeyDown(Keys.P) && enemylist.Count == 0)
                     {
                         wave += 1;
                         RespawnMethold = false;
-
-
                         if (wizardBattle == true)
                             AddWizard(enemylist, wizardRightList, wizardMeleeRightList, wizardHitList);
                         else if (reaperBattle == true)
@@ -610,7 +629,6 @@ namespace Final_Project
                             AddMinotaur(enemylist, minoRightList, minoMeleeRightList, minoHitList);
 
                     }
-
                 }
                 else
                 {
@@ -642,7 +660,6 @@ namespace Final_Project
                         }
                     }
                 }
-    
                 while (t < crusaders)
                 {
                     AddAlly(allylist, KnightRightList, KnightMeleeRightList, KnightHitList,KnightIdleList);
@@ -740,19 +757,39 @@ namespace Final_Project
                 backroundSpeed.X = 0;
                 backroundSpeed.Y = 0;
                 
-                for (int i = 0; barriersList.Count <= 80; i++)
+                for (int i = 0; barriersList.Count <= 125; i++)
                 {
 
                     MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
-                    switch (rand.Next(1, 4))
+                    switch (rand.Next(1, 8))
                     {
                         case 1:
-                            barriersList.Add(new Barriers(grayRockTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(50, 80), rand.Next(50, 80)), 60, Color.White, "true", "true")); break;                        
+                            barriersList.Add(new Barriers(rock1Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(50, 80), rand.Next(50, 80)), 60, Color.White, "true", "true")); break;
                         case 2:
-                            barriersList.Add(new Barriers(darkTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 80, Color.White, "true", "true")); break;
+                            barriersList.Add(new Barriers(rock2Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(50, 80), rand.Next(50, 80)), 60, Color.White, "true", "true")); break;
                         case 3:
-                            barriersList.Add(new Barriers(darkerTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 100, Color.White, "true", "true")); break;
+                            barriersList.Add(new Barriers(rock3Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(50, 80), rand.Next(50, 80)), 60, Color.White, "true", "true")); break;
+                        case 4:
+                            barriersList.Add(new Barriers(greenTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 80, Color.White, "true", "true")); break;
+                        case 5:
+                            barriersList.Add(new Barriers(redTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 80, Color.White, "true", "true")); break;
+                        case 6:
+                            barriersList.Add(new Barriers(brownTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 80, Color.White, "true", "true")); break;
+                      
+                        case 7:
+                            barriersList.Add(new Barriers(logTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 50, 55), 80, Color.White, "true", "true")); break;
+
+                    }
+                    MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
+                    switch (rand.Next(1, 4))
+                    {
                         
+                        case 1:
+                            barriersList.Add(new Barriers(grass1Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 20, 30), 80, Color.White, "false", "false")); break;
+                        case 2:
+                            barriersList.Add(new Barriers(grass2Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 20, 30), 80, Color.White, "false", "false")); break;
+                        case 3:
+                            barriersList.Add(new Barriers(grass3Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 20, 30), 80, Color.White, "false", "false")); break;
                     }
                     
                 }
@@ -782,21 +819,16 @@ namespace Final_Project
                      user.UndoMoveV();                   
                 }
 
-
                 if (user.YLocation <= mainGameHeight / 4 && keyboardState.IsKeyDown(Keys.W))
                 {
                     backroundSpeed.Y = user.VSpeed * -1;                   
                       user.UndoMoveV();                 
                 }
-
-
                 if (user.XLocationRight >= mainGameWidth - mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.D))
                 {
                     backroundSpeed.X = user.HSpeed * -1;                   
                      user.UndoMoveH();                    
                 }
-
-
                 if (user.XLocation <= mainGameWidth / 4 && keyboardState.IsKeyDown(Keys.A))
                 {
                     backroundSpeed.X = user.HSpeed * -1;
@@ -807,9 +839,6 @@ namespace Final_Project
                 }
                 movedDistanceX -= (int)backroundSpeed.X;
                 movedDistanceY -= (int)backroundSpeed.Y;
-
-                
-               
 
                 //Update User
                 user.Update(new Vector2(0, 0), barriersList, "main game", user.Userbox(), "user");
@@ -869,22 +898,25 @@ namespace Final_Project
                         if (troops.Attacking == "false")
                             troops.EnemyAttackMelee(user, barriersList, allylist,enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
                     }
-                    else if ((troops.WeaponType == "minotaur" || troops.WeaponType == "wizard") && troops.Attacking == "false")
-                    {
-                        troops.DrawEnemyAttack(user);
-
-                        troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, new Vector2(0, 0), null, null, null);
-                    }
-
                     //Enemy Shoot
 
-                    else if (troops.EnemyType == "shoter" && new Rectangle(0, 0, mainGameWidth, mainGameHeight).Contains(troops.GetBoundingBox()))
+                    //else if (troops.EnemyType == "shoter" && new Rectangle(0, 0, mainGameWidth, mainGameHeight).Contains(troops.GetBoundingBox()))
+                    else if (troops.EnemyType == "shoter")
                     {
                         troops.DrawEnemyAttack(null);
                         if (troops.Attacking == "false")
                             troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
 
                     }
+                    /*
+                    else if ((troops.WeaponType == "minotaur" || troops.WeaponType == "wizard") && troops.Attacking == "false")
+                    {
+                        troops.DrawEnemyAttack(user);
+
+                        troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, new Vector2(0, 0), null, null, null);
+                    }
+                    */
+                    
                     
                 }
                 //Update User Laser
@@ -936,23 +968,23 @@ namespace Final_Project
                 //If user gets Shot
                 for (int i = enemyLaserList.Count - 1; i >= 0; i--)
                 {
-                    foreach (LaserClass bullet in enemyLaserList)
+                    LaserClass bullet = enemyLaserList[i];
+                    
+                    if (bullet.GetBoundingBox().Intersects(user.Userbox()))
                     {
-                        if (bullet.GetBoundingBox().Intersects(user.Userbox()))
+                        foreach (Player troops in enemylist)
                         {
-                            foreach (Player troops in enemylist)
-                            {
-                                user.Health -= troops.WeaponDamage;
-                            }
-                            guardLocation = new Vector2(bullet.GetBoundingBox().X, bullet.GetBoundingBox().Y);
-                            user.UserHit();
-                            enemyLaserList.RemoveAt(i);
-                            break;
-                            
+                            user.Health -= troops.WeaponDamage;
                         }
-                        else
-                            guardLocation = new Vector2(user.Userbox().X, user.Userbox().Y);
+                        guardLocation = new Vector2(bullet.GetBoundingBox().X, bullet.GetBoundingBox().Y);
+                        user.UserHit();
+                        enemyLaserList.RemoveAt(i);
+                        break;
+                            
                     }
+                    else
+                        guardLocation = new Vector2(user.Userbox().X, user.Userbox().Y);
+                    
                 }
                 //If laser hits barrier
                 for (int i = laserList.Count - 1; i >= 0; i--)
@@ -1072,17 +1104,20 @@ namespace Final_Project
                         if (button.Type == "Minotaur Battle")
                         {
                             bossBattle = true;
-                            
+                            reaperBattle = false;
+                            wizardBattle = false;
                         }
                         else if (button.Type == "Wizard Battle")
                         {
                             bossBattle = true;
-                            wizardBattle = true;                           
+                            wizardBattle = true;
+                            reaperBattle = false;
                         }
                         else if (button.Type == "Reaper Battle")
                         {
                             bossBattle = true;
                             reaperBattle = true;
+                            wizardBattle = false;
                         }
                         else
                         {
@@ -1218,7 +1253,7 @@ namespace Final_Project
            
             else if (screen == Screen.OutroScreen)
             {
-                _spriteBatch.Draw(introBackroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+                _spriteBatch.Draw(outroBackroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
 
 
             }

@@ -18,8 +18,7 @@ namespace Final_Project
         private Vector2 velocity;
         private Rectangle rect;
         private float rotation;
-        
-
+       
         public LaserClass( List<Texture2D> ligthningTextures, Vector2 position, float rotation, Rectangle rect)
         {
 
@@ -32,8 +31,6 @@ namespace Final_Project
             this.rect = rect;
           
         }
-       
-
 
         public void Update(GameTime gt, int projectileSpeed)
         {
@@ -44,7 +41,7 @@ namespace Final_Project
             rect.X = (int)position.X ;
             rect.Y = (int)position.Y + 40;
 
-            updateSpeed += 0.1;
+            updateSpeed += 0.12;
             if (updateSpeed >= lightningTextures.Count - 0.5)
                 updateSpeed = 0;                          
         }
@@ -61,11 +58,6 @@ namespace Final_Project
         {
             sb.Draw(lightningTextures[(int)Math.Round(updateSpeed)], rect, null, Color.White, rotation, Vector2.Zero, SpriteEffects.None, 0f);
         }
-
-
-
-
-
 
     }
 }

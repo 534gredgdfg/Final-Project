@@ -264,7 +264,7 @@ namespace Final_Project
                 _gunInterval = 2.3f;
                 _killpoints = 60;
                 animationSpeed = 0.09;
-                _projectileSpeed = 7;
+                _projectileSpeed = 9;
                 _enemyType = "shoter";
             }
             else if (_weapontype == "goblin melee")
@@ -297,7 +297,7 @@ namespace Final_Project
                 _gunInterval = 6f;
                 _killpoints = 70;
                 _enemyType = "shoter";
-                _projectileSpeed = 5;
+                _projectileSpeed = 6;
             }
             else if (_weapontype == "bat")
             {
@@ -346,7 +346,7 @@ namespace Final_Project
                 _killpoints = 10000;
                 _enemyType = "both";
                 animationSpeed = 0.11;
-                _projectileSpeed = 8;
+                _projectileSpeed = 12;
             }
 
         }
@@ -638,11 +638,11 @@ namespace Final_Project
         }
         public Rectangle LightSaberHitBoxRight()
         {
-            return new Rectangle(_rectangle.X + _rectangle.Width / 2, _rectangle.Y - _rectangle.Height / 2, _rectangle.Width, _rectangle.Height*2 );
+            return new Rectangle(Hitbox().X + Hitbox().Width / 2, Hitbox().Y - Hitbox().Height / 2, Hitbox().Width, Hitbox().Height*2 );
         }
         public Rectangle LightSaberHitBoxLeft()
         {
-            return new Rectangle(_rectangle.X - _rectangle.Width / 2, _rectangle.Y - _rectangle.Height / 2, _rectangle.Width, _rectangle.Height * 2);
+            return new Rectangle(Hitbox().X - Hitbox().Width / 2, Hitbox().Y - Hitbox().Height / 2, Hitbox().Width, Hitbox().Height * 2);
         }
         public Rectangle HeadShotBox()
         {
@@ -677,8 +677,6 @@ namespace Final_Project
         {
             _special = "true";
         }
-
-
         public void EnemyHit()
         {
             _drawingDamage = "true";
