@@ -228,7 +228,7 @@ namespace Final_Project
             //User Traits
             if (_weapontype == "wizard ball")
             {
-                _damage = 34 + boostDamage;
+                _damage = 32+ boostDamage;
                 _gunInterval = 1.4f;
                 _projectileSpeed = 6;
             }
@@ -260,10 +260,10 @@ namespace Final_Project
             //Enemy Traits
             else if (_weapontype == "arrow")
             {
-                _damage = 38;
+                _damage = 29;
                 _gunInterval = 2.3f;
                 _killpoints = 60;
-                animationSpeed = 0.09;
+                animationSpeed = 0.1;
                 _projectileSpeed = 9;
                 _enemyType = "shoter";
             }
@@ -293,7 +293,7 @@ namespace Final_Project
             }
             else if (_weapontype == "fire ball")
             {
-                _damage = 54;
+                _damage = 44;
                 _gunInterval = 6f;
                 _killpoints = 70;
                 _enemyType = "shoter";
@@ -305,6 +305,14 @@ namespace Final_Project
                 _gunInterval = 1.1f;
                 _killpoints = 68;
                 animationSpeed = 0.12;
+                _enemyType = "melee";
+            }
+            else if (_weapontype == "slayer")
+            {
+                _damage = 46;
+                _gunInterval = 3.1f;
+                _killpoints = 89;
+                animationSpeed = 0.1;
                 _enemyType = "melee";
             }
             //Boss Traits
@@ -504,7 +512,7 @@ namespace Final_Project
                         playerPosition = new Vector2(rand.Next(-200, 1600), -400);
                         var distance = new Vector2(Userbox().X - playerPosition.X + rand.Next(-600, 600), Userbox().Y- playerPosition.Y);
                         float playerRotation = (float)Math.Atan2(distance.Y, distance.X);
-                        laserList.Add(new LaserClass(shotTexture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 40, 35)));                      
+                        laserList.Add(new LaserClass(shotTexture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 40, 35), _damage));                      
                     }
                 }
                 else
@@ -515,7 +523,7 @@ namespace Final_Project
                         playerPosition = new Vector2(Userbox().X, Userbox().Y);
                     var distance = new Vector2(mouseStateX - playerPosition.X, mouseStateY - playerPosition.Y);
                     float playerRotation = (float)Math.Atan2(distance.Y, distance.X);
-                    laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 30, 25)));
+                    laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 30, 25), _damage));
                 }
             }
                
@@ -558,8 +566,7 @@ namespace Final_Project
                             user.Health -= _damage;
                             user.UserHit();
                         }
-
-                            
+       
 
                         else if (LightSaberHitBoxLeft().Intersects(user.Userbox()))
                         {
@@ -571,7 +578,7 @@ namespace Final_Project
                     
 
                 }
-                if (_enemyType == "shoter" || _enemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
+                if (_enemyType == "shoter" &&  new Rectangle(-100, -100, 1600, 1000).Contains(GetBoundingBox()) || _enemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
                 {
                     if (HSpeed > 0)
                         enemyPosition = new Vector2(XLocationRight, YLocation);
@@ -584,16 +591,14 @@ namespace Final_Project
 
                     lastMeleeTime = DateTime.Now; // update last shot time  
                     if (WeaponType == "fire ball")
-                        enemyLaserList.Add(new LaserClass(texture1, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 35)));                    
+                        enemyLaserList.Add(new LaserClass(texture1, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 35), _damage));                    
                     else if(WeaponType == "arrow")
-                        enemyLaserList.Add(new LaserClass(texture2, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 30, 8)));
+                        enemyLaserList.Add(new LaserClass(texture2, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 30, 8), _damage));
                     else
                     {
                         SpecialAttack();
-                        enemyLaserList.Add(new LaserClass(texture3, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 120, 60)));
-                    }
-                       
-                    
+                        enemyLaserList.Add(new LaserClass(texture3, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 120, 60), _damage));
+                    }                                       
                 }
                 
                 foreach (Player ally in allylist)
@@ -603,11 +608,10 @@ namespace Final_Project
                     {
                         DrawEnemyAttack(null);
                         ally.Health -= _damage;
-
-                        lastMeleeTime = DateTime.Now; // update last shot time 
+                        if (Attacking == "false")
+                            lastMeleeTime = DateTime.Now; // update last shot time 
 
                     }
-
                 }
                 foreach (Barriers barrier in barriers)
                 {
@@ -616,14 +620,13 @@ namespace Final_Project
                     { 
                         DrawEnemyAttack(null);
                         barrier.TakeHit((int)_damage);
-
-                        lastMeleeTime = DateTime.Now; // update last shot time 
+                        if (Attacking == "false")
+                            lastMeleeTime = DateTime.Now; // update last shot time 
 
                     }
 
                 }
-
-                
+      
             }
 
         }
@@ -818,7 +821,7 @@ namespace Final_Project
             {
                 if (_hit == "true")
                 {                   
-                    spriteBatch.Draw(_walkingTextures[(int)Math.Round(_walkingSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                    spriteBatch.Draw(_hitTextures[(int)Math.Round(_hitSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
                 }
                 else if (_special == "true")
                 {
@@ -847,7 +850,7 @@ namespace Final_Project
             {
                 if (_hit == "true")
                 {                   
-                    spriteBatch.Draw(_guardTextures[(int)Math.Round(_guardSpeed)], new Rectangle((int)guardLocation.X, (int)guardLocation.Y, 30,30), null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                    spriteBatch.Draw(_guardTextures[(int)Math.Round(_guardSpeed)], new Rectangle((int)guardLocation.X, (int)guardLocation.Y, 24,30), null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
                 }
                 if (_trans == "true")
                     spriteBatch.Draw(_transTextures[(int)Math.Round(_transSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
@@ -906,21 +909,11 @@ namespace Final_Project
                 greenBar.Height = redBar.Height - redBar.Height/4;
                 
             }
-            if (user == "true")
-            {
-                redBar.X = 1400 / 2 - redBar.Width / 2;
-                redBar.Y = 910;
-                greenBar.Y = 912;
-                greenBar.X = 1400 / 2 - redBar.Width / 2 + redBar.Width / 10;
-                spriteBatch.Draw(emptytTexture, redBar, Color.White);
-                spriteBatch.Draw(fullTextureRed, greenBar, Color.Green);
-
-            }
-            else
-            {
-                spriteBatch.Draw(emptytTexture, redBar, Color.White);
-                spriteBatch.Draw(fullTextureRed, greenBar, Color.White);
-            }
+           
+           
+            spriteBatch.Draw(emptytTexture, redBar, Color.White);
+            spriteBatch.Draw(fullTextureRed, greenBar, Color.White);
+            
            
 
         }

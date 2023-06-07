@@ -12,6 +12,7 @@ namespace Final_Project
         private Rectangle _rect;
 
         private Color _color;
+       
         private string _type;
         private string hovering;
         private string bought;
@@ -20,6 +21,7 @@ namespace Final_Project
 
         public Buttons(Texture2D texture, Rectangle rect, Color color, string type, int cost)
         {
+       
             _texture = texture;
             _rect = rect;
             _color = color;
@@ -69,6 +71,7 @@ namespace Final_Project
             spent += _cost;
 
         }
+        
         public string Type
         {
             get { return _type; }
@@ -79,31 +82,63 @@ namespace Final_Project
             get { return hovering; }
             set { hovering = value; }
         }
+        
+        public void InstructionsDraw(SpriteBatch spriteBatch, SpriteFont Font)
+        {
+            if (_type == "Instructions")
+            {
+                spriteBatch.Draw(_texture, _rect, _color);
+                spriteBatch.DrawString(Font, "-Play on the infinite map", new Vector2(_rect.X, _rect.Y), Color.Black);
+                spriteBatch.DrawString(Font, "-Move using W,A,S & D", new Vector2(_rect.X, _rect.Y + 75), Color.Black);
+                spriteBatch.DrawString(Font, "-Left Click to Shoot", new Vector2(_rect.X, _rect.Y + 150), Color.Black);
+                spriteBatch.DrawString(Font, "-Press 'X' to Melee", new Vector2(_rect.X, _rect.Y + 225), Color.Black);
+                spriteBatch.DrawString(Font, "-Press 'SPACE' for special attack", new Vector2(_rect.X, _rect.Y + 300), Color.Black);
+                spriteBatch.DrawString(Font, "which leads into invicability", new Vector2(_rect.X, _rect.Y + 350), Color.Black);
+                spriteBatch.DrawString(Font, "-Press 'TAB' to enter Store", new Vector2(_rect.X, _rect.Y + 425), Color.Black);
+            }
+               
 
-
+        }
 
         public bool Contains(Rectangle item)
         {
             return _rect.Contains(item);
         }
+        
+        public void DrawHome(SpriteBatch spriteBatch, SpriteFont Font)
+        {
+            if (_type == "Start" || _type == "How to Play")
+            {
+                spriteBatch.Draw(_texture, _rect, _color);
+                if (hovering == "true")
+                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X, _rect.Y + _rect.Height/2), Color.Gray);
+                else
+                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X, _rect.Y + _rect.Height / 2), Color.Black);
+            }
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, _rect, _color);
+            if (_type != "Start" && _type != "How to Play" && _type != "Instructions")
+                spriteBatch.Draw(_texture, _rect, _color);
         }
-        public void DrawText(SpriteBatch spriteBatch, SpriteFont healthFont)
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont Font)
         {
-            if (hovering == "true" && _cost >0)
+            if (_type != "Start" && _type != "How to Play" && _type != "Instructions")
             {
-                spriteBatch.DrawString(healthFont, $"{_type}", new Vector2(_rect.X, _rect.Y - 50), Color.White);
+                if (hovering == "true" && _cost > 0)
+                {
+                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X, _rect.Y - 50), Color.White);
+                }
+                else if (_cost == 0)
+                {
+                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X, _rect.Y - 50), Color.White);
+                }
+                if (_cost > 0)
+                    spriteBatch.DrawString(Font, $"${_cost}", new Vector2(_rect.X - 60, _rect.Y), Color.White);
+                else
+                    spriteBatch.DrawString(Font, "FREE", new Vector2(_rect.X - 60, _rect.Y), Color.White);
+
             }
-            else if (_cost == 0)
-            {
-                spriteBatch.DrawString(healthFont, $"{_type}", new Vector2(_rect.X, _rect.Y - 50), Color.White);
-            }
-            if (_cost >0)
-                spriteBatch.DrawString(healthFont, $"${_cost}", new Vector2(_rect.X - 60, _rect.Y), Color.White);
-            else 
-                spriteBatch.DrawString(healthFont, "FREE", new Vector2(_rect.X - 60, _rect.Y), Color.White);
 
         }
 

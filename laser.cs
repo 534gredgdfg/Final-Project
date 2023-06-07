@@ -18,8 +18,9 @@ namespace Final_Project
         private Vector2 velocity;
         private Rectangle rect;
         private float rotation;
-       
-        public LaserClass( List<Texture2D> ligthningTextures, Vector2 position, float rotation, Rectangle rect)
+        private int _damage;
+
+        public LaserClass( List<Texture2D> ligthningTextures, Vector2 position, float rotation, Rectangle rect, int damage)
         {
 
 
@@ -27,9 +28,14 @@ namespace Final_Project
             this.position = position;
 
             this.rotation = rotation;
-
+            _damage = damage;
             this.rect = rect;
           
+        }
+        public int WeaponDamage
+        {
+            get { return _damage; }
+            set { _damage = value; }
         }
 
         public void Update(GameTime gt, int projectileSpeed)
@@ -41,7 +47,7 @@ namespace Final_Project
             rect.X = (int)position.X ;
             rect.Y = (int)position.Y + 40;
 
-            updateSpeed += 0.12;
+            updateSpeed += 0.09;
             if (updateSpeed >= lightningTextures.Count - 0.5)
                 updateSpeed = 0;                          
         }
