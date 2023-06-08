@@ -12,9 +12,11 @@ namespace Final_Project
         private Rectangle _rect;
         private int _health;
         private Color _color;
+        private double _grassSpeed;
+        private double _flowerSpeed;
         private string _brakable;
         private string _blocking;
-        private double _coinSpeed;
+       
         public Barriers(Texture2D texture, Rectangle rect, int health, Color color, string brakable, string blocking)
         {
             _texture = texture;
@@ -24,6 +26,7 @@ namespace Final_Project
             _color = color;
             _brakable = brakable;
             _blocking = blocking;
+           
         }
         public float HSpeed
         {
@@ -72,37 +75,30 @@ namespace Final_Project
         {
             _rect.Y -= (int)_speed.Y;
         }
-        public void Update(Vector2 backSpeed, List<Barriers> barriers, ref List<Texture2D> coinTextureList, string type)
+        public void Update(Vector2 backSpeed, List<Barriers> barriers)
         {
             Move(backSpeed, barriers);
-            if (type == "coin")
-            {
-                _coinSpeed += 0.11;
-                if (_coinSpeed >= coinTextureList.Count - 0.5)
-                    _coinSpeed = 0;
-
-            }
-
+            
         }
         
         public Rectangle GetBoundingBox()
         {
-            return new Rectangle(_rect.X, _rect.Y, _rect.Width, _rect.Height);
+            return new Rectangle(_rect.X, _rect.Y + _rect.Height/5, _rect.Width, _rect.Height - _rect.Height / 5*2);
         }
-        public void Draw(SpriteBatch spriteBatch, string type, ref List<Texture2D> coinTextureList)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            if(type == "barrier")
-            {
-                if (_health >= (_rect.Width + _rect.Height) / 3)
-                    spriteBatch.Draw(_texture, _rect, _color);
-                else if (_health < (_rect.Width + _rect.Height) / 3 && _health >= (_rect.Width + _rect.Height) / 4)
-                    spriteBatch.Draw(_texture, _rect, Color.LightGray);
-                else
-                    spriteBatch.Draw(_texture, _rect, Color.Gray);
-            }
-           
+            
+            
+
+            if (_health >= (_rect.Width + _rect.Height) / 3)
+                spriteBatch.Draw(_texture, _rect, _color);
+            else if (_health < (_rect.Width + _rect.Height) / 3 && _health >= (_rect.Width + _rect.Height) / 4)
+                spriteBatch.Draw(_texture, _rect, Color.LightGray);
             else
-                spriteBatch.Draw(coinTextureList[(int)Math.Round(_coinSpeed)], _rect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+                spriteBatch.Draw(_texture, _rect, Color.Gray);
+            
+
+           
         }
     }
 }

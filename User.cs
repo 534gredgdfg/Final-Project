@@ -264,7 +264,7 @@ namespace Final_Project
                 _gunInterval = 2.3f;
                 _killpoints = 60;
                 animationSpeed = 0.1;
-                _projectileSpeed = 9;
+                _projectileSpeed = 6;
                 _enemyType = "shoter";
             }
             else if (_weapontype == "goblin melee")
@@ -297,7 +297,7 @@ namespace Final_Project
                 _gunInterval = 6f;
                 _killpoints = 70;
                 _enemyType = "shoter";
-                _projectileSpeed = 6;
+                _projectileSpeed = 4;
             }
             else if (_weapontype == "bat")
             {
@@ -355,7 +355,7 @@ namespace Final_Project
                
                 _enemyType = "both";
                 animationSpeed = 0.11;
-                _projectileSpeed = 11;
+                _projectileSpeed = 9;
                 if (_health <= 150)
                 {
                     _damage = 245;

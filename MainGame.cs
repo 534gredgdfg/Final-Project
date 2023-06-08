@@ -18,6 +18,8 @@ namespace Final_Project
         Vector2 backroundSpeed;
         Rectangle targetedEnemy = new Rectangle(750, 450, 50,50);
         Vector2 spawnPoint,guardLocation;
+  
+ 
         int t = 0;
         int userspeed = 2;
         int Ratfolk = 0;
@@ -29,6 +31,7 @@ namespace Final_Project
         int movedDistanceX = 0;
         int movedDistanceY = 0;
         int wave = 0;
+        int randomNumber;
         Color dimScreenColor;
         bool RespawnMethold = false;
         bool boost = false;
@@ -126,12 +129,23 @@ namespace Final_Project
         List<Texture2D> thunderList1;
         List<Texture2D> thunderList2;
 
-        List<Texture2D> coinTextureList;
+        List<Texture2D> goldCoinTextureList;
+        List<Texture2D> redCoinTextureList;
+        List<Texture2D> silverCoinTextureList;
+        List<Texture2D> greenGemTextureList;
+
+        List<Texture2D> grassGifTextureList;
+        List<Texture2D> grassGif2TextureList;
+        List<Texture2D> grassGif3TextureList;
+
+        List<Texture2D> flowerGifTextureList;
+        List<Texture2D> flowerGif2TextureList;
 
         List<Texture2D> ArrowShotList;
         List<Texture2D> DeathShotList;
 
-        List<Barriers> coinList = new List<Barriers>();
+        List<Coins> coinList = new List<Coins>();
+        List<Coins> grassList = new List<Coins>();
         List<Barriers> barriersList = new List<Barriers>();
         List<Player> enemylist = new List<Player>();
         List<Player> allylist = new List<Player>();
@@ -214,13 +228,24 @@ namespace Final_Project
             barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
             barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
 
+           
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), grassGifTextureList, "grass")); 
+                      
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), grassGif2TextureList, "grass")); 
+                        
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), grassGif3TextureList, "grass")); 
+                      
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), flowerGifTextureList, "grass"));
+                     
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), flowerGif2TextureList, "grass"));
+
             barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth/4 - 50, mainGameHeight-mainGameHeight/4 - 62, 125,150), 145, Color.White, "true", "true"));
             barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth /4- 50, mainGameHeight /4 - 62, 125, 150), 145, Color.White, "true", "true"));
             barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainGameHeight - mainGameHeight / 4 - 62, 125, 150), 145, Color.White, "true", "true"));
             barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainGameHeight/4 - 62, 125, 150), 145, Color.White, "true", "true"));
 
-            coinList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 35, 35), 80, Color.White, "false", "false")); 
-            coinList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 35, 35), 80, Color.White, "false", "false")); 
+            coinList.Add(new Coins( new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 28, 35),silverCoinTextureList, "silver")); 
+            coinList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 28, 35),goldCoinTextureList, "gold")); 
         }
         //----------------------------------------------------------------------LoadContent--------------------------------------------------------------------------------------
         protected override void LoadContent()
@@ -338,7 +363,18 @@ namespace Final_Project
             Texture2D thunder1Texture = Content.Load<Texture2D>("thunder1");
             Texture2D thunder2Texture = Content.Load<Texture2D>("thunder2");
 
-            Texture2D coinTexture = Content.Load<Texture2D>("GoldCoinSpinning");
+            Texture2D goldCoinTexture = Content.Load<Texture2D>("Coin_Gold");
+            Texture2D silverCoinTexture = Content.Load<Texture2D>("Coin_Silver");
+            Texture2D redCoinTexture = Content.Load<Texture2D>("Coin_Red");
+
+            Texture2D grassGifTexture = Content.Load<Texture2D>("Animated_Grass");
+            Texture2D grassGif2Texture = Content.Load<Texture2D>("Animated_Grass2");
+            Texture2D grassGif3Texture = Content.Load<Texture2D>("Animated_Grass3");
+
+            Texture2D flowerGifTexture = Content.Load<Texture2D>("Animated_Flowers");
+            Texture2D flowerGif2Texture = Content.Load<Texture2D>("Animated_Flowers2");
+
+            Texture2D greenGemTexture = Content.Load<Texture2D>("Gem_Green");
             arrowTexture = Content.Load<Texture2D>("ArrowMove");
             Texture2D deathTexture = Content.Load<Texture2D>("Reaper_Summon");
 
@@ -446,7 +482,18 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, thunder1Texture, thunderList1 = new List<Texture2D>(), 2);
             ReapetingAnimation(GraphicsDevice, thunder2Texture, thunderList2 = new List<Texture2D>(), 2);
 
-            ReapetingAnimation(GraphicsDevice, coinTexture, coinTextureList = new List<Texture2D>(), 24);
+            //Coins
+            ReapetingAnimation(GraphicsDevice, goldCoinTexture, goldCoinTextureList = new List<Texture2D>(), 5);
+            ReapetingAnimation(GraphicsDevice, silverCoinTexture, silverCoinTextureList = new List<Texture2D>(), 5);
+            ReapetingAnimation(GraphicsDevice, redCoinTexture, redCoinTextureList = new List<Texture2D>(), 5);
+            ReapetingAnimation(GraphicsDevice, greenGemTexture, greenGemTextureList = new List<Texture2D>(), 4);
+
+            ReapetingAnimation(GraphicsDevice, grassGifTexture, grassGifTextureList = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, grassGif2Texture, grassGif2TextureList = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, grassGif3Texture, grassGif3TextureList = new List<Texture2D>(), 4);
+
+            ReapetingAnimation(GraphicsDevice, flowerGifTexture, flowerGifTextureList = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, flowerGif2Texture, flowerGif2TextureList = new List<Texture2D>(), 4);
 
             ReapetingAnimation(GraphicsDevice, lightningTexture1, LightningShotList1 = new List<Texture2D>(), 4);
             ReapetingAnimation(GraphicsDevice, lightningTexture2, LightningShotList2 = new List<Texture2D>(), 4);
@@ -635,8 +682,7 @@ namespace Final_Project
                             button.Hovering = "true";
                             if (mouseState.LeftButton == ButtonState.Pressed)
                                 startGame = true;
-                            if (startGame)
-                                DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "title");
+                            
                         }
                         else if(button.Type == "How to Play")
                         {
@@ -653,8 +699,11 @@ namespace Final_Project
                        
                         button.Hovering = "false";
                     }
-                        
+                   
+
                 }
+                if (startGame)
+                    DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "title");
             }
             //------------------------------------------Main Screen Update------------------------------------------------
             else if (screen == Screen.MainScreen)
@@ -821,7 +870,7 @@ namespace Final_Project
                 backroundSpeed.X = 0;
                 backroundSpeed.Y = 0;
 
-                for (int i = 0; barriersList.Count <= 125; i++)
+                for (int i = 0; barriersList.Count <= 150; i++)
                 {
 
                     MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
@@ -839,7 +888,6 @@ namespace Final_Project
                             barriersList.Add(new Barriers(redTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 80, Color.White, "true", "true")); break;
                         case 6:
                             barriersList.Add(new Barriers(brownTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 80, Color.White, "true", "true")); break;
-
                         case 7:
                             barriersList.Add(new Barriers(logTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 50, 55), 80, Color.White, "true", "true")); break;
 
@@ -858,31 +906,89 @@ namespace Final_Project
                     }
 
                 }
-                for (int i = 0; coinList.Count <= 30; i++)
+                for (int i = 0; grassList.Count <= 95; i++)
                 {
                     MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
-                    coinList.Add(new Barriers(grass3Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 35, 35), 80, Color.White, "false", "false")); break;
+                    switch (rand.Next(1, 6))
+                    {
+
+                        case 1:
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90,45 ), grassGifTextureList, "grass")); break;
+                        case 2:
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), grassGif2TextureList, "grass")); break;
+                        case 3:
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), grassGif3TextureList, "grass")); break;
+                        case 4:
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), flowerGifTextureList, "grass")); break;
+                        case 5:
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), flowerGif2TextureList, "grass")); break;
+
+                    }
+
                 }
+                 for (int i = 0; coinList.Count <= 23; i++)
+                {
+                    randomNumber = (rand.Next(0, 101));
+                    MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
+                    if (randomNumber <=50)
+                        coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), silverCoinTextureList, "silver")); 
+                    else if (randomNumber > 50 && randomNumber <= 75)
+                        coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), goldCoinTextureList, "gold"));
+                    else if (randomNumber > 75 && randomNumber <= 92)
+                        coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), redCoinTextureList, "red"));
+                    else if (randomNumber > 92 && randomNumber <=100)
+                        coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), greenGemTextureList, "green")); 
+                }
+
 
                 for (int i = coinList.Count - 1; i >= 0; i--)
                 {
-                    Barriers coins = coinList[i];
-                    if (user.Userbox().Contains(coins.GetBoundingBox()))
+                    Coins coins = coinList[i];
+                    if (user.Userbox().Intersects(coins.GetBoundingBox()))
                     {
-                        user.Points += 30;
-                        coinList.RemoveAt(i);
-                        break;
+                        if (coins.CoinType != "grass")
+                        {
+                            if (coins.CoinType == "silver")
+                                user.Points += 25;
+                            else if (coins.CoinType == "gold")
+                                user.Points += 45;
+                            else if (coins.CoinType == "red")
+                                user.Points += 125;
+                            else if (coins.CoinType == "green")
+                                user.Points += 200;
+                            coinList.RemoveAt(i);
+                            break;
+                        }
+                        
                     }
                         
                 }
                 
 
-                    for (int i = barriersList.Count - 1; i >= 0; i--)
+                for (int i = barriersList.Count - 1; i >= 0; i--)
                 {
                     Barriers t = barriersList[i];
                     if (!t.GetBoundingBox().Intersects(new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, mainGameHeight * 3)))
                     {
                         barriersList.RemoveAt(i);
+                        break;
+                    }
+                }
+                for (int i =coinList.Count - 1; i >= 0; i--)
+                {
+                    Coins t = coinList[i];
+                    if (!t.GetBoundingBox().Intersects(new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, mainGameHeight * 3)))
+                    {
+                        coinList.RemoveAt(i);
+                        break;
+                    }
+                }
+                for (int i = grassList.Count - 1; i >= 0; i--)
+                {
+                    Coins t = grassList[i];
+                    if (!t.GetBoundingBox().Intersects(new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, mainGameHeight * 3)))
+                    {
+                        grassList.RemoveAt(i);
                         break;
                     }
                 }
@@ -932,13 +1038,16 @@ namespace Final_Project
                 foreach (Player troops in enemylist)
 
                     troops.Update(backroundSpeed, barriersList, "main game", troops.Hitbox(), "ai");
-                foreach (Barriers coins in coinList)
+                foreach (Coins coins in coinList)
 
-                    coins.Update(backroundSpeed, barriersList, ref coinTextureList, "coin");
+                    coins.Update(backroundSpeed);
+                foreach (Coins grass in grassList)
+
+                    grass.Update(backroundSpeed);
 
                 foreach (Barriers barrier in barriersList)
 
-                    barrier.Update(backroundSpeed, barriersList,ref coinTextureList,"not coin");
+                    barrier.Update(backroundSpeed, barriersList);
 
                 //User Shots
 
@@ -1263,13 +1372,18 @@ namespace Final_Project
                     _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.SandyBrown);
                 else
                     _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOliveGreen);
-                foreach (Barriers coins in coinList)
-                    coins.Draw(_spriteBatch, "coin", ref coinTextureList);
-                
-                
+                foreach (Coins coins in coinList)
+                    coins.Draw(_spriteBatch);
+
+                foreach (Coins grass in grassList)
+                    grass.Draw(_spriteBatch);
 
                 foreach (Barriers barrier in barriersList)
-                    barrier.Draw(_spriteBatch, "barrier", ref coinTextureList);
+                    barrier.Draw(_spriteBatch);
+
+                
+
+          
 
                 //Draw all the bullets
                 foreach (LaserClass bullet in laserList)
@@ -1288,7 +1402,7 @@ namespace Final_Project
                     ai.DrawDamage(_spriteBatch, damageFont,damgaeMultiplyer, backroundSpeed, user.WeaponType);
                 }
                
-
+                
                 foreach (LaserClass bullet in enemyLaserList)
                     bullet.Draw(_spriteBatch, arrowTexture);
 
@@ -1323,7 +1437,7 @@ namespace Final_Project
                 foreach (Barriers barrier in barriersList)
                 {
                     if (barrier.Blocking == "false")
-                        barrier.Draw(_spriteBatch, "barrier", ref coinTextureList);
+                        barrier.Draw(_spriteBatch);
                 }
                     
                 //Structures Far
