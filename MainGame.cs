@@ -16,11 +16,11 @@ namespace Final_Project
         Texture2D rectangleTexture, outroBackroundTexture,introBackroundTexture, hutBlueTexture,hutTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
         Texture2D greenTreeTexture, bossBuyTexture, boostBuyTexture,redTreeTexture, brownTreeTexture, rock1Texture, rock2Texture, rock3Texture, grass1Texture, grass2Texture, grass3Texture, logTexture;
         Vector2 backroundSpeed;
-        Rectangle targetedEnemy;
+        Rectangle targetedEnemy = new Rectangle(750, 450, 50,50);
         Vector2 spawnPoint,guardLocation;
         int t = 0;
         int userspeed = 2;
-        int crusaders = 0;
+        int Ratfolk = 0;
         int previousHealth = 0;
         int mainGameWidth = 1400;
         int mainGameHeight = 900;
@@ -38,8 +38,9 @@ namespace Final_Project
         bool bossBattle = false;
         bool wizardBattle = false;
         bool reaperBattle = false;
-       
+        bool startGame = false;
 
+       
         double damgaeMultiplyer = 1;
         float seconds;
         float sheildTime;
@@ -85,10 +86,10 @@ namespace Final_Project
         List<Texture2D> AiSkelMeleeRightList;
         List<Texture2D> AiSkelHitList;
         
-        List<Texture2D> KnightRightList;
-        List<Texture2D> KnightMeleeRightList;
-        List<Texture2D> KnightIdleList;
-        List<Texture2D> KnightHitList;
+        List<Texture2D> RatfolkRightList;
+        List<Texture2D> RatfolkMeleeRightList;
+        List<Texture2D> RatfolkIdleList;
+        List<Texture2D> RatfolkHitList;
 
         List<Texture2D> minoRightList;
         List<Texture2D> minoMeleeRightList;
@@ -125,9 +126,12 @@ namespace Final_Project
         List<Texture2D> thunderList1;
         List<Texture2D> thunderList2;
 
+        List<Texture2D> coinTextureList;
+
         List<Texture2D> ArrowShotList;
         List<Texture2D> DeathShotList;
 
+        List<Barriers> coinList = new List<Barriers>();
         List<Barriers> barriersList = new List<Barriers>();
         List<Player> enemylist = new List<Player>();
         List<Player> allylist = new List<Player>();
@@ -198,7 +202,7 @@ namespace Final_Project
 
             buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 650, 160, 160), Color.Black, "Reaper Battle", 0));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(450, 150, 160, 160), Color.White, "Add Crusader", 300));
+            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(450, 150, 160, 160), Color.White, "Buy Ratfolk (Ally)", 125));
 
             barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
             barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
@@ -214,6 +218,9 @@ namespace Final_Project
             barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth /4- 50, mainGameHeight /4 - 62, 125, 150), 145, Color.White, "true", "true"));
             barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainGameHeight - mainGameHeight / 4 - 62, 125, 150), 145, Color.White, "true", "true"));
             barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainGameHeight/4 - 62, 125, 150), 145, Color.White, "true", "true"));
+
+            coinList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 35, 35), 80, Color.White, "false", "false")); 
+            coinList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 35, 35), 80, Color.White, "false", "false")); 
         }
         //----------------------------------------------------------------------LoadContent--------------------------------------------------------------------------------------
         protected override void LoadContent()
@@ -290,10 +297,10 @@ namespace Final_Project
             Texture2D SlayerMeleeRightTexture = Content.Load<Texture2D>("Slayer_Attack");
             Texture2D SlayerHitTexture = Content.Load<Texture2D>("Slayer_Hit");
             //Ally
-            Texture2D knightWalkingRight = Content.Load<Texture2D>("Crusader_Run");
-            Texture2D knightMeleeRightTexture = Content.Load<Texture2D>("Crusader_Attack");
-            Texture2D knightIdleTexture = Content.Load<Texture2D>("Crusader_Idle");
-            Texture2D knightHitTexture = Content.Load<Texture2D>("Crusader_Take_Hit");
+            Texture2D RatfolkWalkingRight = Content.Load<Texture2D>("Ratfolk_Move");
+            Texture2D RatfolkMeleeRightTexture = Content.Load<Texture2D>("Ratfolk_Attack");
+            Texture2D RatfolkIdleTexture = Content.Load<Texture2D>("Ratfolk_Idle");
+            Texture2D RatfolkHitTexture = Content.Load<Texture2D>("Ratfolk_Hit");
             //Bosses
             Texture2D minoWalkTexture = Content.Load<Texture2D>("Minotaur_Walk");
             Texture2D minoMeleeTexture = Content.Load<Texture2D>("Minotaur_Attack");
@@ -330,6 +337,8 @@ namespace Final_Project
 
             Texture2D thunder1Texture = Content.Load<Texture2D>("thunder1");
             Texture2D thunder2Texture = Content.Load<Texture2D>("thunder2");
+
+            Texture2D coinTexture = Content.Load<Texture2D>("GoldCoinSpinning");
             arrowTexture = Content.Load<Texture2D>("ArrowMove");
             Texture2D deathTexture = Content.Load<Texture2D>("Reaper_Summon");
 
@@ -399,10 +408,10 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, SlayerMeleeRightTexture, SlayerMeleeRightList = new List<Texture2D>(), 5);
             ReapetingAnimation(GraphicsDevice, SlayerHitTexture,SlayerHitList = new List<Texture2D>(), 4);
             //Ally
-            ReapetingAnimation(GraphicsDevice, knightWalkingRight, KnightRightList = new List<Texture2D>(), 6);
-            ReapetingAnimation(GraphicsDevice, knightMeleeRightTexture, KnightMeleeRightList = new List<Texture2D>(), 13);
-            ReapetingAnimation(GraphicsDevice, knightIdleTexture, KnightIdleList = new List<Texture2D>(), 6);
-            ReapetingAnimation(GraphicsDevice, knightHitTexture, KnightHitList = new List<Texture2D>(), 3);
+            ReapetingAnimation(GraphicsDevice, RatfolkWalkingRight, RatfolkRightList = new List<Texture2D>(), 7);
+            ReapetingAnimation(GraphicsDevice, RatfolkMeleeRightTexture, RatfolkMeleeRightList = new List<Texture2D>(), 12);
+            ReapetingAnimation(GraphicsDevice, RatfolkIdleTexture, RatfolkIdleList = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, RatfolkHitTexture, RatfolkHitList = new List<Texture2D>(), 4);
             //Bosses
             ReapetingAnimation(GraphicsDevice, minoWalkTexture, minoRightList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, minoMeleeTexture, minoMeleeRightList = new List<Texture2D>(), 9);
@@ -436,6 +445,8 @@ namespace Final_Project
 
             ReapetingAnimation(GraphicsDevice, thunder1Texture, thunderList1 = new List<Texture2D>(), 2);
             ReapetingAnimation(GraphicsDevice, thunder2Texture, thunderList2 = new List<Texture2D>(), 2);
+
+            ReapetingAnimation(GraphicsDevice, coinTexture, coinTextureList = new List<Texture2D>(), 24);
 
             ReapetingAnimation(GraphicsDevice, lightningTexture1, LightningShotList1 = new List<Texture2D>(), 4);
             ReapetingAnimation(GraphicsDevice, lightningTexture2, LightningShotList2 = new List<Texture2D>(), 4);
@@ -499,12 +510,12 @@ namespace Final_Project
             static void AddBringerOfDeath(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList , List<Texture2D> AiSpellRightList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 800, "death", 1, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiRightList, AiRightList, AiSpellRightList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 800, "death", 1.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiRightList, AiRightList, AiSpellRightList, AiRightList));
             }
             static void AddAlly(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList,  List<Texture2D> AiIdleList)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(120, 150), 250, "ally melee", 0.9 , AiRightList, AiIdleList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(100, 50), 120, "ally melee", 1.2 , AiRightList, AiIdleList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
             }
             static void MakeSpwanPoints(int mainGameWidth, int mainGameHeight, ref Vector2 spawnPoint)
             {
@@ -623,6 +634,8 @@ namespace Final_Project
                             fading = true;
                             button.Hovering = "true";
                             if (mouseState.LeftButton == ButtonState.Pressed)
+                                startGame = true;
+                            if (startGame)
                                 DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "title");
                         }
                         else if(button.Type == "How to Play")
@@ -646,7 +659,7 @@ namespace Final_Project
             //------------------------------------------Main Screen Update------------------------------------------------
             else if (screen == Screen.MainScreen)
             {
-
+                
                 foreach (Player troops in enemylist)
                     if (troops.GetBoundingBox().Intersects(new Rectangle(0, 0, mainGameWidth, mainGameHeight)))
                         toStore = false;
@@ -713,9 +726,9 @@ namespace Final_Project
                         }
                     }
                 }
-                while (t < crusaders)
+                while (t < Ratfolk)
                 {
-                    AddAlly(allylist, KnightRightList, KnightMeleeRightList, KnightHitList, KnightIdleList);
+                    AddAlly(allylist, RatfolkRightList, RatfolkMeleeRightList, RatfolkHitList, RatfolkIdleList);
                     t++;
                 }
 
@@ -753,8 +766,6 @@ namespace Final_Project
                             }
                         }
                     }
-
-
                     RespawnMethold = true;
                 }
 
@@ -770,17 +781,17 @@ namespace Final_Project
                     if (troops.Target == "target")
                     {
                         targetedEnemy = new Rectangle((int)troops.XLocation, (int)troops.YLocation, 100, 100);
-                        foreach (Player ally in allylist)
-                        {
-                            foreach (Barriers barrier in barriersList)
-                                if (ally.Collide(barrier.GetBoundingBox()))
-                                    ally.UserAttackMelee(enemylist, barriersList, null, null, mouseState.X, mouseState.Y, null, null, null, null, null, null, null);
-                            if (ally.Collide(troops.Hitbox()))
-                                ally.UserAttackMelee(enemylist, barriersList, null, null, mouseState.X, mouseState.Y, null, null, null, null, null, null, null);
-                        }
+                        
                     }
-                }
-
+                    foreach (Player ally in allylist)
+                    {
+                        foreach (Barriers barrier in barriersList)
+                            if (ally.Collide(barrier.GetBoundingBox()) && barrier.Breakable == "true")
+                                ally.UserAttackMelee(enemylist, barriersList, null, null, mouseState.X, mouseState.Y, null, null, null, null, null, null, null);
+                        if (ally.Collide(troops.Hitbox()))
+                            ally.UserAttackMelee(enemylist, barriersList, null, null, mouseState.X, mouseState.Y, null, null, null, null, null, null, null);
+                    }
+                }                     
                 //Make user move
                 MoveingUser(user, userspeed, keyboardState);
 
@@ -843,12 +854,30 @@ namespace Final_Project
                             barriersList.Add(new Barriers(grass2Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 20, 30), 80, Color.White, "false", "false")); break;
                         case 3:
                             barriersList.Add(new Barriers(grass3Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 20, 30), 80, Color.White, "false", "false")); break;
+                        
                     }
 
                 }
+                for (int i = 0; coinList.Count <= 30; i++)
+                {
+                    MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
+                    coinList.Add(new Barriers(grass3Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 35, 35), 80, Color.White, "false", "false")); break;
+                }
 
+                for (int i = coinList.Count - 1; i >= 0; i--)
+                {
+                    Barriers coins = coinList[i];
+                    if (user.Userbox().Contains(coins.GetBoundingBox()))
+                    {
+                        user.Points += 30;
+                        coinList.RemoveAt(i);
+                        break;
+                    }
+                        
+                }
+                
 
-                for (int i = barriersList.Count - 1; i >= 0; i--)
+                    for (int i = barriersList.Count - 1; i >= 0; i--)
                 {
                     Barriers t = barriersList[i];
                     if (!t.GetBoundingBox().Intersects(new Rectangle(-mainGameWidth, -mainGameHeight, mainGameWidth * 3, mainGameHeight * 3)))
@@ -903,10 +932,13 @@ namespace Final_Project
                 foreach (Player troops in enemylist)
 
                     troops.Update(backroundSpeed, barriersList, "main game", troops.Hitbox(), "ai");
+                foreach (Barriers coins in coinList)
+
+                    coins.Update(backroundSpeed, barriersList, ref coinTextureList, "coin");
 
                 foreach (Barriers barrier in barriersList)
 
-                    barrier.Update(backroundSpeed, barriersList);
+                    barrier.Update(backroundSpeed, barriersList,ref coinTextureList,"not coin");
 
                 //User Shots
 
@@ -996,7 +1028,7 @@ namespace Final_Project
                     LaserClass laser = laserList[i];
                     foreach (Player troops in enemylist)
                     {
-                        if (troops.Hitbox().Contains(laser.GetBoundingBox()))
+                        if (troops.Hitbox().Intersects(laser.GetBoundingBox()))
                         {
                             damgaeMultiplyer = 1;
                             if (troops.HeadShotBox().Intersects(laser.GetBoundingBox()))
@@ -1096,11 +1128,15 @@ namespace Final_Project
                     {
                         enemylist.RemoveAt(i);
                         user.Points += troops.PointsOnKill;
-
-
-                        bossBattle = false;
-                        wizardBattle = false;
-                        reaperBattle = false;
+                        if (bossBattle == true)
+                        {
+                            bossBattle = false;
+                            wizardBattle = false;
+                            reaperBattle = false;
+                            fading = true;
+                            
+                        }
+                        
 
                     }
                 }
@@ -1143,7 +1179,7 @@ namespace Final_Project
                         {
                             if (boost == true)
                             {
-                                button.Boosts(user, ref crusaders);
+                                button.Boosts(user, ref Ratfolk);
                                 boost = false;
                             }
                         }
@@ -1227,10 +1263,13 @@ namespace Final_Project
                     _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.SandyBrown);
                 else
                     _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkOliveGreen);
-
+                foreach (Barriers coins in coinList)
+                    coins.Draw(_spriteBatch, "coin", ref coinTextureList);
+                
+                
 
                 foreach (Barriers barrier in barriersList)
-                    barrier.Draw(_spriteBatch);
+                    barrier.Draw(_spriteBatch, "barrier", ref coinTextureList);
 
                 //Draw all the bullets
                 foreach (LaserClass bullet in laserList)
@@ -1284,7 +1323,7 @@ namespace Final_Project
                 foreach (Barriers barrier in barriersList)
                 {
                     if (barrier.Blocking == "false")
-                        barrier.Draw(_spriteBatch);
+                        barrier.Draw(_spriteBatch, "barrier", ref coinTextureList);
                 }
                     
                 //Structures Far

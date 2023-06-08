@@ -61,7 +61,7 @@ namespace Final_Project
               
 
             }
-            else if (_type == "Add Crusader" && user.Points >= _cost)
+            else if (_type == "Buy Ratfolk (Ally)" && user.Points >= _cost)
             {
                 user.Points -= _cost;
                 crusaders += 1;

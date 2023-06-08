@@ -229,7 +229,7 @@ namespace Final_Project
             if (_weapontype == "wizard ball")
             {
                 _damage = 32+ boostDamage;
-                _gunInterval = 1.4f;
+                _gunInterval = 1.8f;
                 _projectileSpeed = 6;
             }
 
@@ -253,8 +253,8 @@ namespace Final_Project
             else if (_weapontype == "ally melee")
             {
                 _damage = 12 + boostDamage;
-                _gunInterval = 3.4f;
-                animationSpeed = 0.08;
+                _gunInterval = 2.0f;
+                animationSpeed = 0.11;
             }
 
             //Enemy Traits
@@ -319,14 +319,14 @@ namespace Final_Project
             else if (_weapontype == "minotaur")
             {
                 _damage = 160;
-                _gunInterval = 2.6f;
+                _gunInterval = 2.0f;
                 _killpoints = 850;
                 _enemyType = "melee";
                 if (_health <= 200)
                 {
-                    _damage = 180;
-                    _gunInterval = 2.0f;
-                    _speed = 3.3;
+                    _damage = 225;
+                    _gunInterval = 1.2f;
+                    _speed = 3.7;
                     otherColor = Color.Red;
                     hitColor = Color.DarkRed;
                 }
@@ -341,7 +341,7 @@ namespace Final_Project
                 if (_health <= 150)
                 {
                     _damage = 139;
-                    _gunInterval = 0.8f;
+                    _gunInterval = 0.6f;
                     _speed = 4;
                     otherColor = Color.Red;
                     hitColor = Color.DarkRed;
@@ -352,9 +352,19 @@ namespace Final_Project
                 _damage = 205;
                 _gunInterval = 2.1f;
                 _killpoints = 10000;
+               
                 _enemyType = "both";
                 animationSpeed = 0.11;
-                _projectileSpeed = 12;
+                _projectileSpeed = 11;
+                if (_health <= 150)
+                {
+                    _damage = 245;
+                    _gunInterval = 1.6f;
+                    _speed = 3;
+                    otherColor = Color.Black;
+                    hitColor = Color.Black;
+                    _projectileSpeed = 15;
+                }
             }
 
         }
@@ -552,31 +562,26 @@ namespace Final_Project
         public void EnemyAttackMelee(Player user, List<Barriers> barriers, List<Player> allylist, List<LaserClass> enemyLaserList, Vector2 playerPositions, List<Texture2D> texture1, List<Texture2D> texture2, List<Texture2D> texture3)
         {
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
-
             if (timeSinceLastAttack.TotalSeconds >= GunInterval)
             {
-
+                lastMeleeTime = DateTime.Now; // update last shot time 
                 if (_enemyType == "melee" || _enemyType == "both")
                 {
                     if (_rectangle.Intersects(user.GetBoundingBox()))
                     {
-                        lastMeleeTime = DateTime.Now; // update last shot time 
+                        
                         if (LightSaberHitBoxRight().Intersects(user.Userbox()))
                         {
                             user.Health -= _damage;
                             user.UserHit();
                         }
-       
-
                         else if (LightSaberHitBoxLeft().Intersects(user.Userbox()))
                         {
                             user.Health -= _damage;
                             user.UserHit();
-                        }
-                            
+                        }                           
                     }
-                    
-
+                   
                 }
                 if (_enemyType == "shoter" &&  new Rectangle(-100, -100, 1600, 1000).Contains(GetBoundingBox()) || _enemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
                 {
@@ -585,11 +590,11 @@ namespace Final_Project
                     else
                         enemyPosition = new Vector2(XLocation, YLocation);
 
-                    float missingRange = rand.Next(-90, 90);
+                    float missingRange = rand.Next(-100, 100);
                     var enemydistance = new Vector2(playerPositions.X + missingRange - enemyPosition.X, playerPositions.Y + missingRange - enemyPosition.Y);
                     enemyRotation = (float)Math.Atan2(enemydistance.Y, enemydistance.X);
 
-                    lastMeleeTime = DateTime.Now; // update last shot time  
+                   
                     if (WeaponType == "fire ball")
                         enemyLaserList.Add(new LaserClass(texture1, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 35), _damage));                    
                     else if(WeaponType == "arrow")
@@ -599,8 +604,7 @@ namespace Final_Project
                         SpecialAttack();
                         enemyLaserList.Add(new LaserClass(texture3, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 120, 60), _damage));
                     }                                       
-                }
-                
+                }   
                 foreach (Player ally in allylist)
                 {
 
@@ -608,27 +612,20 @@ namespace Final_Project
                     {
                         DrawEnemyAttack(null);
                         ally.Health -= _damage;
-                        if (Attacking == "false")
-                            lastMeleeTime = DateTime.Now; // update last shot time 
-
+                        ally.UserHit();
                     }
                 }
                 foreach (Barriers barrier in barriers)
                 {
-
                     if (GetBoundingBox().Intersects(barrier.GetBoundingBox()))
                     { 
                         DrawEnemyAttack(null);
-                        barrier.TakeHit((int)_damage);
-                        if (Attacking == "false")
-                            lastMeleeTime = DateTime.Now; // update last shot time 
+                        barrier.TakeHit((int)_damage);                      
+                       
 
                     }
-
                 }
-      
             }
-
         }
         public string Sheilding
         {
@@ -745,7 +742,7 @@ namespace Final_Project
             }
 
             
-              _guardSpeed += 0.08;
+            _guardSpeed += 0.08;
 
             if (_guardSpeed >= _guardTextures.Count - 0.5)
             {
