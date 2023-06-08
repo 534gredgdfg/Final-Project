@@ -30,7 +30,7 @@ namespace Final_Project
             hovering = "false";
         }
         
-        public void Boosts(Player user, ref int crusaders)
+        public void Boosts(Player user, ref int crusaders, ref int difficulty)
         {
             
             if (_type == "Health Potion" && user.Points >= _cost)
@@ -67,6 +67,11 @@ namespace Final_Project
                 crusaders += 1;
               
 
+            }
+            else if (_type == "Increase Difficuly (+$250)" && user.Points >= _cost)
+            {
+                user.Points += _cost;
+                difficulty += 1;
             }
             spent += _cost;
 
@@ -127,11 +132,11 @@ namespace Final_Project
             {
                 if (hovering == "true" && _cost > 0)
                 {
-                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X, _rect.Y - 50), Color.White);
+                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X- 50, _rect.Y - 50), Color.White);
                 }
                 else if (_cost == 0)
                 {
-                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X, _rect.Y - 50), Color.White);
+                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X - 50, _rect.Y - 50), Color.White);
                 }
                 if (_cost > 0)
                     spriteBatch.DrawString(Font, $"${_cost}", new Vector2(_rect.X - 60, _rect.Y), Color.White);

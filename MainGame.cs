@@ -30,7 +30,7 @@ namespace Final_Project
         int mainScreenHeight = 1000;
         int movedDistanceX = 0;
         int movedDistanceY = 0;
-        int wave = 0;
+        int difficulty = 3;
         int randomNumber;
         Color dimScreenColor;
         bool RespawnMethold = false;
@@ -217,6 +217,8 @@ namespace Final_Project
             buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 650, 160, 160), Color.Black, "Reaper Battle", 0));
 
             buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(450, 150, 160, 160), Color.White, "Buy Ratfolk (Ally)", 125));
+
+            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 400, 160, 160), Color.White, "Increase Difficuly (+$250)", 250));
 
             barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
             barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
@@ -731,7 +733,7 @@ namespace Final_Project
                     }
                     if (keyboardState.IsKeyDown(Keys.P) && enemylist.Count == 0)
                     {
-                        wave += 1;
+                        difficulty += 1;
                         RespawnMethold = false;
                         if (wizardBattle == true)
                             AddWizard(enemylist, wizardRightList, wizardMeleeRightList, wizardHitList);
@@ -744,7 +746,7 @@ namespace Final_Project
                 }
                 else
                 {
-                    for (int i = 0; enemylist.Count <= 3; i++)
+                    for (int i = 0; enemylist.Count <= difficulty; i++)
                     {
                         enemyType = rand.Next(1, 8);
                         MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
@@ -1284,11 +1286,11 @@ namespace Final_Project
                     if (button.Contains(user.Userbox()))
                     {
                         button.Hovering = "true";
-                        if (keyboardState.IsKeyDown(Keys.B))
+                        if (keyboardState.IsKeyDown(Keys.Enter))
                         {
                             if (boost == true)
                             {
-                                button.Boosts(user, ref Ratfolk);
+                                button.Boosts(user, ref Ratfolk, ref difficulty);
                                 boost = false;
                             }
                         }
@@ -1416,7 +1418,7 @@ namespace Final_Project
 
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
                 _spriteBatch.DrawString(healthFont, $"{user.Health}", new Vector2(550, 900), Color.White);
-                _spriteBatch.DrawString(healthFont, $"{wave}", new Vector2(400, 900), Color.White);
+                _spriteBatch.DrawString(healthFont, $"{difficulty-2}", new Vector2(400, 900), Color.White);
                 _spriteBatch.DrawString(healthFont, $"{user.Points}", new Vector2(800, 900), Color.White);
                 _spriteBatch.DrawString(healthFont, (seconds).ToString("0.0"), new Vector2(1000, 900), Color.CornflowerBlue);
                 //user.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle, "true");
@@ -1444,7 +1446,8 @@ namespace Final_Project
                 _spriteBatch.Draw(hutBlueTexture, new Rectangle(66, 0, 240, 200), Color.White);
                 foreach (Npc npc in npcList)
                     npc.Draw(_spriteBatch);
-
+                //Structures Close
+                _spriteBatch.Draw(hutTexture, new Rectangle(162, 660, 200, 200), Color.White);
                 //Button text
                 foreach (Buttons button in buttonList)             
                     button.DrawText(_spriteBatch, damageFont);
@@ -1452,14 +1455,13 @@ namespace Final_Project
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
                 user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0));
 
-                //Structures Close
-                _spriteBatch.Draw(hutTexture, new Rectangle(162, 660, 200,200), Color.White);
+                
                 
 
                 //Hud               
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
                 _spriteBatch.DrawString(healthFont, $"{user.Health}", new Vector2(550, 900), Color.White);
-                _spriteBatch.DrawString(healthFont, $"{wave}", new Vector2(400, 900), Color.White);
+                _spriteBatch.DrawString(healthFont, $"{difficulty-2}", new Vector2(400, 900), Color.White);
                 _spriteBatch.DrawString(healthFont, $"{user.Points}", new Vector2(800, 900), Color.White);
                 _spriteBatch.DrawString(healthFont, (seconds).ToString("0.0"), new Vector2(1000, 900), Color.CornflowerBlue);
 
