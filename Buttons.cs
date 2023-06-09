@@ -14,11 +14,12 @@ namespace Final_Project
         private Color _color;
        
         private string _type;
-        private string hovering;
-        private string bought;
+        private string hovering;       
         private int spent;
         private int _cost;
-
+        private int _totalCost;
+        private bool bought;
+        private bool poor;
         public Buttons(Texture2D texture, Rectangle rect, Color color, string type, int cost)
         {
        
@@ -61,7 +62,7 @@ namespace Final_Project
               
 
             }
-            else if (_type == "Buy Ratfolk (Ally)" && user.Points >= _cost)
+            else if (_type == "Ratfolk (Ally)" && user.Points >= _cost)
             {
                 user.Points -= _cost;
                 crusaders += 1;
@@ -73,6 +74,10 @@ namespace Final_Project
                 user.Points += _cost;
                 difficulty += 1;
             }
+            else
+            {
+                poor = true;
+            }
             spent += _cost;
 
         }
@@ -82,12 +87,33 @@ namespace Final_Project
             get { return _type; }
             set { _type = value; }
         }
+        public int Cost
+        {
+            get { return _cost; }
+            set { _cost = value; }
+        }
+        public int TotalButtonCost
+        {
+            get { return _totalCost; }
+            set { _totalCost = value; }
+        }
         public string Hovering
         {
             get { return hovering; }
             set { hovering = value; }
         }
-        
+        public bool Bought
+        {
+            get { return bought; }
+            set { bought = value; }
+        }
+        public bool Poor
+        {
+            get { return poor; }
+            set { poor = value; }
+        }
+
+
         public void InstructionsDraw(SpriteBatch spriteBatch, SpriteFont Font)
         {
             if (_type == "Instructions")
@@ -126,6 +152,14 @@ namespace Final_Project
             if (_type != "Start" && _type != "How to Play" && _type != "Instructions")
                 spriteBatch.Draw(_texture, _rect, _color);
         }
+        public void DrawBuyingItem(Player user, SpriteBatch spriteBatch, SpriteFont Font)
+        {
+            if (_type == "Increase Difficuly (+$250)" && user.Points >= _cost)
+                spriteBatch.DrawString(Font, $"Bought {_type}, +${_totalCost}", new Vector2(450, 425), Color.White);
+            else if (_type != "Start" && _type != "How to Play" && _type != "Instructions" && user.Points >= _cost)
+                spriteBatch.DrawString(Font, $"Bought {_type}, -${_totalCost}", new Vector2(500, 425), Color.White);
+        }
+       
         public void DrawText(SpriteBatch spriteBatch, SpriteFont Font)
         {
             if (_type != "Start" && _type != "How to Play" && _type != "Instructions")
@@ -141,8 +175,11 @@ namespace Final_Project
                 if (_cost > 0)
                     spriteBatch.DrawString(Font, $"${_cost}", new Vector2(_rect.X - 60, _rect.Y), Color.White);
                 else
-                    spriteBatch.DrawString(Font, "FREE", new Vector2(_rect.X - 60, _rect.Y), Color.White);
-
+                    spriteBatch.DrawString(Font, "BOSS", new Vector2(_rect.X - 60, _rect.Y), Color.White);
+                if (poor)
+                {
+                    spriteBatch.DrawString(Font, "You need more money for this!", new Vector2(450, 425), Color.White);
+                }
             }
 
         }

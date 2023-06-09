@@ -10,12 +10,13 @@ namespace Final_Project
         
         List<Texture2D> _texturesList;
         private Rectangle _rect;
+        private SpriteEffects direction;
         private double _updateSpeed;
-        
+        private string type;
         
 
 
-        public Npc(Rectangle rect, List<Texture2D> texturesList)
+        public Npc(Rectangle rect, List<Texture2D> texturesList, string type)
         {
             _texturesList = texturesList;
             _rect = rect;
@@ -26,15 +27,16 @@ namespace Final_Project
         {
             _updateSpeed += 0.1;
 
-            if (_updateSpeed >= _texturesList.Count - 0.5)
-            {
-                _updateSpeed = 0;
-                
-            }
+            if (_updateSpeed >= _texturesList.Count - 0.5)            
+                _updateSpeed = 0;                           
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texturesList[(int)Math.Round(_updateSpeed)], _rect, Color.White);
+            direction = SpriteEffects.FlipHorizontally;
+            if (type == "right")
+                spriteBatch.Draw(_texturesList[(int)Math.Round(_updateSpeed)], _rect, Color.White);
+            else
+                spriteBatch.Draw(_texturesList[(int)Math.Round(_updateSpeed)], _rect, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
         }
     }
 }

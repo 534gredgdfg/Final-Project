@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 
@@ -28,13 +30,12 @@ namespace Final_Project
         int mainGameHeight = 900;
         int enemyType = 0;
         int mainScreenHeight = 1000;
-        int movedDistanceX = 0;
-        int movedDistanceY = 0;
         int difficulty = 3;
         int randomNumber;
         Color dimScreenColor;
         bool RespawnMethold = false;
         bool boost = false;
+       
         bool Instruct = false;
         bool fading;
         bool toStore;
@@ -43,12 +44,14 @@ namespace Final_Project
         bool reaperBattle = false;
         bool startGame = false;
 
-       
+        //Sounds
+        Song introMusic, bossMusic, mainMusic, storeMusic;
+
+
         double damgaeMultiplyer = 1;
         float seconds;
         float sheildTime;
 
-        private float playerRotation;
         
         private Vector2 playerPosition;
         
@@ -111,6 +114,8 @@ namespace Final_Project
         List<Texture2D> postionList;
         List<Texture2D> herbaleList;
         List<Texture2D> merchantList;
+        List<Texture2D> minoIdleList;
+        List<Texture2D> evilIdleList;
 
         List<Texture2D> fireBallList;
 
@@ -189,11 +194,21 @@ namespace Final_Project
             user = new Player(new Vector2(500, 500),new Vector2( 150, 185), 1000, "melee", 1.75, userRightList, userIdleList, userSheildWalkList, userSheildIdleList, userAttackList, userRightList, userSkillSheildList, userSpecialList, guardList);
 
             //Add Npc
-            npcList.Add(new Npc(new Rectangle(150, 100, 70, 100), herbaleList));
-            npcList.Add(new Npc(new Rectangle(950, 100, 70, 100), postionList));
-            npcList.Add(new Npc(new Rectangle(180, 750, 90,100), blacksmithList));
-            npcList.Add(new Npc(new Rectangle(990, 770, 50, 90), merchantList));
+            npcList.Add(new Npc(new Rectangle(150, 100, 70, 100), herbaleList, "right"));
+            npcList.Add(new Npc(new Rectangle(950, 100, 70, 100), postionList, "right"));
+            npcList.Add(new Npc(new Rectangle(180, 750, 90,100), blacksmithList, "right"));
+            npcList.Add(new Npc(new Rectangle(990, 770, 50, 90), merchantList, "right"));
 
+            npcList.Add(new Npc(new Rectangle(1200, 150, 190, 170), minoIdleList, "flip"));
+            npcList.Add(new Npc(new Rectangle(1200, 400, 230, 150), evilIdleList, "flip"));
+            npcList.Add(new Npc(new Rectangle(1200, 650, 230, 150), deathRightList, "flip"));
+
+            npcList.Add(new Npc(new Rectangle(450, 135, 100, 50), RatfolkIdleList, "flip"));
+            npcList.Add(new Npc(new Rectangle(475, 150, 100, 50), RatfolkIdleList, "right"));
+            npcList.Add(new Npc(new Rectangle(490, 160, 100, 50), RatfolkIdleList, "flip"));
+            npcList.Add(new Npc(new Rectangle(496, 135, 100, 50), RatfolkIdleList, "right"));
+            npcList.Add(new Npc(new Rectangle(475, 130, 100, 50), RatfolkIdleList, "right"));
+            
             //Home Screen Buttons
             buttonList.Add(new Buttons(rectangleTexture, new Rectangle(5, 520, 345, 90), Color.White, "Start", 0));
 
@@ -216,7 +231,7 @@ namespace Final_Project
 
             buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 650, 160, 160), Color.Black, "Reaper Battle", 0));
 
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(450, 150, 160, 160), Color.White, "Buy Ratfolk (Ally)", 125));
+            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(450, 150, 160, 160), Color.White, "Ratfolk (Ally)", 125));
 
             buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 400, 160, 160), Color.White, "Increase Difficuly (+$250)", 250));
 
@@ -256,7 +271,12 @@ namespace Final_Project
 
 
             // TODO: use this.Content to load your game content here
-            
+            //Sounds
+            introMusic = Content.Load<Song>("introMusic");
+            bossMusic = Content.Load<Song>("MusicBoss");
+            mainMusic = Content.Load<Song>("MusicMainGame");
+            storeMusic = Content.Load<Song>("MusicStore");
+
             rectangleTexture = Content.Load<Texture2D>("rectangle");
             outroBackroundTexture = Content.Load<Texture2D>("Art_Screen");
             introBackroundTexture = Content.Load<Texture2D>("Art_Intro");
@@ -346,7 +366,9 @@ namespace Final_Project
             Texture2D postionTexture = Content.Load<Texture2D>("Postion_Maker");
             Texture2D herbaleTexture = Content.Load<Texture2D>("Herbale_Maker");
             Texture2D merchantTexture = Content.Load<Texture2D>("Speed_Maker");
-            
+            Texture2D minoIdleTexture = Content.Load<Texture2D>("Minotaur_Idle");
+            Texture2D evilIdleTexture = Content.Load<Texture2D>("Evil_Idle");
+
             hutTexture = Content.Load<Texture2D>("Decorations_Hut");
             hutBlueTexture = Content.Load<Texture2D>("Decorations_Bluehut");
             //Projectiles
@@ -469,6 +491,8 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, postionTexture, postionList = new List<Texture2D>(), 19);
             ReapetingAnimation(GraphicsDevice, herbaleTexture, herbaleList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, merchantTexture, merchantList = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, minoIdleTexture, minoIdleList = new List<Texture2D>(), 5);
+            ReapetingAnimation(GraphicsDevice, evilIdleTexture, evilIdleList = new List<Texture2D>(), 8);
 
             //Projectiles
             ReapetingAnimation(GraphicsDevice, fireBallTexture, fireBallList = new List<Texture2D>(), 6);
@@ -639,7 +663,7 @@ namespace Final_Project
             }
             static void DimingScreen(ref bool fading, KeyboardState keyboardState, ref Color dimScreenColor, ref Player user, ref Screen screen, string type)
             {
-                                
+               
                 if (keyboardState.IsKeyDown(Keys.Tab))
                     fading = true;
 
@@ -648,6 +672,7 @@ namespace Final_Project
                 
                 if (dimScreenColor.A >= 255)
                 {
+                    MediaPlayer.Stop();
                     fading = false;
                     dimScreenColor.A = 0;
                     user.XLocation = 600;
@@ -672,7 +697,10 @@ namespace Final_Project
 
             if (screen == Screen.TitleScreen)
             {
-                
+                //Play intro song on loop
+                if (MediaPlayer.State == MediaState.Stopped)
+                    MediaPlayer.Play(introMusic);
+
                 foreach (Buttons button in buttonList)
                 {
 
@@ -710,7 +738,19 @@ namespace Final_Project
             //------------------------------------------Main Screen Update------------------------------------------------
             else if (screen == Screen.MainScreen)
             {
+                //Play intro song on loop
+                if (bossBattle)
+                {
+                    if (MediaPlayer.State == MediaState.Stopped)
+                        MediaPlayer.Play(bossMusic);
+                }
+                else
+                {
+                    if (MediaPlayer.State == MediaState.Stopped)
+                        MediaPlayer.Play(mainMusic);
+                }
                 
+
                 foreach (Player troops in enemylist)
                     if (troops.GetBoundingBox().Intersects(new Rectangle(0, 0, mainGameWidth, mainGameHeight)))
                         toStore = false;
@@ -1027,8 +1067,7 @@ namespace Final_Project
 
 
                 }
-                movedDistanceX -= (int)backroundSpeed.X;
-                movedDistanceY -= (int)backroundSpeed.Y;
+        
 
                 //Update User
                 user.Update(new Vector2(0, 0), barriersList, "main game", user.Userbox(), "user");
@@ -1262,13 +1301,11 @@ namespace Final_Project
 
                     }
                 }
-
-
-
-
             }
             else if (screen == Screen.StoreScreen)
-            { 
+            {
+                if (MediaPlayer.State == MediaState.Stopped)
+                    MediaPlayer.Play(storeMusic);
                 seconds = user.SheildSeconds;
 
                 MoveingUser(user, userspeed, keyboardState);
@@ -1276,9 +1313,10 @@ namespace Final_Project
                 foreach (Npc npc in npcList)
                     npc.Update();
                 user.Update(new Vector2(0, 0), barriersList, "not main game", user.Userbox(), "user");
-                if (keyboardState.IsKeyUp(Keys.B))
+                if (keyboardState.IsKeyUp(Keys.Enter))
                 {
                     boost = true;
+                    
                 }
                 foreach (Buttons button in buttonList)
                 {
@@ -1288,8 +1326,10 @@ namespace Final_Project
                         button.Hovering = "true";
                         if (keyboardState.IsKeyDown(Keys.Enter))
                         {
+                            button.Bought = true;
                             if (boost == true)
                             {
+                                button.TotalButtonCost += button.Cost;
                                 button.Boosts(user, ref Ratfolk, ref difficulty);
                                 boost = false;
                             }
@@ -1324,6 +1364,9 @@ namespace Final_Project
                     }
                     else
                     {
+                        button.Poor = false;
+                        button.TotalButtonCost = 0;
+                        button.Bought = false;
                         button.Hovering = "false";
                     }
 
@@ -1449,9 +1492,15 @@ namespace Final_Project
                 //Structures Close
                 _spriteBatch.Draw(hutTexture, new Rectangle(162, 660, 200, 200), Color.White);
                 //Button text
-                foreach (Buttons button in buttonList)             
+                foreach (Buttons button in buttonList)
+                {
                     button.DrawText(_spriteBatch, damageFont);
-                
+                    if (button.Bought)
+                        button.DrawBuyingItem(user,_spriteBatch, damageFont);
+                }            
+         
+                   
+
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
                 user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0));
 

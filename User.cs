@@ -65,6 +65,8 @@ namespace Final_Project
         private Color hitColor;
         private Color otherColor;
 
+       
+
         List<Texture2D> _walkingTextures;
         List<Texture2D> _standingTextures;
         List<Texture2D> _transTextures;
@@ -228,14 +230,14 @@ namespace Final_Project
             //User Traits
             if (_weapontype == "wizard ball")
             {
-                _damage = 32+ boostDamage;
+                _damage = 26+ boostDamage;
                 _gunInterval = 1.8f;
                 _projectileSpeed = 6;
             }
 
             else if (_weapontype == "melee")
             {
-                _damage = 26 + boostDamage;
+                _damage = 22 + boostDamage;
                 _gunInterval = 1.0f;
 
             }

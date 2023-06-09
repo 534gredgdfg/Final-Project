@@ -313,6 +313,18 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Death_Walk.png;Death_Walk.png
 
+#begin C:/Users/owenr/Downloads/Evil_Idle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Evil_Idle.png;Evil_Idle.png
+
 #begin C:/Users/owenr/Downloads/Evil_Move.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -384,6 +396,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Health_Full.png;Health_Full.png
+
+#begin C:/Users/owenr/Downloads/Minotaur_Idle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Minotaur_Idle.png;Minotaur_Idle.png
 
 #begin C:/Users/owenr/Downloads/Minotaur_Walk.png
 /importer:TextureImporter
@@ -874,6 +898,12 @@
 /processorParam:TextureFormat=Color
 /build:ice2.png
 
+#begin introMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:introMusic.mp3
+
 #begin lightning1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -957,6 +987,24 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Move_Fire_Ball.png
+
+#begin MusicBoss.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:MusicBoss.mp3
+
+#begin MusicMainGame.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:MusicMainGame.mp3
+
+#begin MusicStore.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:MusicStore.mp3
 
 #begin NatureSprite-Dark-Tree.png
 /importer:TextureImporter
