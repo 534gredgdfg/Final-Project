@@ -20,6 +20,7 @@ namespace Final_Project
         private int _totalCost;
         private bool bought;
         private bool poor;
+        private bool changeDifficulty;
         public Buttons(Texture2D texture, Rectangle rect, Color color, string type, int cost)
         {
        
@@ -29,6 +30,7 @@ namespace Final_Project
             _type = type;
             _cost = cost;
             hovering = "false";
+            changeDifficulty = true;
         }
         
         public void Boosts(Player user, ref int crusaders, ref int difficulty)
@@ -69,10 +71,12 @@ namespace Final_Project
               
 
             }
-            else if (_type == "Increase Difficuly (+$250)" && user.Points >= _cost)
+            else if (_type == "Increase Difficuly (+$250)" && user.Points >= _cost && changeDifficulty == true)
             {
                 user.Points += _cost;
                 difficulty += 1;
+                changeDifficulty = false;
+                Bought = false;
             }
             else
             {

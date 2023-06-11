@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
-using System.Text;
-
 
 namespace Final_Project
 {
@@ -16,12 +17,14 @@ namespace Final_Project
         private Vector2 _velocity;
         private Rectangle greenBar;
         private Rectangle redBar;
+        private Rectangle userFullBar;
+        private Rectangle userEmptyBar;
         private Rectangle _rectangle;
 
         private DateTime lastMeleeTime = DateTime.MinValue;
         private DateTime lastMeleeTimes = DateTime.MinValue;
         private double _speed;
-
+        private double damgaeMultiplyer;
         private Vector2 _damageTextVector;
         private Vector2 playerPosition;
         private Vector2 enemyPosition;
@@ -37,7 +40,7 @@ namespace Final_Project
         private int _damage;
         private int _killpoints = 0;
         private int _points = 1000;
-        private int _sheildSeconds = 10;
+        private int _sheildSeconds = 12;
         private double _boostSpeed;
         private int boostDamage;
         private double _meleeSpeed;
@@ -110,7 +113,8 @@ namespace Final_Project
             redBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health + (int)Health / 4, 10);
             greenBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health, redBar.Height - redBar.Height / 5);
 
-
+            userEmptyBar = new Rectangle(200, 910, (int)Health/2 + 30, 23);
+            userFullBar = new Rectangle(210, 916, (int)Health / 2, 10);
 
         }
         public Texture2D Texture
@@ -182,6 +186,11 @@ namespace Final_Project
         {
             get { return (float)_gunInterval; }
             set { _gunInterval = value; }
+        }
+        public Double HeadShot
+        {
+            get { return damgaeMultiplyer; }
+            set { damgaeMultiplyer = value; }
         }
 
         public string Attacking
@@ -475,6 +484,7 @@ namespace Final_Project
                 lastMeleeTime = DateTime.Now; // update last shot time
                 if (WeaponType == "melee" || WeaponType == "sheild melee" || WeaponType == "ally melee")
                 {
+                    
                     foreach (Player troops in enemys)
                     {
 
@@ -775,17 +785,21 @@ namespace Final_Project
             greenBar.Y = _rectangle.Y;
             if (greenBar.Width != (int)Health)
                 greenBar.Width -= 1;
-
+            if (_health >= 1000)
+                _health = 1000;
+            if (SheildSeconds <= 5)
+                SheildSeconds = 5;
+            if (userFullBar.Width < _health / 2)
+                userFullBar.Width += 1;
+            else if (userFullBar.Width > _health / 2)
+                userFullBar.Width -= 1;
 
 
             Move(backSpeed, barriers, screen, Box, type);
         }
 
-        public void Draw(SpriteBatch spriteBatch, int mouseX, Vector2 guardLocation)
+        public void Draw(SpriteBatch spriteBatch, int mouseX, Vector2 guardLocation, SoundEffectInstance attackSound, SoundEffectInstance hitSound)
         {
-            
-
-
             if (HSpeed < 0 && mouseX < _rectangle.X)
             {
                 direction = SpriteEffects.FlipHorizontally;
@@ -819,7 +833,9 @@ namespace Final_Project
             if (_drawSheild == "false")
             {
                 if (_hit == "true")
-                {                   
+                {
+                    if(hitSound.State == SoundState.Stopped)
+                        hitSound.Play();
                     spriteBatch.Draw(_hitTextures[(int)Math.Round(_hitSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
                 }
                 else if (_special == "true")
@@ -829,6 +845,8 @@ namespace Final_Project
                 }
                 else if (_attack == "true")
                 {
+                    if (attackSound.State == SoundState.Stopped)
+                        attackSound.Play();
                     spriteBatch.Draw(_meleeTextures[(int)Math.Round(_meleeSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
 
                 }
@@ -848,7 +866,9 @@ namespace Final_Project
             else
             {
                 if (_hit == "true")
-                {                   
+                {
+                    if (hitSound.State == SoundState.Stopped)
+                        hitSound.Play();
                     spriteBatch.Draw(_guardTextures[(int)Math.Round(_guardSpeed)], new Rectangle((int)guardLocation.X, (int)guardLocation.Y, 24,30), null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
                 }
                 if (_trans == "true")
@@ -869,7 +889,7 @@ namespace Final_Project
 
 
         }
-        public void DrawDamage(SpriteBatch spriteBatch, SpriteFont FontText,double headshotMultiplyer, Vector2 backSpeed, string userWeapon)
+        public void DrawDamage(SpriteBatch spriteBatch, SpriteFont FontText, Vector2 backSpeed, string userWeapon)
         {
 
             _damageTextLocation.X += (int)_damageTextVector.X + (int)backSpeed.X;
@@ -879,7 +899,7 @@ namespace Final_Project
                 _damageTextVector = new Vector2(rand.Next(-2, 2), rand.Next(-2, -1));
                 if (_damageTextVector.X == 0)
                     _damageTextVector.X = 2;
-
+                HeadShot = 1;
                 ResetEnemyHit();
                 _damageTextLocation.X = Hitbox().X + 50;
                 _damageTextLocation.Y = Hitbox().Y;
@@ -889,14 +909,14 @@ namespace Final_Project
                 
                 _targeted = "not a target";
                 
-                if (headshotMultiplyer != 1)
-                    spriteBatch.DrawString(FontText, $"{(previousHealth - _health)* headshotMultiplyer}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.Yellow);
+                if (damgaeMultiplyer != 1)
+                    spriteBatch.DrawString(FontText, $"{(previousHealth - _health)* damgaeMultiplyer}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.Yellow);
                 else
                     spriteBatch.DrawString(FontText, $"{previousHealth - _health}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.White);
             }
 
         }
-        public void DrawHealth(SpriteBatch spriteBatch, Texture2D emptytTexture, Texture2D fullTextureRed, bool bossBattle, string user)
+        public void DrawHealth(SpriteBatch spriteBatch, Texture2D emptytTexture, Texture2D fullTextureRed, bool bossBattle, string player)
         {
             if (bossBattle == true)
             {
@@ -908,15 +928,20 @@ namespace Final_Project
                 greenBar.Height = redBar.Height - redBar.Height/4;
                 
             }
-           
-           
-            spriteBatch.Draw(emptytTexture, redBar, Color.White);
-            spriteBatch.Draw(fullTextureRed, greenBar, Color.White);
+            if (player == "user")
+            {
+                
+
+                spriteBatch.Draw(emptytTexture, userEmptyBar, Color.White);
+                spriteBatch.Draw(fullTextureRed, userFullBar, Color.White);
+
+            }
+            else
+            {
+                spriteBatch.Draw(emptytTexture, redBar, Color.White);
+                spriteBatch.Draw(fullTextureRed, greenBar, Color.White);
+            }
             
-           
-
         }
-
-
     }
 }

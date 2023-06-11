@@ -15,8 +15,9 @@ namespace Final_Project
         private SpriteBatch _spriteBatch;
         Player user;
 
-        Texture2D rectangleTexture, outroBackroundTexture,introBackroundTexture, hutBlueTexture,hutTexture,AiSkelMeleeRightTexture, AiSkelWalkingRight,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
+        Texture2D rectangleTexture, outroBackroundTexture,introBackroundTexture, hutBlueTexture,hutTexture,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
         Texture2D greenTreeTexture, bossBuyTexture, boostBuyTexture,redTreeTexture, brownTreeTexture, rock1Texture, rock2Texture, rock3Texture, grass1Texture, grass2Texture, grass3Texture, logTexture;
+        Texture2D UIHealthTexture, UIBlackTexture, UIHoverTexture, UIRedTexture, UIRedEmptyTexture, UIHeartTexture,UIBlueTexture, UIBlueEmptyTexture,wizardHeadTexture;
         Vector2 backroundSpeed;
         Rectangle targetedEnemy = new Rectangle(750, 450, 50,50);
         Vector2 spawnPoint,guardLocation;
@@ -46,7 +47,8 @@ namespace Final_Project
 
         //Sounds
         Song introMusic, bossMusic, mainMusic, storeMusic;
-
+        SoundEffect buttonSound, staffSound, hitSound;
+        SoundEffectInstance buttonSoundInsta, staffSoundInsta, hitSoundInsta;
 
         double damgaeMultiplyer = 1;
         float seconds;
@@ -55,9 +57,9 @@ namespace Final_Project
         
         private Vector2 playerPosition;
         
-        private SpriteFont healthFont;
-        private SpriteFont damageFont;
-
+        private SpriteFont healthFont, dungeonFont, damageFont;
+  
+    
         List<Texture2D> shotTexture;
         List<Texture2D> userRightList;       
         List<Texture2D> userAttackList;     
@@ -217,13 +219,13 @@ namespace Final_Project
             buttonList.Add(new Buttons(rectangleTexture, new Rectangle(500, 80, 545, 500), Color.White, "Instructions", 0));
 
             //Buttons
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 150, 150, 150), Color.White, "Health Potion", 50));
+            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 150, 160, 160), Color.White, "Health Potion", 50));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(900, 150, 150, 150), Color.White, "Sheild Recovery Time Decrease", 250));
+            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(900, 150, 160, 160), Color.White, "Sheild Recovery Time Decrease", 250));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(900, 750, 150, 150), Color.White, "Speed Boost", 500));
+            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(900, 750, 160, 160), Color.White, "Speed Boost", 500));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 750, 150, 150), Color.White, "Damage Boost", 300));
+            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 750, 160, 160), Color.White, "Damage Boost", 300));
 
             buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 150, 160, 160), Color.SandyBrown, "Minotaur Battle", 0));
 
@@ -277,6 +279,15 @@ namespace Final_Project
             mainMusic = Content.Load<Song>("MusicMainGame");
             storeMusic = Content.Load<Song>("MusicStore");
 
+            buttonSound = Content.Load<SoundEffect>("Effect_Button");
+            buttonSoundInsta = buttonSound.CreateInstance();
+
+            staffSound = Content.Load<SoundEffect>("Effect_Staff");
+            staffSoundInsta = buttonSound.CreateInstance();
+
+            hitSound = Content.Load<SoundEffect>("Effect_Hit");
+            hitSoundInsta = buttonSound.CreateInstance();
+
             rectangleTexture = Content.Load<Texture2D>("rectangle");
             outroBackroundTexture = Content.Load<Texture2D>("Art_Screen");
             introBackroundTexture = Content.Load<Texture2D>("Art_Intro");
@@ -284,8 +295,22 @@ namespace Final_Project
             emptyGreenBarTexture = Content.Load<Texture2D>("Health_Empty");
             healthGreenBarTexture = Content.Load<Texture2D>("Health_Full");
 
+            UIHealthTexture = Content.Load<Texture2D>("UI_Health");
+            UIBlackTexture = Content.Load<Texture2D>("UI_Black");
+            UIHoverTexture = Content.Load<Texture2D>("UI_Hover");
+
+            UIBlueTexture = Content.Load<Texture2D>("UI_Blue_Full");
+            UIBlueEmptyTexture = Content.Load<Texture2D>("UI_Blue_Empty");
+
+            UIRedTexture = Content.Load<Texture2D>("UI_Red_Full");
+            UIRedEmptyTexture = Content.Load<Texture2D>("UI_Red_Empty");
+            UIHeartTexture = Content.Load<Texture2D>("UI_Heart");
+
+            wizardHeadTexture = Content.Load<Texture2D>("Wizard_Head");
+
             healthFont = Content.Load<SpriteFont>("Good");
             damageFont = Content.Load<SpriteFont>("DamageText");
+            dungeonFont = Content.Load<SpriteFont>("DungonFont");
 
             wizardCrosshair = Content.Load<Texture2D>("WizardCrosshair");
             //Enviorment
@@ -706,19 +731,31 @@ namespace Final_Project
 
                     if (button.Contains(new Rectangle(mouseState.X, mouseState.Y, 20, 20)))
                     {
+                        
+                        
                         if (button.Type == "Start")
                         {
                             fading = true;
                             button.Hovering = "true";
                             if (mouseState.LeftButton == ButtonState.Pressed)
+                            {
+                                if (buttonSoundInsta.State == SoundState.Stopped)
+                                    buttonSoundInsta.Play();
                                 startGame = true;
+                            }
+                                
                             
                         }
                         else if(button.Type == "How to Play")
                         {
                             button.Hovering = "true";
                             if (mouseState.LeftButton == ButtonState.Pressed)
+                            {
+                                if (buttonSoundInsta.State == SoundState.Stopped)
+                                    buttonSoundInsta.Play();
                                 Instruct = true;
+                            }
+                                
                             else
                                 Instruct = false;
                         }
@@ -767,7 +804,7 @@ namespace Final_Project
                         Player t = enemylist[i];
                         if (t.WeaponType != "minotaur" && t.WeaponType != "wizard" && t.WeaponType != "death")
                         {
-                            enemylist.RemoveAt(i);
+                            enemylist.Clear();
                             break;
                         }
                     }
@@ -783,6 +820,7 @@ namespace Final_Project
                             AddMinotaur(enemylist, minoRightList, minoMeleeRightList, minoHitList);
 
                     }
+                    
                 }
                 else
                 {
@@ -1180,13 +1218,11 @@ namespace Final_Project
                     {
                         if (troops.Hitbox().Intersects(laser.GetBoundingBox()))
                         {
-                            damgaeMultiplyer = 1;
+                            
                             if (troops.HeadShotBox().Intersects(laser.GetBoundingBox()))
-                            {
-                                damgaeMultiplyer = 1.5f;
+                                troops.HeadShot = 1.5f;
 
-                            }
-
+                            
                             troops.Health -= user.WeaponDamage * (float)damgaeMultiplyer;
                             troops.EnemyHit();
                             laserList.RemoveAt(i);
@@ -1326,13 +1362,16 @@ namespace Final_Project
                         button.Hovering = "true";
                         if (keyboardState.IsKeyDown(Keys.Enter))
                         {
-                            button.Bought = true;
+                            
                             if (boost == true)
                             {
+                                button.Bought = true;
                                 button.TotalButtonCost += button.Cost;
                                 button.Boosts(user, ref Ratfolk, ref difficulty);
                                 boost = false;
                             }
+                            if (bossBattle)
+                                fading = true;
                         }
 
                         if (button.Type == "Minotaur Battle")
@@ -1433,18 +1472,18 @@ namespace Final_Project
                 //Draw all the bullets
                 foreach (LaserClass bullet in laserList)
                     bullet.Draw(_spriteBatch, lightningTexture2);
-                user.Draw(_spriteBatch, mouseState.X, guardLocation);
+                user.Draw(_spriteBatch, mouseState.X, guardLocation, staffSoundInsta, hitSoundInsta);
                 
                 foreach (Player ally in allylist)
                 {
-                    ally.Draw(_spriteBatch, 100000, new Vector2(0,0));
+                    ally.Draw(_spriteBatch, 100000, new Vector2(0,0), staffSoundInsta, hitSoundInsta);
                    
                 }
                 foreach (Player ai in enemylist)
                 {
-                    ai.Draw(_spriteBatch, 100000, new Vector2(0, 0));
-                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle, "false");                   
-                    ai.DrawDamage(_spriteBatch, damageFont,damgaeMultiplyer, backroundSpeed, user.WeaponType);
+                    ai.Draw(_spriteBatch, 100000, new Vector2(0, 0), staffSoundInsta, hitSoundInsta);
+                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle, "ai");                   
+                    ai.DrawDamage(_spriteBatch, damageFont, backroundSpeed, user.WeaponType);
                 }
                
                 
@@ -1459,11 +1498,16 @@ namespace Final_Project
                     _spriteBatch.DrawString(damageFont, "Minotaur", new Vector2(mainGameWidth / 2 - 80, 0), Color.White);
                 //Hud               
 
-                _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
-                _spriteBatch.DrawString(healthFont, $"{user.Health}", new Vector2(550, 900), Color.White);
-                _spriteBatch.DrawString(healthFont, $"{difficulty-2}", new Vector2(400, 900), Color.White);
-                _spriteBatch.DrawString(healthFont, $"{user.Points}", new Vector2(800, 900), Color.White);
-                _spriteBatch.DrawString(healthFont, (seconds).ToString("0.0"), new Vector2(1000, 900), Color.CornflowerBlue);
+               // _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
+                _spriteBatch.Draw(UIHealthTexture, new Rectangle(100, mainGameHeight, 250, 100), Color.White);
+                _spriteBatch.Draw(wizardHeadTexture, new Rectangle(115, mainGameHeight + 5, 70, 85), Color.White);
+                _spriteBatch.Draw(UIHeartTexture, new Rectangle(735, 910, 30, 30), Color.White);
+                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture, false, "user");
+                _spriteBatch.DrawString(dungeonFont, $"{user.Points}", new Vector2(230, mainGameHeight +55), Color.White);             
+                _spriteBatch.DrawString(dungeonFont, $"{difficulty-2}", new Vector2(600, 940), Color.White);               
+                _spriteBatch.DrawString(dungeonFont, (seconds).ToString("0.0"), new Vector2(1000, 900), Color.CornflowerBlue);
+
+
                 //user.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle, "true");
 
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
@@ -1502,17 +1546,20 @@ namespace Final_Project
                    
 
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
-                user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0));
+                user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0), staffSoundInsta, hitSoundInsta);
 
-                
-                
+
+
 
                 //Hud               
-                _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
-                _spriteBatch.DrawString(healthFont, $"{user.Health}", new Vector2(550, 900), Color.White);
-                _spriteBatch.DrawString(healthFont, $"{difficulty-2}", new Vector2(400, 900), Color.White);
-                _spriteBatch.DrawString(healthFont, $"{user.Points}", new Vector2(800, 900), Color.White);
-                _spriteBatch.DrawString(healthFont, (seconds).ToString("0.0"), new Vector2(1000, 900), Color.CornflowerBlue);
+               // _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
+                _spriteBatch.Draw(UIHealthTexture, new Rectangle(100, mainGameHeight, 250, 100), Color.White);
+                _spriteBatch.Draw(wizardHeadTexture, new Rectangle(115, mainGameHeight + 5, 70, 85), Color.White);
+                _spriteBatch.Draw(UIHeartTexture, new Rectangle(735, 910, 30, 30), Color.White);
+                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture, false, "user");
+                _spriteBatch.DrawString(dungeonFont, $"{user.Points}", new Vector2(230, mainGameHeight + 55), Color.White);
+                _spriteBatch.DrawString(dungeonFont, $"{difficulty - 2}", new Vector2(600, 940), Color.White);
+                _spriteBatch.DrawString(dungeonFont, (seconds).ToString("0.0"), new Vector2(1000, 900), Color.CornflowerBlue);
 
                 // - screen fade
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), dimScreenColor);
