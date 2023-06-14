@@ -20,7 +20,7 @@ namespace Final_Project
         private float rotation;
         private int _damage;
 
-        public LaserClass( List<Texture2D> ligthningTextures, Vector2 position, float rotation, Rectangle rect, int damage)
+        public LaserClass(List<Texture2D> ligthningTextures, Vector2 position, float rotation, Rectangle rect, int damage)
         {
 
 
@@ -38,14 +38,17 @@ namespace Final_Project
             set { _damage = value; }
         }
 
-        public void Update(GameTime gt, int projectileSpeed)
+        public void Update(GameTime gt, Vector2 backSpeed, double projectileSpeed)
         {
 
             velocity = new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation));
-            velocity *= projectileSpeed;
+            velocity *= (float)projectileSpeed;
             position += velocity;
-            rect.X = (int)position.X ;
-            rect.Y = (int)position.Y + 40;
+            rect.X = (int)position.X;
+            rect.Y = (int)position.Y ;
+
+            position.X += (int)backSpeed.X;
+            position.Y += (int)backSpeed.Y;
 
             updateSpeed += 0.09;
             if (updateSpeed >= lightningTextures.Count - 0.5)
@@ -55,6 +58,7 @@ namespace Final_Project
         {
             return new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
         }
+        
         public bool Collide(Rectangle item)
         {
             return rect.Intersects(item);

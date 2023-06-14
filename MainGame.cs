@@ -17,7 +17,7 @@ namespace Final_Project
 
         Texture2D rectangleTexture, outroBackroundTexture,introBackroundTexture, hutBlueTexture,hutTexture,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
         Texture2D greenTreeTexture, bossBuyTexture, boostBuyTexture,redTreeTexture, brownTreeTexture, rock1Texture, rock2Texture, rock3Texture, grass1Texture, grass2Texture, grass3Texture, logTexture;
-        Texture2D UIHealthTexture, UIBlackTexture, UIHoverTexture, UIRedTexture, UIRedEmptyTexture, UIHeartTexture,UIBlueTexture, UIBlueEmptyTexture,wizardHeadTexture;
+        Texture2D hoverTexture, UIStatsTexture ,notHoverTexture,UIHealthTexture, UIBlackTexture, UIHoverTexture, UIRedTexture, UIGrayFullTexture,UIRedEmptyTexture, UIHeartTexture,UIBlueTexture, UIBlueEmptyTexture,wizardHeadTexture;
         Vector2 backroundSpeed;
         Rectangle targetedEnemy = new Rectangle(750, 450, 50,50);
         Vector2 spawnPoint,guardLocation;
@@ -31,15 +31,23 @@ namespace Final_Project
         int mainGameHeight = 900;
         int enemyType = 0;
         int mainScreenHeight = 1000;
-        int difficulty = 3;
+        int difficulty = 0;
+        int difficultyChange = 1400;
         int randomNumber;
+
+        int silverCoinGain = 15;
+        int goldCoinGain = 25;
+        int redCoinGain = 75;
+        int greenCoinGain = 125;
+
+        double totalSpent = 0;
         Color dimScreenColor;
         bool RespawnMethold = false;
         bool boost = false;
        
         bool Instruct = false;
         bool fading;
-        bool toStore;
+        bool toStore = false;
         bool bossBattle = false;
         bool wizardBattle = false;
         bool reaperBattle = false;
@@ -47,8 +55,8 @@ namespace Final_Project
 
         //Sounds
         Song introMusic, bossMusic, mainMusic, storeMusic;
-        SoundEffect buttonSound, staffSound, hitSound;
-        SoundEffectInstance buttonSoundInsta, staffSoundInsta, hitSoundInsta;
+        SoundEffect buttonSound, staffSound, hitSound, fireSound;
+        SoundEffectInstance buttonSoundInsta;
 
         double damgaeMultiplyer = 1;
         float seconds;
@@ -77,6 +85,10 @@ namespace Final_Project
         List<Texture2D> AiArcherRightList;  
         List<Texture2D> AiArcherMeleeRightList;
         List<Texture2D> AiArcherHitList;
+
+        List<Texture2D> guyArcherRightList;
+        List<Texture2D> guyArcherMeleeRightList;
+        List<Texture2D> guyArcherHitList;
 
         List<Texture2D> AiWormRightList;
         List<Texture2D> AiWormMeleeRightList;
@@ -148,6 +160,8 @@ namespace Final_Project
         List<Texture2D> flowerGifTextureList;
         List<Texture2D> flowerGif2TextureList;
 
+        List<Texture2D> bushGifTextureList;
+
         List<Texture2D> ArrowShotList;
         List<Texture2D> DeathShotList;
 
@@ -193,7 +207,7 @@ namespace Final_Project
             dimScreenColor = new Color(0, 0, 0, 0);
             base.Initialize();
             //Texture, x, y, width, health, heatup amount, firable shots
-            user = new Player(new Vector2(500, 500),new Vector2( 150, 185), 1000, "melee", 1.75, userRightList, userIdleList, userSheildWalkList, userSheildIdleList, userAttackList, userRightList, userSkillSheildList, userSpecialList, guardList);
+            user = new Player(new Vector2(500, 500),new Vector2( 150, 185), 800, "melee", 1.75, userRightList, userIdleList, userSheildWalkList, userSheildIdleList, userAttackList, userRightList, userSkillSheildList, userSpecialList, guardList, staffSound, hitSound);
 
             //Add Npc
             npcList.Add(new Npc(new Rectangle(150, 100, 70, 100), herbaleList, "right"));
@@ -210,61 +224,66 @@ namespace Final_Project
             npcList.Add(new Npc(new Rectangle(490, 160, 100, 50), RatfolkIdleList, "flip"));
             npcList.Add(new Npc(new Rectangle(496, 135, 100, 50), RatfolkIdleList, "right"));
             npcList.Add(new Npc(new Rectangle(475, 130, 100, 50), RatfolkIdleList, "right"));
-            
+
             //Home Screen Buttons
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(5, 520, 345, 90), Color.White, "Start", 0));
+            //Texture,  Rectangle, Color, Type, pro text, pro boost, con text, con boost, price
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(5, 520, 345, 90), Color.White, "Start", "NONE", 0, "NONE", 0, 0));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(5, 645, 545, 90), Color.White, "How to Play", 0));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(5, 645, 545, 90), Color.White, "How to Play", "NONE", 0, "NONE", 0, 0));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(500, 80, 545, 500), Color.White, "Instructions", 0));
+            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(500, 80, 545, 500), Color.White, "Instructions", "NONE", 0, "NONE", 0, 0));
 
-            //Buttons
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 150, 160, 160), Color.White, "Health Potion", 50));
+            //Store
+            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 150, 160, 160), Color.White, "Health Potion", "Health:+", 100,"NONE", 0, 60));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(900, 150, 160, 160), Color.White, "Sheild Recovery Time Decrease", 250));
+            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(900, 150, 160, 160), Color.White, "Sheild Recovery Time", "Sheild Cooldown:",-2, "Speed:", -0.1, 225));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(900, 750, 160, 160), Color.White, "Speed Boost", 500));
+            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(800, 750, 160, 160), Color.White, "Speed Boost", "Speed:+",0.70, "Max Health:", -40, 500));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 750, 160, 160), Color.White, "Damage Boost", 300));
+            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 750, 160, 160), Color.White, "Damage Boost", "Damage:+", 7, "Speed:", -0.20, 300));
+         
+            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(450, 150, 160, 160), Color.White, "Ratfolk (Ally)", "Allies:+", 1, "Sheild Cooldown:+", 0.50, 100));
 
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 150, 160, 160), Color.SandyBrown, "Minotaur Battle", 0));
+            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(400, 750, 160, 160), Color.White, "Wizard Ball Speed", "Ball Speed:+", 1, "Damage:", -1, 275));
 
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 400, 160, 160), Color.DarkRed, "Wizard Battle" ,0));
+            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(600, 750, 160, 160), Color.White, "Attack Downtime", "Attack Cooldown:", -0.40, "Ball Speed:", -0.10, 325));
 
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 650, 160, 160), Color.Black, "Reaper Battle", 0));
 
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(450, 150, 160, 160), Color.White, "Ratfolk (Ally)", 125));
+            //Bosses
+            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 150, 160, 160), Color.SandyBrown, "Minotaur Battle", "NONE", 0, "NONE", 0, 0));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 400, 160, 160), Color.White, "Increase Difficuly (+$250)", 250));
+            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 400, 160, 160), Color.DarkRed, "Wizard Battle", "NONE", 0, "NONE", 0, 0));
 
-            barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
-            barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
-            barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
-            barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
-            barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
-            barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
-            barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
-            barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
-            barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 20, 30), 80, Color.White, "false", "false"));
+            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 650, 160, 160), Color.Black, "Reaper Battle", "NONE", 0, "NONE", 0, 0));
+
+            barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
+            barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
 
            
-            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), grassGifTextureList, "grass")); 
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 90, 45), grassGifTextureList, "grass", 0)); 
                       
-            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), grassGif2TextureList, "grass")); 
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 90, 45), grassGif2TextureList, "grass", 0)); 
                         
-            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), grassGif3TextureList, "grass")); 
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 90, 45), grassGif3TextureList, "grass", 0)); 
                       
-            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), flowerGifTextureList, "grass"));
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 90, 45), flowerGifTextureList, "grass", 0));
                      
-            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 90, 45), flowerGif2TextureList, "grass"));
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 90, 45), flowerGif2TextureList, "grass", 0));
 
-            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth/4 - 50, mainGameHeight-mainGameHeight/4 - 62, 125,150), 145, Color.White, "true", "true"));
-            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth /4- 50, mainGameHeight /4 - 62, 125, 150), 145, Color.White, "true", "true"));
-            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainGameHeight - mainGameHeight / 4 - 62, 125, 150), 145, Color.White, "true", "true"));
-            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainGameHeight/4 - 62, 125, 150), 145, Color.White, "true", "true"));
+            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth/4 - 50, mainScreenHeight - mainScreenHeight / 4 - 62, 125,150), 145, Color.White, "true", "true"));
+            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth /4- 50, mainScreenHeight / 4 - 62, 125, 150), 145, Color.White, "true", "true"));
+            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainScreenHeight - mainScreenHeight / 4 - 62, 125, 150), 145, Color.White, "true", "true"));
+            barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth - mainGameWidth / 4-50, mainScreenHeight / 4 - 62, 125, 150), 145, Color.White, "true", "true"));
 
-            coinList.Add(new Coins( new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 28, 35),silverCoinTextureList, "silver")); 
-            coinList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainGameHeight), 28, 35),goldCoinTextureList, "gold")); 
+            coinList.Add(new Coins( new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 28, 35),silverCoinTextureList, "silver", silverCoinGain)); 
+            coinList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 28, 35),goldCoinTextureList, "gold", goldCoinGain)); 
         }
         //----------------------------------------------------------------------LoadContent--------------------------------------------------------------------------------------
         protected override void LoadContent()
@@ -283,10 +302,13 @@ namespace Final_Project
             buttonSoundInsta = buttonSound.CreateInstance();
 
             staffSound = Content.Load<SoundEffect>("Effect_Staff");
-            staffSoundInsta = buttonSound.CreateInstance();
+          
 
             hitSound = Content.Load<SoundEffect>("Effect_Hit");
-            hitSoundInsta = buttonSound.CreateInstance();
+           
+
+             fireSound = Content.Load<SoundEffect>("Effect_Hit");
+           
 
             rectangleTexture = Content.Load<Texture2D>("rectangle");
             outroBackroundTexture = Content.Load<Texture2D>("Art_Screen");
@@ -294,6 +316,9 @@ namespace Final_Project
             //Hud
             emptyGreenBarTexture = Content.Load<Texture2D>("Health_Empty");
             healthGreenBarTexture = Content.Load<Texture2D>("Health_Full");
+
+            hoverTexture = Content.Load<Texture2D>("UI_Hover");
+            notHoverTexture = Content.Load<Texture2D>("UI_Black");
 
             UIHealthTexture = Content.Load<Texture2D>("UI_Health");
             UIBlackTexture = Content.Load<Texture2D>("UI_Black");
@@ -304,7 +329,10 @@ namespace Final_Project
 
             UIRedTexture = Content.Load<Texture2D>("UI_Red_Full");
             UIRedEmptyTexture = Content.Load<Texture2D>("UI_Red_Empty");
+            UIGrayFullTexture = Content.Load<Texture2D>("UI_Gray_Full");
             UIHeartTexture = Content.Load<Texture2D>("UI_Heart");
+
+            UIStatsTexture = Content.Load<Texture2D>("UI_Stats");
 
             wizardHeadTexture = Content.Load<Texture2D>("Wizard_Head");
 
@@ -352,6 +380,10 @@ namespace Final_Project
             Texture2D AiArcherWalkingRight = Content.Load<Texture2D>("RunArcher_scaled");
             Texture2D AiArcherMeleeRightTexture = Content.Load<Texture2D>("AttackArcher_scaled");
             Texture2D AiArcherHitTexture = Content.Load<Texture2D>("Take Hit_Archer");
+
+            Texture2D guyArcherWalkingRight = Content.Load<Texture2D>("Guy_Archer_Move");
+            Texture2D guyArcherMeleeRightTexture = Content.Load<Texture2D>("Guy_Archer_Attack");
+            Texture2D guyArcherHitTexture = Content.Load<Texture2D>("Guy_Archer_Hit");
 
             Texture2D AiSkelWalkingRight = Content.Load<Texture2D>("Walk_Skel");
             Texture2D AiSkelMeleeRightTexture = Content.Load<Texture2D>("Attack_Skel");
@@ -423,8 +455,11 @@ namespace Final_Project
             Texture2D flowerGifTexture = Content.Load<Texture2D>("Animated_Flowers");
             Texture2D flowerGif2Texture = Content.Load<Texture2D>("Animated_Flowers2");
 
+            Texture2D bushGifTexture = Content.Load<Texture2D>("Animated_Bush");
+
             Texture2D greenGemTexture = Content.Load<Texture2D>("Gem_Green");
             arrowTexture = Content.Load<Texture2D>("ArrowMove");
+           
             Texture2D deathTexture = Content.Load<Texture2D>("Reaper_Summon");
 
             static void ReapetingAnimation(GraphicsDevice graphicsDevice, Texture2D _texture, List<Texture2D> _textureList, int _diffImages)
@@ -476,6 +511,10 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, AiArcherWalkingRight, AiArcherRightList = new List<Texture2D>(), 8);         
             ReapetingAnimation(GraphicsDevice, AiArcherMeleeRightTexture, AiArcherMeleeRightList = new List<Texture2D>(), 6);
             ReapetingAnimation(GraphicsDevice, AiArcherHitTexture, AiArcherHitList = new List<Texture2D>(), 3);
+
+            ReapetingAnimation(GraphicsDevice, guyArcherWalkingRight, guyArcherRightList = new List<Texture2D>(), 8);
+            ReapetingAnimation(GraphicsDevice, guyArcherMeleeRightTexture, guyArcherMeleeRightList = new List<Texture2D>(), 7);
+            ReapetingAnimation(GraphicsDevice, guyArcherHitTexture, guyArcherHitList = new List<Texture2D>(), 4);
 
             ReapetingAnimation(GraphicsDevice, AiSkelWalkingRight, AiSkelRightList = new List<Texture2D>(), 4);
             ReapetingAnimation(GraphicsDevice, AiSkelMeleeRightTexture, AiSkelMeleeRightList = new List<Texture2D>(), 8);
@@ -546,6 +585,8 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, flowerGifTexture, flowerGifTextureList = new List<Texture2D>(), 4);
             ReapetingAnimation(GraphicsDevice, flowerGif2Texture, flowerGif2TextureList = new List<Texture2D>(), 4);
 
+            ReapetingAnimation(GraphicsDevice, bushGifTexture, bushGifTextureList = new List<Texture2D>(), 6);
+
             ReapetingAnimation(GraphicsDevice, lightningTexture1, LightningShotList1 = new List<Texture2D>(), 4);
             ReapetingAnimation(GraphicsDevice, lightningTexture2, LightningShotList2 = new List<Texture2D>(), 4);
             ReapetingAnimation(GraphicsDevice, lightningTexture3, LightningShotList3 = new List<Texture2D>(), 4);
@@ -559,79 +600,80 @@ namespace Final_Project
         {
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
-            static void AddGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
+            static void AddBaseEnemy(List<Player> enemys, int enemy, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint, SoundEffect attackSound, SoundEffect hitSound)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(spawnPoint,new Vector2( 200, 100), 100, "goblin melee", 1.5, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList,AiRightList));
-            }
-            static void AddFastGoblin(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
-            {
-                Random rand = new Random();
-                enemys.Add(new Player(spawnPoint, new Vector2(180, 90), 80, "fast goblin melee", 2.3, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
-            }
+               
 
-            static void AddSkel(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
+                switch (enemy) 
+                {
+
+                    case 1:
+                        enemys.Add(new Player(spawnPoint, new Vector2(200, 100), 100, "goblin melee", 1.5, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        break;
+                    case 2:
+                        enemys.Add(new Player(spawnPoint, new Vector2(180, 90), 80, "fast goblin melee", 2.6, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        break;
+                    case 3:
+                        enemys.Add(new Player(spawnPoint, new Vector2(250, 125), 145, "skel melee", 0.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        break;
+                    case 4:
+                        enemys.Add(new Player(spawnPoint, new Vector2(190, 95), 90, "arrow", 1.7, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        break;
+                    case 5:
+                        enemys.Add(new Player(spawnPoint, new Vector2(210, 110), 115, "guy arrow", 0.9, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        break;
+                    case 6:
+                        enemys.Add(new Player(spawnPoint, new Vector2(220, 100), 175, "fire ball", 1.3, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        break;
+                    case 7:
+                        enemys.Add(new Player(spawnPoint, new Vector2(170, 90), 75, "bat", 2.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        break;
+                    case 8:
+                        enemys.Add(new Player(spawnPoint, new Vector2(170, 90), 105, "slayer", 2.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        break;
+                }
+
+                
+            }
+            
+            static void AddMinotaur(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, SoundEffect attackSound, SoundEffect hitSound)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(spawnPoint, new Vector2(250, 125), 145, "skel melee", 0.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(190, 170), 550, "minotaur", 2.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
             }
-            static void AddArcher(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
+            static void AddWizard(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, SoundEffect attackSound, SoundEffect hitSound)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(spawnPoint, new Vector2(200, 100), 95, "arrow", 1.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 300, "wizard", 3.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
             }
-            static void AddWorm(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
+            static void AddBringerOfDeath(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList , List<Texture2D> AiSpellRightList, SoundEffect attackSound, SoundEffect hitSound)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(spawnPoint, new Vector2(220, 100), 175, "fire ball", 1.4, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 800, "death", 1.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiRightList, AiRightList, AiSpellRightList, AiRightList, attackSound, hitSound));
             }
-            static void AddBat(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
+            static void AddAlly(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList,  List<Texture2D> AiIdleList, SoundEffect attackSound, SoundEffect hitSound)
             {
                 Random rand = new Random();
-                enemys.Add(new Player(spawnPoint, new Vector2(170, 90), 75, "bat", 2.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
+                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(100, 50), 120, "ally melee", 1.2 , AiRightList, AiIdleList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
             }
-            static void AddSlayer(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint)
-            {
-                Random rand = new Random();
-                enemys.Add(new Player(spawnPoint, new Vector2(170, 90), 105, "slayer", 2.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
-            }
-            static void AddMinotaur(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
-            {
-                Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(190, 170), 550, "minotaur", 2.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
-            }
-            static void AddWizard(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList)
-            {
-                Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 300, "wizard", 3.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
-            }
-            static void AddBringerOfDeath(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList , List<Texture2D> AiSpellRightList)
-            {
-                Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(230, 150), 800, "death", 1.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiRightList, AiRightList, AiSpellRightList, AiRightList));
-            }
-            static void AddAlly(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList,  List<Texture2D> AiIdleList)
-            {
-                Random rand = new Random();
-                enemys.Add(new Player(new Vector2(rand.Next(0, 1000), rand.Next(0, 300)), new Vector2(100, 50), 120, "ally melee", 1.2 , AiRightList, AiIdleList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList));
-            }
-            static void MakeSpwanPoints(int mainGameWidth, int mainGameHeight, ref Vector2 spawnPoint)
+            static void MakeSpwanPoints(int mainGameWidth, int mainScreenHeight, ref Vector2 spawnPoint)
             {
                 Random rand = new Random();
                 switch (rand.Next(1, 5))
                 {
                     case 1:
                         //Left
-                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, -150), rand.Next(-mainGameHeight, mainGameHeight * 3)); break;
+                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, -150), rand.Next(-mainScreenHeight, mainScreenHeight * 3)); break;
                     case 2:
                         //Top
-                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(-mainGameHeight, -150)); break;
+                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(-mainScreenHeight, -150)); break;
                     case 3:
                         //Right
-                        spawnPoint = new Vector2(rand.Next(mainGameWidth + 150, mainGameWidth * 2), rand.Next(-mainGameHeight, mainGameHeight * 3)); break;
+                        spawnPoint = new Vector2(rand.Next(mainGameWidth + 150, mainGameWidth * 2), rand.Next(-mainScreenHeight, mainScreenHeight * 3)); break;
                     case 4:
                         //Bottom
-                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(mainGameHeight +150, mainGameHeight * 2)); break;
+                        spawnPoint = new Vector2(rand.Next(-mainGameWidth, mainGameWidth * 3), rand.Next(mainScreenHeight + 150, mainScreenHeight * 2)); break;
                 }
             }
             static void MoveingUser(Player user, int userspeed, KeyboardState keyboardState)
@@ -786,13 +828,21 @@ namespace Final_Project
                     if (MediaPlayer.State == MediaState.Stopped)
                         MediaPlayer.Play(mainMusic);
                 }
-                
+                //Increase Difficulty
+                if (user.TotalPoints >= difficultyChange)
+                {
+                    difficulty += 1;
+                    difficultyChange += 1200;
+                }
 
                 foreach (Player troops in enemylist)
+                {
                     if (troops.GetBoundingBox().Intersects(new Rectangle(0, 0, mainGameWidth, mainGameHeight)))
                         toStore = false;
                     else
                         toStore = true;
+
+                }
                 if (toStore)
                     DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "main");
 
@@ -808,56 +858,63 @@ namespace Final_Project
                             break;
                         }
                     }
+                    coinList.Clear();
                     if (keyboardState.IsKeyDown(Keys.P) && enemylist.Count == 0)
                     {
-                        difficulty += 1;
+                        
                         RespawnMethold = false;
                         if (wizardBattle == true)
-                            AddWizard(enemylist, wizardRightList, wizardMeleeRightList, wizardHitList);
+                            AddWizard(enemylist, wizardRightList, wizardMeleeRightList, wizardHitList,  staffSound,  hitSound);
                         else if (reaperBattle == true)
-                            AddBringerOfDeath(enemylist, deathRightList, deathMeleeRightList, deathSpellList);
+                            AddBringerOfDeath(enemylist, deathRightList, deathMeleeRightList, deathSpellList, staffSound, hitSound);
                         else
-                            AddMinotaur(enemylist, minoRightList, minoMeleeRightList, minoHitList);
+                            AddMinotaur(enemylist, minoRightList, minoMeleeRightList, minoHitList, staffSound, hitSound);
 
                     }
                     
                 }
                 else
                 {
-                    for (int i = 0; enemylist.Count <= difficulty; i++)
+                    for (int i = 0; enemylist.Count <= difficulty + 2; i++)
                     {
-                        enemyType = rand.Next(1, 8);
-                        MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
+                        enemyType = rand.Next(1, 9);
+                        MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
                         switch (enemyType)
                         {
                             case 1:
-                                AddArcher(enemylist, AiArcherRightList, AiArcherMeleeRightList, AiArcherHitList, spawnPoint);
+                                AddBaseEnemy(enemylist, enemyType, AiRightList, AiMeleeRightList, AiGoblinHitList, spawnPoint, staffSound, hitSound);
                                 break;
                             case 2:
-                                AddFastGoblin(enemylist, AiRightList, AiMeleeRightList, AiGoblinHitList, spawnPoint);
+                                AddBaseEnemy(enemylist, enemyType, AiRightList, AiMeleeRightList, AiGoblinHitList, spawnPoint, staffSound, hitSound);
                                 break;
                             case 3:
-                                AddGoblin(enemylist, AiRightList, AiMeleeRightList, AiGoblinHitList, spawnPoint);
+                                AddBaseEnemy(enemylist, enemyType, AiSkelRightList, AiSkelMeleeRightList, AiSkelHitList, spawnPoint, staffSound, hitSound);
                                 break;
                             case 4:
-                                AddWorm(enemylist, AiWormRightList, AiWormMeleeRightList, AiWormHitList, spawnPoint);
+                                AddBaseEnemy(enemylist, enemyType, AiArcherRightList, AiArcherMeleeRightList, AiArcherHitList, spawnPoint, staffSound, hitSound);
                                 break;
                             case 5:
-                                AddSkel(enemylist, AiSkelRightList, AiSkelMeleeRightList, AiSkelHitList, spawnPoint);
+                                AddBaseEnemy(enemylist, enemyType, guyArcherRightList, guyArcherMeleeRightList, guyArcherHitList, spawnPoint, staffSound, hitSound);
                                 break;
+                            
                             case 6:
-                                AddBat(enemylist, BatRightList, BatMeleeRightList, BatHitList, spawnPoint);
+                                AddBaseEnemy(enemylist, enemyType, AiWormRightList, AiWormMeleeRightList, AiWormHitList, spawnPoint, fireSound,hitSound);
                                 break;
+                                                     
                             case 7:
-                                AddSlayer(enemylist, SlayerRightList, SlayerMeleeRightList, SlayerHitList, spawnPoint);
+                                AddBaseEnemy(enemylist, enemyType, BatRightList, BatMeleeRightList, BatHitList, spawnPoint, staffSound, hitSound);
                                 break;
+                            case 8:
+                                AddBaseEnemy(enemylist, enemyType, SlayerRightList, SlayerMeleeRightList, SlayerHitList, spawnPoint, staffSound, hitSound);
+                                break;
+                            
 
                         }
                     }
                 }
                 while (t < Ratfolk)
                 {
-                    AddAlly(allylist, RatfolkRightList, RatfolkMeleeRightList, RatfolkHitList, RatfolkIdleList);
+                    AddAlly(allylist, RatfolkRightList, RatfolkMeleeRightList, RatfolkHitList, RatfolkIdleList, staffSound, hitSound);
                     t++;
                 }
 
@@ -945,7 +1002,7 @@ namespace Final_Project
                     user.UnSheild();
                 }
                 if (seconds >= user.SheildSeconds)
-                    seconds = user.SheildSeconds;
+                    seconds = (float)user.SheildSeconds;
 
                 backroundSpeed.X = 0;
                 backroundSpeed.Y = 0;
@@ -953,7 +1010,7 @@ namespace Final_Project
                 for (int i = 0; barriersList.Count <= 150; i++)
                 {
 
-                    MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
+                    MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
                     switch (rand.Next(1, 8))
                     {
                         case 1:
@@ -972,7 +1029,7 @@ namespace Final_Project
                             barriersList.Add(new Barriers(logTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 50, 55), 80, Color.White, "true", "true")); break;
 
                     }
-                    MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
+                    MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
                     switch (rand.Next(1, 4))
                     {
 
@@ -986,40 +1043,45 @@ namespace Final_Project
                     }
 
                 }
-                for (int i = 0; grassList.Count <= 95; i++)
+                for (int i = 0; grassList.Count <= 100; i++)
                 {
-                    MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
-                    switch (rand.Next(1, 6))
+                    MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
+                    switch (rand.Next(1,7))
                     {
 
                         case 1:
-                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90,45 ), grassGifTextureList, "grass")); break;
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90,45 ), grassGifTextureList, "grass", 0)); break;
                         case 2:
-                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), grassGif2TextureList, "grass")); break;
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), grassGif2TextureList, "grass", 0)); break;
                         case 3:
-                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), grassGif3TextureList, "grass")); break;
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), grassGif3TextureList, "grass", 0)); break;
                         case 4:
-                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), flowerGifTextureList, "grass")); break;
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), flowerGifTextureList, "grass", 0)); break;
                         case 5:
-                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), flowerGif2TextureList, "grass")); break;
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90, 45), flowerGif2TextureList, "grass", 0)); break;
+                        case 6:
+                            grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 40, 20), bushGifTextureList, "bush", 0)); break;
 
                     }
 
                 }
-                 for (int i = 0; coinList.Count <= 23; i++)
+                if (!bossBattle)
                 {
-                    randomNumber = (rand.Next(0, 101));
-                    MakeSpwanPoints(mainGameWidth, mainGameHeight, ref spawnPoint);
-                    if (randomNumber <=50)
-                        coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), silverCoinTextureList, "silver")); 
-                    else if (randomNumber > 50 && randomNumber <= 75)
-                        coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), goldCoinTextureList, "gold"));
-                    else if (randomNumber > 75 && randomNumber <= 92)
-                        coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), redCoinTextureList, "red"));
-                    else if (randomNumber > 92 && randomNumber <=100)
-                        coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), greenGemTextureList, "green")); 
+                    for (int i = 0; coinList.Count <= 23; i++)
+                    {
+                        
+                        MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
+                        randomNumber = (rand.Next(0, 101));
+                        if (randomNumber <= 50)
+                            coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), silverCoinTextureList, "silver", silverCoinGain));
+                        else if (randomNumber > 50 && randomNumber <= 75)
+                            coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), goldCoinTextureList, "gold", goldCoinGain));
+                        else if (randomNumber > 75 && randomNumber <= 92)
+                            coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), redCoinTextureList, "red", redCoinGain));
+                        else if (randomNumber > 92 && randomNumber <= 100)
+                            coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), greenGemTextureList, "green", greenCoinGain));
+                    }
                 }
-
 
                 for (int i = coinList.Count - 1; i >= 0; i--)
                 {
@@ -1028,14 +1090,8 @@ namespace Final_Project
                     {
                         if (coins.CoinType != "grass")
                         {
-                            if (coins.CoinType == "silver")
-                                user.Points += 25;
-                            else if (coins.CoinType == "gold")
-                                user.Points += 45;
-                            else if (coins.CoinType == "red")
-                                user.Points += 125;
-                            else if (coins.CoinType == "green")
-                                user.Points += 200;
+                            user.Points += coins.CoinPoints;
+                            user.TotalPoints += coins.CoinPoints;  
                             coinList.RemoveAt(i);
                             break;
                         }
@@ -1193,13 +1249,13 @@ namespace Final_Project
                 }
                 //Update User Laser
                 foreach (LaserClass bullet in laserList)
-                    bullet.Update(gameTime, user.ProjectileSpeed);
+                    bullet.Update(gameTime, backroundSpeed, user.ProjectileSpeed);
 
                 //Update Enemy Laser
                 foreach (LaserClass bullet in enemyLaserList)
                 {
                     foreach (Player troops in enemylist)
-                        bullet.Update(gameTime, troops.ProjectileSpeed);
+                        bullet.Update(gameTime, backroundSpeed,troops.ProjectileSpeed);
 
                 }
 
@@ -1312,18 +1368,24 @@ namespace Final_Project
 
                     if (troops.Health <= 0)
                     {
-                        enemylist.RemoveAt(i);
-                        user.Points += troops.PointsOnKill;
+                        enemylist.RemoveAt(i);                       
                         if (bossBattle == true)
                         {
+                            
                             bossBattle = false;
                             wizardBattle = false;
                             reaperBattle = false;
-                            fading = true;
-                            
+                                                    
                         }
-                        
-
+                        for (int j = 0; j <= rand.Next(troops.PointsOnKill-2, troops.PointsOnKill); j++)
+                        {
+                            int randomLocationX = rand.Next(-55, 55);
+                            int randomLocationY = rand.Next(-55, 55);
+                            if (difficulty <= 5)
+                                coinList.Add(new Coins(new Rectangle(troops.Hitbox().X + randomLocationX, troops.Hitbox().Y + randomLocationY, 28, 35), silverCoinTextureList, "silver", silverCoinGain));
+                            else
+                                coinList.Add(new Coins(new Rectangle(troops.Hitbox().X + randomLocationX, troops.Hitbox().Y + randomLocationY, 28, 35), goldCoinTextureList, "gold", goldCoinGain));
+                        }
                     }
                 }
                 //Detect barrier dealth
@@ -1340,9 +1402,10 @@ namespace Final_Project
             }
             else if (screen == Screen.StoreScreen)
             {
+
                 if (MediaPlayer.State == MediaState.Stopped)
                     MediaPlayer.Play(storeMusic);
-                seconds = user.SheildSeconds;
+                seconds = (float)user.SheildSeconds;
 
                 MoveingUser(user, userspeed, keyboardState);
 
@@ -1363,11 +1426,15 @@ namespace Final_Project
                         if (keyboardState.IsKeyDown(Keys.Enter))
                         {
                             
+                            
                             if (boost == true)
                             {
-                                button.Bought = true;
+                                totalSpent += button.Cost;
                                 button.TotalButtonCost += button.Cost;
+                                button.Bought = true;                                
                                 button.Boosts(user, ref Ratfolk, ref difficulty);
+                                
+                                
                                 boost = false;
                             }
                             if (bossBattle)
@@ -1404,6 +1471,7 @@ namespace Final_Project
                     else
                     {
                         button.Poor = false;
+                      
                         button.TotalButtonCost = 0;
                         button.Bought = false;
                         button.Hovering = "false";
@@ -1411,6 +1479,8 @@ namespace Final_Project
 
                 }
                 DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "store");
+                if (user.Health <= 0)
+                    screen = Screen.OutroScreen;
             }
 
             else if (screen == Screen.OutroScreen)
@@ -1436,7 +1506,7 @@ namespace Final_Project
                 _spriteBatch.Draw(introBackroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
                 foreach (Buttons button in buttonList)
                 {
-                    button.DrawHome(_spriteBatch, damageFont);
+                    button.DrawHome(_spriteBatch, damageFont, hoverTexture, notHoverTexture);
                     if (Instruct == true)
                         button.InstructionsDraw(_spriteBatch, damageFont);
                 }
@@ -1464,25 +1534,19 @@ namespace Final_Project
 
                 foreach (Barriers barrier in barriersList)
                     barrier.Draw(_spriteBatch);
-
-                
-
-          
-
                 //Draw all the bullets
                 foreach (LaserClass bullet in laserList)
                     bullet.Draw(_spriteBatch, lightningTexture2);
-                user.Draw(_spriteBatch, mouseState.X, guardLocation, staffSoundInsta, hitSoundInsta);
+                user.Draw(_spriteBatch, mouseState.X, guardLocation);
                 
-                foreach (Player ally in allylist)
-                {
-                    ally.Draw(_spriteBatch, 100000, new Vector2(0,0), staffSoundInsta, hitSoundInsta);
+                foreach (Player ally in allylist)              
+                    ally.Draw(_spriteBatch, 100000, new Vector2(0,0));
                    
-                }
+                
                 foreach (Player ai in enemylist)
                 {
-                    ai.Draw(_spriteBatch, 100000, new Vector2(0, 0), staffSoundInsta, hitSoundInsta);
-                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle, "ai");                   
+                    ai.Draw(_spriteBatch, 100000, new Vector2(0, 0));
+                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, UIGrayFullTexture, bossBattle, "ai");                   
                     ai.DrawDamage(_spriteBatch, damageFont, backroundSpeed, user.WeaponType);
                 }
                
@@ -1497,18 +1561,21 @@ namespace Final_Project
                 else if (bossBattle == true)
                     _spriteBatch.DrawString(damageFont, "Minotaur", new Vector2(mainGameWidth / 2 - 80, 0), Color.White);
                 //Hud               
+                if (keyboardState.IsKeyDown(Keys.Tab))
+                {
+                    if(toStore == false)
+                        _spriteBatch.DrawString(dungeonFont, "To Many Monsters Near", new Vector2(500, 500), Color.White);
+                }
+                
 
-               // _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
                 _spriteBatch.Draw(UIHealthTexture, new Rectangle(100, mainGameHeight, 250, 100), Color.White);
                 _spriteBatch.Draw(wizardHeadTexture, new Rectangle(115, mainGameHeight + 5, 70, 85), Color.White);
-                _spriteBatch.Draw(UIHeartTexture, new Rectangle(735, 910, 30, 30), Color.White);
-                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture, false, "user");
-                _spriteBatch.DrawString(dungeonFont, $"{user.Points}", new Vector2(230, mainGameHeight +55), Color.White);             
-                _spriteBatch.DrawString(dungeonFont, $"{difficulty-2}", new Vector2(600, 940), Color.White);               
-                _spriteBatch.DrawString(dungeonFont, (seconds).ToString("0.0"), new Vector2(1000, 900), Color.CornflowerBlue);
+                _spriteBatch.Draw(UIHeartTexture, new Rectangle((int)user.MaxHealth/2 + 235, 910, 30, 30), Color.White);;
+                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture,UIGrayFullTexture, false, "user");
+                _spriteBatch.DrawString(dungeonFont, $"{user.Points}", new Vector2(230, mainGameHeight +55), Color.White);
+                _spriteBatch.DrawString(dungeonFont, $"Difficulty Level: {difficulty}", new Vector2(760, 950), Color.White);
+                _spriteBatch.DrawString(dungeonFont,$"SPACEBAR Ability {(seconds).ToString("0.0")}" , new Vector2(370, 950), Color.CornflowerBlue);
 
-
-                //user.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, bossBattle, "true");
 
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
                 // - screen fade
@@ -1538,28 +1605,22 @@ namespace Final_Project
                 //Button text
                 foreach (Buttons button in buttonList)
                 {
-                    button.DrawText(_spriteBatch, damageFont);
+                    button.DrawText(_spriteBatch, damageFont, UIStatsTexture);
                     if (button.Bought)
                         button.DrawBuyingItem(user,_spriteBatch, damageFont);
                 }            
-         
-                   
 
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
-                user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0), staffSoundInsta, hitSoundInsta);
-
-
-
-
+                user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0));
                 //Hud               
-               // _spriteBatch.Draw(rectangleTexture, new Rectangle(0, mainGameHeight, _graphics.PreferredBackBufferWidth, 100), Color.Gray);
+               
                 _spriteBatch.Draw(UIHealthTexture, new Rectangle(100, mainGameHeight, 250, 100), Color.White);
                 _spriteBatch.Draw(wizardHeadTexture, new Rectangle(115, mainGameHeight + 5, 70, 85), Color.White);
-                _spriteBatch.Draw(UIHeartTexture, new Rectangle(735, 910, 30, 30), Color.White);
-                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture, false, "user");
+                _spriteBatch.Draw(UIHeartTexture, new Rectangle((int)user.MaxHealth/2 +235, 910, 30, 30), Color.White); ;
+                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture, UIGrayFullTexture, false, "user");
                 _spriteBatch.DrawString(dungeonFont, $"{user.Points}", new Vector2(230, mainGameHeight + 55), Color.White);
-                _spriteBatch.DrawString(dungeonFont, $"{difficulty - 2}", new Vector2(600, 940), Color.White);
-                _spriteBatch.DrawString(dungeonFont, (seconds).ToString("0.0"), new Vector2(1000, 900), Color.CornflowerBlue);
+                _spriteBatch.DrawString(dungeonFont, $"Difficulty Level: {difficulty}", new Vector2(760, 950), Color.White);
+                _spriteBatch.DrawString(dungeonFont, $"SPACEBAR Ability {(seconds).ToString("0.0")}", new Vector2(370, 950), Color.CornflowerBlue);
 
                 // - screen fade
                 _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), dimScreenColor);
@@ -1569,6 +1630,9 @@ namespace Final_Project
             {
                 _spriteBatch.Draw(outroBackroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
+                _spriteBatch.DrawString(damageFont, $"Total points spent ${Math.Round(totalSpent,2)}", new Vector2(600, 400), Color.White);
+                _spriteBatch.DrawString(damageFont, $"Total points gained ${Math.Round(user.TotalPoints,2)}", new Vector2(600, 500), Color.White);
+
 
             }
             _spriteBatch.End();

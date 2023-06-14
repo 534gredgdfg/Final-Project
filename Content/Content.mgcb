@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Animated_Bush.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Animated_Bush.png
+
 #begin Animated_Flowers2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -84,18 +96,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ArrowMove.png
-
-#begin Art_Intro.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Art_Intro.png
 
 #begin Art_Screen.png
 /importer:TextureImporter
@@ -241,6 +241,18 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Animated_Grass.png;Animated_Grass.png
 
+#begin C:/Users/owenr/Downloads/Art_Intro.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Art_Intro.png;Art_Intro.png
+
 #begin C:/Users/owenr/Downloads/AttackArcher_scaled.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -264,6 +276,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Brown_Tree.png;Brown_Tree.png
+
+#begin C:/Users/owenr/Downloads/Coin_Gold.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,50,225,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Coin_Gold.png;Coin_Gold.png
+
+#begin C:/Users/owenr/Downloads/Coin_Red.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,50,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Coin_Red.png;Coin_Red.png
+
+#begin C:/Users/owenr/Downloads/Coin_Silver.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,50,225,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Coin_Silver.png;Coin_Silver.png
 
 #begin C:/Users/owenr/Downloads/Death_Attack.png
 /importer:TextureImporter
@@ -313,6 +361,12 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Death_Walk.png;Death_Walk.png
 
+#begin C:/Users/owenr/Downloads/Effect_Shoot_Fire.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:C:/Users/owenr/Downloads/Effect_Shoot_Fire.mp3;Effect_Shoot_Fire.mp3
+
 #begin C:/Users/owenr/Downloads/Evil_Idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -360,6 +414,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Green_Tree.png;Green_Tree.png
+
+#begin C:/Users/owenr/Downloads/Guy_Archer_Attack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Guy_Archer_Attack.png;Guy_Archer_Attack.png
+
+#begin C:/Users/owenr/Downloads/Guy_Archer_Hit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Guy_Archer_Hit.png;Guy_Archer_Hit.png
+
+#begin C:/Users/owenr/Downloads/Guy_Archer_Move.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Guy_Archer_Move.png;Guy_Archer_Move.png
 
 #begin C:/Users/owenr/Downloads/Health_Empty_Boss.png
 /importer:TextureImporter
@@ -565,6 +655,30 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Take Hit_Skel.png;Take Hit_Skel.png
 
+#begin C:/Users/owenr/Downloads/UI_Black.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/UI_Black.png;UI_Black.png
+
+#begin C:/Users/owenr/Downloads/UI_Hover.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/UI_Hover.png;UI_Hover.png
+
 #begin C:/Users/owenr/Downloads/UI_Red_Empty.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -625,7 +739,7 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Wizard_Special.png;Wizard_Special.png
 
-#begin Coin_Gold.png
+#begin C:/Users/owenr/Downloads/WizardCrosshair.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,255,255,255
@@ -635,31 +749,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Coin_Gold.png
-
-#begin Coin_Red.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Coin_Red.png
-
-#begin Coin_Silver.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Coin_Silver.png
+/build:C:/Users/owenr/Downloads/WizardCrosshair.png;WizardCrosshair.png
 
 #begin DamageText.spritefont
 /importer:FontDescriptionImporter
@@ -728,12 +818,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Effect_Hit.mp3
-
-#begin Effect_Shoot_Fire.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Effect_Shoot_Fire.mp3
 
 #begin Effect_Staff.mp3
 /importer:Mp3Importer
@@ -914,7 +998,7 @@
 #begin guard.png
 /importer:TextureImporter
 /processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyColor=225,0,255,255
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
@@ -1271,18 +1355,6 @@
 /processorParam:TextureFormat=Color
 /build:thunder2.png
 
-#begin UI_Black.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:UI_Black.png
-
 #begin UI_Blue_Empty.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1306,6 +1378,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI_Blue_Full.png
+
+#begin UI_Gray_Full.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI_Gray_Full.png
 
 #begin UI_Health.png
 /importer:TextureImporter
@@ -1331,7 +1415,7 @@
 /processorParam:TextureFormat=Color
 /build:UI_Heart.png
 
-#begin UI_Hover.png
+#begin UI_Stats.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,255,255,255
@@ -1341,7 +1425,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:UI_Hover.png
+/build:UI_Stats.png
 
 #begin Walk_Skel.png
 /importer:TextureImporter
@@ -1462,16 +1546,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Wizard_Special.png
-
-#begin WizardCrosshair.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:WizardCrosshair.png
 

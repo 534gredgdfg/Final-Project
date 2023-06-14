@@ -18,6 +18,7 @@ namespace Final_Project
         private Rectangle greenBar;
         private Rectangle redBar;
         private Rectangle userFullBar;
+        private Rectangle userFullBarGray;
         private Rectangle userEmptyBar;
         private Rectangle _rectangle;
 
@@ -36,11 +37,14 @@ namespace Final_Project
         private int previousHealth;
         private int _AicooldownTime;
         private int _AiFireableShots;
-        private int _projectileSpeed;
+        private float _projectileSpeed;
+        private float _projectileSpeedBoost;
         private int _damage;
+        private int _maxHealth;
         private int _killpoints = 0;
-        private int _points = 1000;
-        private int _sheildSeconds = 12;
+        private double _points = 3000;
+        private double _totalPoints = 0;
+        private double _sheildSeconds = 12;
         private double _boostSpeed;
         private int boostDamage;
         private double _meleeSpeed;
@@ -51,12 +55,15 @@ namespace Final_Project
         private double _transSpeed;
         private double _specialSpeed;
 
-        private double _gunInterval;
+        private float _gunInterval;
+        private float _gunIntervalBoost;
         private SpriteEffects direction;
         private float enemyRotation;
         private string _weapontype;
         private string _enemyType;
         private string _attack;
+        private string playHitSound;
+        private string playAttackSound;
 
         private string _hit;
         private string _trans;
@@ -68,8 +75,10 @@ namespace Final_Project
         private Color hitColor;
         private Color otherColor;
 
-       
-
+        private SoundEffect attackSound;
+        private SoundEffect hitSound;
+        private SoundEffectInstance attackSoundInsta;
+        private SoundEffectInstance hitSoundInsta;
         List<Texture2D> _walkingTextures;
         List<Texture2D> _standingTextures;
         List<Texture2D> _transTextures;
@@ -81,7 +90,7 @@ namespace Final_Project
         List<Texture2D> _hitTextures;
         List<Texture2D> _guardTextures;
         Random rand = new Random();
-        public Player(Vector2 location, Vector2 dimentions, int health, string weapontype, double speed, List<Texture2D> walkingTextures, List<Texture2D> standingTextures, List<Texture2D> walkingSheildTextures, List<Texture2D> standingSheildTextures, List<Texture2D> meleeTextures, List<Texture2D> AiHitTextures, List<Texture2D> TransSheildTextures, List<Texture2D> specialTextures, List<Texture2D> guardTextures)
+        public Player(Vector2 location, Vector2 dimentions, int health, string weapontype, double speed, List<Texture2D> walkingTextures, List<Texture2D> standingTextures, List<Texture2D> walkingSheildTextures, List<Texture2D> standingSheildTextures, List<Texture2D> meleeTextures, List<Texture2D> AiHitTextures, List<Texture2D> TransSheildTextures, List<Texture2D> specialTextures, List<Texture2D> guardTextures, SoundEffect _attackSound, SoundEffect _hitSound)
         {
             _dimentions = dimentions;
             _location = location;
@@ -90,14 +99,13 @@ namespace Final_Project
             _damageTextLocation = new Rectangle((int)_location.X, (int)_location.Y, 120, 120);
             _rectangle = new Rectangle((int)_location.X, (int)_location.Y, (int)_dimentions.X, (int)_dimentions.Y);
             _health = health;
+            _maxHealth = health;
             _velocity = new Vector2(0, 0);
 
             _attack = "false";
             _hit = "false";
             _drawSheild = "false";
             _drawingDamage = "false";
-
-
             _weapontype = weapontype;
             _walkingTextures = walkingTextures;
             _standingTextures = standingTextures;
@@ -113,9 +121,14 @@ namespace Final_Project
             redBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health + (int)Health / 4, 10);
             greenBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health, redBar.Height - redBar.Height / 5);
 
-            userEmptyBar = new Rectangle(200, 910, (int)Health/2 + 30, 23);
+            userEmptyBar = new Rectangle(200, 910, (int)Health / 2 + 30, 23);
             userFullBar = new Rectangle(210, 916, (int)Health / 2, 10);
+            userFullBarGray = new Rectangle(210, 916, (int)Health / 2, 10);
 
+            attackSound = _attackSound;
+            hitSound = _hitSound;
+            attackSoundInsta = attackSound.CreateInstance();
+            hitSoundInsta = hitSound.CreateInstance();
         }
         public Texture2D Texture
         {
@@ -159,6 +172,11 @@ namespace Final_Project
             get { return _health; }
             set { _health = (int)value; }
         }
+        public float MaxHealth
+        {
+            get { return _maxHealth; }
+            set { _maxHealth = (int)value; }
+        }
 
         public float AICooldownTime
         {
@@ -184,8 +202,13 @@ namespace Final_Project
 
         public float GunInterval
         {
-            get { return (float)_gunInterval; }
+            get { return _gunInterval; }
             set { _gunInterval = value; }
+        }
+        public float GunIntervalBoost
+        {
+            get { return _gunIntervalBoost; }
+            set { _gunIntervalBoost = value; }
         }
         public Double HeadShot
         {
@@ -203,20 +226,30 @@ namespace Final_Project
             get { return _killpoints; }
             set { _killpoints = value; }
         }
-        public int Points
+        public double Points
         {
             get { return _points; }
             set { _points = value; }
         }
-        public int SheildSeconds
+        public double TotalPoints
+        {
+            get { return _totalPoints; }
+            set { _totalPoints = value; }
+        }
+        public double SheildSeconds
         {
             get { return _sheildSeconds; }
             set { _sheildSeconds = value; }
         }
-        public int ProjectileSpeed
+        public float ProjectileSpeed
         {
             get { return _projectileSpeed; }
             set { _projectileSpeed = value; }
+        }
+        public float ProjectileSpeedBoost
+        {
+            get { return _projectileSpeedBoost; }
+            set { _projectileSpeedBoost = value; }
         }
         public double BoostSpeed
         {
@@ -239,15 +272,15 @@ namespace Final_Project
             //User Traits
             if (_weapontype == "wizard ball")
             {
-                _damage = 26+ boostDamage;
-                _gunInterval = 1.8f;
-                _projectileSpeed = 6;
+                _damage = 26 + boostDamage;
+                _gunInterval = 2.6f + _gunIntervalBoost;
+                _projectileSpeed = 4 + _projectileSpeedBoost;
             }
 
             else if (_weapontype == "melee")
             {
                 _damage = 22 + boostDamage;
-                _gunInterval = 1.0f;
+                _gunInterval = 1.9f + _gunIntervalBoost;
 
             }
             else if (_weapontype == "sheild melee")
@@ -258,13 +291,13 @@ namespace Final_Project
             else if (_weapontype == "special")
             {
                 _damage = 28 + boostDamage;
-                _gunInterval = 6.0f;
-                _projectileSpeed = 8;
+                _gunInterval = 8.0f + _gunIntervalBoost;
+                _projectileSpeed = 5 + _projectileSpeedBoost;
             }
             else if (_weapontype == "ally melee")
             {
                 _damage = 12 + boostDamage;
-                _gunInterval = 2.0f;
+                _gunInterval = 2.8f + _gunIntervalBoost;
                 animationSpeed = 0.11;
             }
 
@@ -272,17 +305,35 @@ namespace Final_Project
             else if (_weapontype == "arrow")
             {
                 _damage = 29;
-                _gunInterval = 2.3f;
-                _killpoints = 60;
-                animationSpeed = 0.1;
+                _gunInterval = 2.1f;
+                _killpoints = 5;
+                animationSpeed = 0.12;
+                _projectileSpeed = 5;
+                _enemyType = "shoter";
+            }
+            else if (_weapontype == "guy arrow")
+            {
+                _damage = 41;
+                _gunInterval = 3.4f;
+                _killpoints = 6;
+                animationSpeed = 0.09;
                 _projectileSpeed = 6;
                 _enemyType = "shoter";
+            }
+            else if (_weapontype == "fire ball")
+            {
+                _damage = 52;
+                _gunInterval = 5.5f;
+                _killpoints = 7;
+                animationSpeed = 0.08;
+                _enemyType = "shoter";
+                _projectileSpeed = 4;
             }
             else if (_weapontype == "goblin melee")
             {
                 _damage = 18;
                 _gunInterval = 2.4f;
-                _killpoints = 50;
+                _killpoints = 4;
                 _enemyType = "melee";
 
             }
@@ -290,7 +341,7 @@ namespace Final_Project
             {
                 _damage = 9;
                 _gunInterval = 1.2f;
-                _killpoints = 55;
+                _killpoints = 4;
                 animationSpeed = 0.14;
                 _enemyType = "melee";
             }
@@ -298,23 +349,16 @@ namespace Final_Project
             {
                 _damage = 40;
                 _gunInterval = 5f;
-                _killpoints = 55;
+                _killpoints = 6;
                 animationSpeed = 0.08;
                 _enemyType = "melee";
             }
-            else if (_weapontype == "fire ball")
-            {
-                _damage = 44;
-                _gunInterval = 6f;
-                _killpoints = 70;
-                _enemyType = "shoter";
-                _projectileSpeed = 4;
-            }
+
             else if (_weapontype == "bat")
             {
                 _damage = 33;
                 _gunInterval = 1.1f;
-                _killpoints = 68;
+                _killpoints = 3;
                 animationSpeed = 0.12;
                 _enemyType = "melee";
             }
@@ -322,7 +366,7 @@ namespace Final_Project
             {
                 _damage = 46;
                 _gunInterval = 3.1f;
-                _killpoints = 89;
+                _killpoints = 6;
                 animationSpeed = 0.1;
                 _enemyType = "melee";
             }
@@ -331,7 +375,7 @@ namespace Final_Project
             {
                 _damage = 160;
                 _gunInterval = 2.0f;
-                _killpoints = 850;
+                _killpoints = 40;
                 _enemyType = "melee";
                 if (_health <= 200)
                 {
@@ -347,7 +391,7 @@ namespace Final_Project
             {
                 _damage = 99;
                 _gunInterval = 1.2f;
-                _killpoints = 850;
+                _killpoints = 35;
                 _enemyType = "melee";
                 if (_health <= 150)
                 {
@@ -362,8 +406,8 @@ namespace Final_Project
             {
                 _damage = 205;
                 _gunInterval = 2.1f;
-                _killpoints = 10000;
-               
+                _killpoints = 125;
+
                 _enemyType = "both";
                 animationSpeed = 0.11;
                 _projectileSpeed = 9;
@@ -415,12 +459,12 @@ namespace Final_Project
                 _location.X += _velocity.X + (int)backSpeed.X;
                 _location.Y += _velocity.Y + (int)backSpeed.Y;
             }
-            else 
+            else
             {
-                _location.X +=  (int)backSpeed.X;
+                _location.X += (int)backSpeed.X;
                 _location.Y += (int)backSpeed.Y;
             }
-                
+
 
             _rectangle.X = (int)Math.Round(_location.X);
             _rectangle.Y = (int)Math.Round(_location.Y);
@@ -444,9 +488,9 @@ namespace Final_Project
 
                 }
             }
-         
+
         }
-     
+
         public void UndoMoveH()
         {
             _location.X -= _velocity.X;
@@ -467,16 +511,16 @@ namespace Final_Project
             _trans = "false";
             _transSpeed = 0;
         }
-        
-        public void UserAttackMelee(List<Player> enemys, List<Barriers> barriers,  List<LaserClass> laserList, List<Texture2D> texture, float mouseStateX, float mouseStateY, List<Texture2D> shotTexture, List<Texture2D> fireList1, List<Texture2D> fireList2, List<Texture2D> iceList1, List<Texture2D> iceList2, List<Texture2D> thunderList1, List<Texture2D> thunderList2)
+
+        public void UserAttackMelee(List<Player> enemys, List<Barriers> barriers, List<LaserClass> laserList, List<Texture2D> texture, float mouseStateX, float mouseStateY, List<Texture2D> shotTexture, List<Texture2D> fireList1, List<Texture2D> fireList2, List<Texture2D> iceList1, List<Texture2D> iceList2, List<Texture2D> thunderList1, List<Texture2D> thunderList2)
         {
 
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
-            
+
             ChoosingWeapon();
-            if (timeSinceLastAttack.TotalSeconds >= GunInterval && _drawSheild == "false")
+            if (timeSinceLastAttack.TotalSeconds >= _gunInterval && _drawSheild == "false")
             {
-             
+
                 if (WeaponType == "special")
                     SpecialAttack();
                 else
@@ -484,7 +528,7 @@ namespace Final_Project
                 lastMeleeTime = DateTime.Now; // update last shot time
                 if (WeaponType == "melee" || WeaponType == "sheild melee" || WeaponType == "ally melee")
                 {
-                    
+
                     foreach (Player troops in enemys)
                     {
 
@@ -532,9 +576,9 @@ namespace Final_Project
                             */
                         }
                         playerPosition = new Vector2(rand.Next(-200, 1600), -400);
-                        var distance = new Vector2(Userbox().X - playerPosition.X + rand.Next(-600, 600), Userbox().Y- playerPosition.Y);
+                        var distance = new Vector2(Userbox().X - playerPosition.X + rand.Next(-600, 600), Userbox().Y - playerPosition.Y);
                         float playerRotation = (float)Math.Atan2(distance.Y, distance.X);
-                        laserList.Add(new LaserClass(shotTexture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 40, 35), _damage));                      
+                        laserList.Add(new LaserClass(shotTexture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 40, 35), _damage));
                     }
                 }
                 else
@@ -548,13 +592,13 @@ namespace Final_Project
                     laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 30, 25), _damage));
                 }
             }
-               
+
         }
         public void DrawEnemyAttack(Player user)
         {
             TimeSpan timeSinceLastAttacks = DateTime.Now - lastMeleeTimes;
 
-            if (timeSinceLastAttacks.TotalSeconds >= GunInterval)
+            if (timeSinceLastAttacks.TotalSeconds >= _gunInterval)
             {
                 if (user != null)
                 {
@@ -562,9 +606,9 @@ namespace Final_Project
                     {
                         Attack();
                         lastMeleeTimes = DateTime.Now; // update last shot time 
-                    }   
-                }           
-                else 
+                    }
+                }
+                else
                 {
                     Attack();
                     lastMeleeTimes = DateTime.Now; // update last shot time 
@@ -574,14 +618,14 @@ namespace Final_Project
         public void EnemyAttackMelee(Player user, List<Barriers> barriers, List<Player> allylist, List<LaserClass> enemyLaserList, Vector2 playerPositions, List<Texture2D> texture1, List<Texture2D> texture2, List<Texture2D> texture3)
         {
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
-            if (timeSinceLastAttack.TotalSeconds >= GunInterval)
+            if (timeSinceLastAttack.TotalSeconds >= _gunInterval)
             {
                 lastMeleeTime = DateTime.Now; // update last shot time 
                 if (_enemyType == "melee" || _enemyType == "both")
                 {
                     if (_rectangle.Intersects(user.GetBoundingBox()))
                     {
-                        
+                        lastMeleeTime = DateTime.Now; // update last shot time 
                         if (LightSaberHitBoxRight().Intersects(user.Userbox()))
                         {
                             user.Health -= _damage;
@@ -591,11 +635,11 @@ namespace Final_Project
                         {
                             user.Health -= _damage;
                             user.UserHit();
-                        }                           
+                        }
                     }
-                   
+
                 }
-                if (_enemyType == "shoter" &&  new Rectangle(-100, -100, 1600, 1000).Contains(GetBoundingBox()) || _enemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
+                if (_enemyType == "shoter" && new Rectangle(-100, -100, 1600, 1000).Contains(GetBoundingBox()) || _enemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
                 {
                     if (HSpeed > 0)
                         enemyPosition = new Vector2(XLocationRight, YLocation);
@@ -606,22 +650,23 @@ namespace Final_Project
                     var enemydistance = new Vector2(playerPositions.X + missingRange - enemyPosition.X, playerPositions.Y + missingRange - enemyPosition.Y);
                     enemyRotation = (float)Math.Atan2(enemydistance.Y, enemydistance.X);
 
-                   
+
                     if (WeaponType == "fire ball")
-                        enemyLaserList.Add(new LaserClass(texture1, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 35), _damage));                    
-                    else if(WeaponType == "arrow")
+                        enemyLaserList.Add(new LaserClass(texture1, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 35), _damage));
+                    else if (WeaponType == "arrow" || WeaponType == "guy arrow")
                         enemyLaserList.Add(new LaserClass(texture2, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 30, 8), _damage));
                     else
                     {
                         SpecialAttack();
                         enemyLaserList.Add(new LaserClass(texture3, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 120, 60), _damage));
-                    }                                       
-                }   
+                    }
+                }
                 foreach (Player ally in allylist)
                 {
 
                     if (GetBoundingBox().Intersects(ally.GetBoundingBox()))
                     {
+                        lastMeleeTime = DateTime.Now; // update last shot time 
                         DrawEnemyAttack(null);
                         ally.Health -= _damage;
                         ally.UserHit();
@@ -629,11 +674,12 @@ namespace Final_Project
                 }
                 foreach (Barriers barrier in barriers)
                 {
-                    if (GetBoundingBox().Intersects(barrier.GetBoundingBox()))
-                    { 
+                    if (GetBoundingBox().Intersects(barrier.GetBoundingBox()) && barrier.Breakable == "true")
+                    {
+                        lastMeleeTime = DateTime.Now; // update last shot time 
                         DrawEnemyAttack(null);
-                        barrier.TakeHit((int)_damage);                      
-                       
+                        barrier.TakeHit((int)_damage);
+
 
                     }
                 }
@@ -650,7 +696,7 @@ namespace Final_Project
         }
         public Rectangle LightSaberHitBoxRight()
         {
-            return new Rectangle(Hitbox().X + Hitbox().Width / 2, Hitbox().Y - Hitbox().Height / 2, Hitbox().Width, Hitbox().Height*2 );
+            return new Rectangle(Hitbox().X + Hitbox().Width / 2, Hitbox().Y - Hitbox().Height / 2, Hitbox().Width, Hitbox().Height * 2);
         }
         public Rectangle LightSaberHitBoxLeft()
         {
@@ -666,12 +712,12 @@ namespace Final_Project
         }
         public Rectangle Userbox()
         {
-            return new Rectangle(_rectangle.X + _rectangle.Width / 3, _rectangle.Y + _rectangle.Height / 2, _rectangle.Width - _rectangle.Width / 2, _rectangle.Height/2);
+            return new Rectangle(_rectangle.X + _rectangle.Width / 3, _rectangle.Y + _rectangle.Height / 2, _rectangle.Width - _rectangle.Width / 2, _rectangle.Height / 2);
         }
 
         public Rectangle Largebox()
         {
-            return new Rectangle(_rectangle.X - _rectangle.Width / 2, _rectangle.Y - _rectangle.Height / 2, _rectangle.Width *2, _rectangle.Height*2);
+            return new Rectangle(_rectangle.X - _rectangle.Width / 2, _rectangle.Y - _rectangle.Height / 2, _rectangle.Width * 2, _rectangle.Height * 2);
         }
 
 
@@ -684,6 +730,7 @@ namespace Final_Project
         public void Attack()
         {
             _attack = "true";
+            playAttackSound = "true";
         }
         public void SpecialAttack()
         {
@@ -693,16 +740,18 @@ namespace Final_Project
         {
             _drawingDamage = "true";
             _hit = "true";
+            playHitSound = "true";
         }
         public void UserHit()
-        {           
+        {
             _hit = "true";
+            playHitSound = "true";
         }
 
         public void ResetEnemyHit()
         {
             _drawingDamage = "false";
-            
+
         }
         public void Respawn()
         {
@@ -722,9 +771,9 @@ namespace Final_Project
             {
                 _meleeSpeed = 0;
                 _attack = "false";
-                
+
             }
-           
+
 
             if (_hit == "true")
                 _hitSpeed += 0.1;
@@ -753,18 +802,18 @@ namespace Final_Project
                 _special = "false";
             }
 
-            
+
             _guardSpeed += 0.08;
 
             if (_guardSpeed >= _guardTextures.Count - 0.5)
             {
                 _guardSpeed = 0;
-                
+
             }
 
             if (_drawSheild == "true")
                 _walkingSpeed += 0.07;
-            
+
             else
                 _walkingSpeed += animationSpeed;
 
@@ -785,108 +834,131 @@ namespace Final_Project
             greenBar.Y = _rectangle.Y;
             if (greenBar.Width != (int)Health)
                 greenBar.Width -= 1;
-            if (_health >= 1000)
-                _health = 1000;
+
+
+            //Maxes
+            userEmptyBar.Width = _maxHealth / 2 + 30;
+            if (_health >= _maxHealth)
+                _health = _maxHealth;
             if (SheildSeconds <= 5)
                 SheildSeconds = 5;
+            if (_points <= 0)
+                _points = 0;
+
+
             if (userFullBar.Width < _health / 2)
-                userFullBar.Width += 1;
+                userFullBar.Width += 2;
             else if (userFullBar.Width > _health / 2)
-                userFullBar.Width -= 1;
+                userFullBar.Width -= 2;
+
+            if (userFullBarGray.Width < _health / 2)
+                userFullBarGray.Width += 2;
+            else if (userFullBarGray.Width > _health / 2)
+                userFullBarGray.Width -= 1;
 
 
             Move(backSpeed, barriers, screen, Box, type);
         }
-
-        public void Draw(SpriteBatch spriteBatch, int mouseX, Vector2 guardLocation, SoundEffectInstance attackSound, SoundEffectInstance hitSound)
+        public void LowerMaxHealth()
         {
-            if (HSpeed < 0 && mouseX < _rectangle.X)
+            _maxHealth -= 45;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, int mouseX, Vector2 guardLocation)
+        {
+            if (new Rectangle(-100, -100, 1600, 1000).Intersects(GetBoundingBox()))
             {
-                direction = SpriteEffects.FlipHorizontally;
+                if (HSpeed < 0 && mouseX < _rectangle.X)
+
+                    direction = SpriteEffects.FlipHorizontally;
+
+                else if (HSpeed > 0)
+
+                    direction = SpriteEffects.None;
 
 
-            }
-            else if (HSpeed > 0)
-            {
-                direction = SpriteEffects.None;
+                else if (HSpeed < 0)
 
-            }
-            else if (HSpeed < 0)
-            {
-                direction = SpriteEffects.FlipHorizontally;
+                    direction = SpriteEffects.FlipHorizontally;
+
+                else if (mouseX < _rectangle.X)
 
 
-            }
-            else if (mouseX < _rectangle.X)
-            {
-
-                direction = SpriteEffects.FlipHorizontally;
-
-
-            }
-
-
-            else
-                direction = SpriteEffects.None;
-
-
-            if (_drawSheild == "false")
-            {
-                if (_hit == "true")
-                {
-                    if(hitSound.State == SoundState.Stopped)
-                        hitSound.Play();
-                    spriteBatch.Draw(_hitTextures[(int)Math.Round(_hitSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
-                }
-                else if (_special == "true")
-                {
-                    spriteBatch.Draw(_specialTextures[(int)Math.Round(_specialSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
-
-                }
-                else if (_attack == "true")
-                {
-                    if (attackSound.State == SoundState.Stopped)
-                        attackSound.Play();
-                    spriteBatch.Draw(_meleeTextures[(int)Math.Round(_meleeSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
-
-                }
-
-                else if (HSpeed != 0 || VSpeed != 0)
-                {
-                    spriteBatch.Draw(_walkingTextures[(int)Math.Round(_walkingSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
-
-                }
+                    direction = SpriteEffects.FlipHorizontally;
 
                 else
+                    direction = SpriteEffects.None;
+
+                if (_drawSheild == "false")
                 {
-                    spriteBatch.Draw(_standingTextures[(int)Math.Round(_standingSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
+                    if (_hit == "true")
+                    {
+                        if (hitSoundInsta.State == SoundState.Stopped && playHitSound == "true")
+                        {
+                            hitSoundInsta.Play();
+                            playHitSound = "false";
+                        }
 
+                        spriteBatch.Draw(_hitTextures[(int)Math.Round(_hitSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                    }
+                    else if (_special == "true")
+                    {
+                        spriteBatch.Draw(_specialTextures[(int)Math.Round(_specialSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
+
+                    }
+                    else if (_attack == "true")
+                    {
+                        if (attackSoundInsta.State == SoundState.Stopped && playAttackSound == "true")
+                        {
+                            attackSoundInsta.Play();
+                            playAttackSound = "false";
+                        }
+                        spriteBatch.Draw(_meleeTextures[(int)Math.Round(_meleeSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
+
+                    }
+
+                    else if (HSpeed != 0 || VSpeed != 0)
+                    {
+                        spriteBatch.Draw(_walkingTextures[(int)Math.Round(_walkingSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
+
+                    }
+
+                    else
+                    {
+                        spriteBatch.Draw(_standingTextures[(int)Math.Round(_standingSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
+
+                    }
                 }
-            }
-            else
-            {
-                if (_hit == "true")
-                {
-                    if (hitSound.State == SoundState.Stopped)
-                        hitSound.Play();
-                    spriteBatch.Draw(_guardTextures[(int)Math.Round(_guardSpeed)], new Rectangle((int)guardLocation.X, (int)guardLocation.Y, 24,30), null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
-                }
-                if (_trans == "true")
-                    spriteBatch.Draw(_transTextures[(int)Math.Round(_transSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
-
-                else if (HSpeed != 0 || VSpeed != 0)
-                {
-                    spriteBatch.Draw(_walkingSheildTextures[(int)Math.Round(_walkingSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
-
-                }
-
                 else
                 {
-                    spriteBatch.Draw(_standingSheildTextures[(int)Math.Round(_standingSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
+                    if (_hit == "true")
+                    {
+                        if (hitSoundInsta.State == SoundState.Stopped && playHitSound == "true")
+                        {
+                            hitSoundInsta.Play();
+                            playHitSound = "false";
+                        }
+                        spriteBatch.Draw(_guardTextures[(int)Math.Round(_guardSpeed)], new Rectangle((int)guardLocation.X, (int)guardLocation.Y, 24, 30), null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                    }
+                    if (_trans == "true")
+                        spriteBatch.Draw(_transTextures[(int)Math.Round(_transSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
 
+                    else if (HSpeed != 0 || VSpeed != 0)
+                    {
+                        spriteBatch.Draw(_walkingSheildTextures[(int)Math.Round(_walkingSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
+
+                    }
+
+                    else
+                    {
+                        spriteBatch.Draw(_standingSheildTextures[(int)Math.Round(_standingSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
+
+                    }
                 }
-            }
 
+
+
+            }
 
         }
         public void DrawDamage(SpriteBatch spriteBatch, SpriteFont FontText, Vector2 backSpeed, string userWeapon)
@@ -906,33 +978,32 @@ namespace Final_Project
             }
             else if (_drawingDamage == "true")
             {
-                
+
                 _targeted = "not a target";
-                
+
                 if (damgaeMultiplyer != 1)
-                    spriteBatch.DrawString(FontText, $"{(previousHealth - _health)* damgaeMultiplyer}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.Yellow);
+                    spriteBatch.DrawString(FontText, $"{(previousHealth - _health) * damgaeMultiplyer}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.Yellow);
                 else
                     spriteBatch.DrawString(FontText, $"{previousHealth - _health}", new Vector2(_damageTextLocation.X, _damageTextLocation.Y), Color.White);
             }
 
         }
-        public void DrawHealth(SpriteBatch spriteBatch, Texture2D emptytTexture, Texture2D fullTextureRed, bool bossBattle, string player)
+        public void DrawHealth(SpriteBatch spriteBatch, Texture2D emptytTexture, Texture2D fullTextureRed, Texture2D grayTexture, bool bossBattle, string player)
         {
             if (bossBattle == true)
             {
-                redBar.X = 1400/2-redBar.Width/2 ;
+                redBar.X = 1400 / 2 - redBar.Width / 2;
                 redBar.Y = 80;
-                greenBar.X = 1400 / 2 - redBar.Width / 2 + redBar.Width /10;
+                greenBar.X = 1400 / 2 - redBar.Width / 2 + redBar.Width / 10;
                 greenBar.Y = 82;
                 redBar.Height = 18;
-                greenBar.Height = redBar.Height - redBar.Height/4;
-                
+                greenBar.Height = redBar.Height - redBar.Height / 4;
+
             }
             if (player == "user")
             {
-                
-
                 spriteBatch.Draw(emptytTexture, userEmptyBar, Color.White);
+                spriteBatch.Draw(grayTexture, userFullBarGray, Color.White);
                 spriteBatch.Draw(fullTextureRed, userFullBar, Color.White);
 
             }
@@ -941,7 +1012,7 @@ namespace Final_Project
                 spriteBatch.Draw(emptytTexture, redBar, Color.White);
                 spriteBatch.Draw(fullTextureRed, greenBar, Color.White);
             }
-            
+
         }
     }
 }

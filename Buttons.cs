@@ -14,14 +14,19 @@ namespace Final_Project
         private Color _color;
        
         private string _type;
+        private string _changing;
+        private string _changingCon;
         private string hovering;       
-        private int spent;
-        private int _cost;
-        private int _totalCost;
+      
+        private double _cost;
+        private double _totalCost;
+        private double _boostChange;
+        private double _boostChangeCon;
         private bool bought;
         private bool poor;
-        private bool changeDifficulty;
-        public Buttons(Texture2D texture, Rectangle rect, Color color, string type, int cost)
+   
+
+        public Buttons(Texture2D texture, Rectangle rect, Color color, string type, string changing, double boostchange , string changingCon, double boostchangeCon,double cost)
         {
        
             _texture = texture;
@@ -30,59 +35,70 @@ namespace Final_Project
             _type = type;
             _cost = cost;
             hovering = "false";
-            changeDifficulty = true;
+            _changing = changing;
+            _boostChange = boostchange;
+            _changingCon = changingCon;
+            _boostChangeCon = boostchangeCon;
         }
         
         public void Boosts(Player user, ref int crusaders, ref int difficulty)
         {
-            
+
+
             if (_type == "Health Potion" && user.Points >= _cost)
             {
-                user.Health += 100;
-                user.Points -= _cost;
-                
+                user.Health += (int)_boostChange;
+
             }
-                
-            else if (_type == "Sheild Recovery Time Decrease" && user.Points >= _cost)
+
+            else if (_type == "Sheild Recovery Time" && user.Points >= _cost && user.SheildSeconds >= 5)
             {
-                user.Points -= _cost;
-                user.SheildSeconds -= 1;
-               
+
+                user.SheildSeconds += _boostChange;
+                user.BoostSpeed += _boostChangeCon;
             }
-                
+
             else if (_type == "Speed Boost" && user.Points >= _cost)
             {
-                user.Points -= _cost;
-                user.BoostSpeed += 0.5;
-               
+                user.BoostSpeed += _boostChange;
+                user.LowerMaxHealth();
 
             }
             else if (_type == "Damage Boost" && user.Points >= _cost)
             {
-                user.Points -= _cost;
-                user.BoostDamage += 4;
-              
+                user.BoostDamage += (int)_boostChange;
+                user.BoostSpeed += _boostChangeCon;
 
             }
             else if (_type == "Ratfolk (Ally)" && user.Points >= _cost)
             {
-                user.Points -= _cost;
-                crusaders += 1;
-              
-
+                crusaders += (int)_boostChange;
+                user.SheildSeconds += _boostChangeCon;
             }
-            else if (_type == "Increase Difficuly (+$250)" && user.Points >= _cost && changeDifficulty == true)
+            else if (_type == "Wizard Ball Speed" && user.Points >= _cost)
             {
-                user.Points += _cost;
-                difficulty += 1;
-                changeDifficulty = false;
-                Bought = false;
+                user.ProjectileSpeedBoost += (float)_boostChange;
+                user.BoostDamage += (int)_boostChangeCon;
             }
-            else
+            else if (_type == "Attack Downtime" && user.Points >= _cost)
+            {
+                user.GunIntervalBoost += (float)_boostChange;
+                user.ProjectileSpeedBoost += (float)_boostChangeCon;
+            }
+         
+           
+                
+
+            if (user.Points <= _cost)
             {
                 poor = true;
             }
-            spent += _cost;
+            if (!poor)
+            {
+                user.Points -= (int)_cost;
+                _cost *= 1.10;
+            }
+                
 
         }
         
@@ -91,12 +107,13 @@ namespace Final_Project
             get { return _type; }
             set { _type = value; }
         }
-        public int Cost
+        public double Cost
         {
             get { return _cost; }
             set { _cost = value; }
         }
-        public int TotalButtonCost
+      
+        public double TotalButtonCost
         {
             get { return _totalCost; }
             set { _totalCost = value; }
@@ -116,12 +133,14 @@ namespace Final_Project
             get { return poor; }
             set { poor = value; }
         }
+       
 
 
         public void InstructionsDraw(SpriteBatch spriteBatch, SpriteFont Font)
         {
             if (_type == "Instructions")
             {
+                
                 spriteBatch.Draw(_texture, _rect, _color);
                 spriteBatch.DrawString(Font, "-Play on the infinite map", new Vector2(_rect.X, _rect.Y), Color.Black);
                 spriteBatch.DrawString(Font, "-Move using W,A,S & D", new Vector2(_rect.X, _rect.Y + 75), Color.Black);
@@ -140,15 +159,24 @@ namespace Final_Project
             return _rect.Contains(item);
         }
         
-        public void DrawHome(SpriteBatch spriteBatch, SpriteFont Font)
+        public void DrawHome(SpriteBatch spriteBatch, SpriteFont Font, Texture2D hoverTexture, Texture2D notHoverTexture)
         {
             if (_type == "Start" || _type == "How to Play")
             {
-                spriteBatch.Draw(_texture, _rect, _color);
+                 
+
                 if (hovering == "true")
-                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X, _rect.Y + _rect.Height/2), Color.Gray);
+                {
+                    spriteBatch.Draw(hoverTexture, _rect, Color.Gray);
+                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X + 60, _rect.Y + _rect.Height / 4), Color.Black);
+                }
+
                 else
-                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X, _rect.Y + _rect.Height / 2), Color.Black);
+                {
+                    spriteBatch.Draw(notHoverTexture, _rect, Color.White);
+                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X + 60, _rect.Y + _rect.Height / 4), Color.Gray);
+                }
+                   
             }
         }
         public void Draw(SpriteBatch spriteBatch)
@@ -158,32 +186,40 @@ namespace Final_Project
         }
         public void DrawBuyingItem(Player user, SpriteBatch spriteBatch, SpriteFont Font)
         {
-            if (_type == "Increase Difficuly (+$250)" && user.Points >= _cost)
-                spriteBatch.DrawString(Font, $"Bought {_type}, +${_totalCost}", new Vector2(450, 425), Color.White);
-            else if (_type != "Start" && _type != "How to Play" && _type != "Instructions" && user.Points >= _cost)
-                spriteBatch.DrawString(Font, $"Bought {_type}, -${_totalCost}", new Vector2(500, 425), Color.White);
+           
+            if (_type != "Start" && _type != "How to Play" && _type != "Instructions" && user.Points >= _cost)
+                spriteBatch.DrawString(Font, $"Bought {_type}, -${Math.Round(_totalCost, 2)}", new Vector2(500, 425), Color.White);
         }
        
-        public void DrawText(SpriteBatch spriteBatch, SpriteFont Font)
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont Font, Texture2D texture)
         {
             if (_type != "Start" && _type != "How to Play" && _type != "Instructions")
             {
                 if (hovering == "true" && _cost > 0)
                 {
-                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X- 50, _rect.Y - 50), Color.White);
+                    spriteBatch.Draw(texture, new Rectangle(-60, 320, 500, 350), Color.White);
+                    spriteBatch.DrawString(Font, $"{_type}", new Vector2(50, 375), Color.White);
+                    if (_changing != "NONE")
+                        spriteBatch.DrawString(Font, $"{_changing} {_boostChange}", new Vector2(10, 425), Color.DarkGreen);
+                    if (_changingCon != "NONE")
+                        spriteBatch.DrawString(Font, $"{_changingCon} {_boostChangeCon}", new Vector2(10, 475), Color.DarkRed);
                 }
                 else if (_cost == 0)
                 {
                     spriteBatch.DrawString(Font, $"{_type}", new Vector2(_rect.X - 50, _rect.Y - 50), Color.White);
                 }
                 if (_cost > 0)
-                    spriteBatch.DrawString(Font, $"${_cost}", new Vector2(_rect.X - 60, _rect.Y), Color.White);
+                    spriteBatch.DrawString(Font, $"${Math.Round(_cost, 2)}", new Vector2(_rect.X - 60, _rect.Y + 30), Color.White);
                 else
                     spriteBatch.DrawString(Font, "BOSS", new Vector2(_rect.X - 60, _rect.Y), Color.White);
+                
                 if (poor)
                 {
                     spriteBatch.DrawString(Font, "You need more money for this!", new Vector2(450, 425), Color.White);
                 }
+              
+                
+                
             }
 
         }

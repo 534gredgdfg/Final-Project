@@ -87,18 +87,22 @@ namespace Final_Project
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            
-            
+            int startinghealth = _rect.Width + _rect.Height;
 
-            if (_health >= (_rect.Width + _rect.Height) / 3)
-                spriteBatch.Draw(_texture, _rect, _color);
-            else if (_health < (_rect.Width + _rect.Height) / 3 && _health >= (_rect.Width + _rect.Height) / 4)
+            if (_health >= startinghealth - startinghealth / 4)
+                spriteBatch.Draw(_texture, _rect, Color.White);
+
+            else if (_health < startinghealth - startinghealth / 4 && _health >= startinghealth / 2)
                 spriteBatch.Draw(_texture, _rect, Color.LightGray);
-            else
-                spriteBatch.Draw(_texture, _rect, Color.Gray);
-            
 
-           
+            else if (_health < startinghealth - startinghealth / 2 && _health >= startinghealth / 4)
+                spriteBatch.Draw(_texture, _rect, Color.Gray);
+
+            else
+                spriteBatch.Draw(_texture, _rect, Color.DarkSlateGray);
+
+
+
         }
     }
 }

@@ -11,17 +11,24 @@ namespace Final_Project
         private Rectangle _rect;
         private string _type;
         private double _coinSpeed;
+        private int _points;
         List<Texture2D> _coinTextureList;
-        public Coins(Rectangle rect, List<Texture2D> coinTextureList, string type)
+        public Coins(Rectangle rect, List<Texture2D> coinTextureList, string type, int points)
         { 
             _rect = rect;        
             _type = type;
             _coinTextureList = coinTextureList;
+            _points = points;
         }
         public string CoinType
         {
             get { return _type; }
             set { _type = value; }
+        }
+        public int CoinPoints
+        {
+            get { return _points; }
+            set { _points = value; }
         }
 
         public Rectangle Rect()
@@ -32,6 +39,11 @@ namespace Final_Project
         {
             _rect.X +=  (int)backSpeed.X;
             _rect.Y += (int)backSpeed.Y;
+            if (_type == "bush")
+            {
+                _rect.X += 1;
+                
+            }
         }
        
         public void Update(Vector2 backSpeed)
