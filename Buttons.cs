@@ -56,18 +56,21 @@ namespace Final_Project
 
                 user.SheildSeconds += _boostChange;
                 user.BoostSpeed += _boostChangeCon;
+                user.AnimationSpeed -= 0.004;
             }
 
             else if (_type == "Speed Boost" && user.Points >= _cost)
             {
                 user.BoostSpeed += _boostChange;
                 user.LowerMaxHealth();
+                user.AnimationSpeed += 0.01;
 
             }
             else if (_type == "Damage Boost" && user.Points >= _cost)
             {
                 user.BoostDamage += (int)_boostChange;
                 user.BoostSpeed += _boostChangeCon;
+                user.AnimationSpeed -= 0.004;
 
             }
             else if (_type == "Ratfolk (Ally)" && user.Points >= _cost)
@@ -85,10 +88,7 @@ namespace Final_Project
                 user.GunIntervalBoost += (float)_boostChange;
                 user.ProjectileSpeedBoost += (float)_boostChangeCon;
             }
-         
-           
-                
-
+ 
             if (user.Points <= _cost)
             {
                 poor = true;
@@ -96,7 +96,7 @@ namespace Final_Project
             if (!poor)
             {
                 user.Points -= (int)_cost;
-                _cost *= 1.10;
+                _cost *= 1.05;
             }
                 
 

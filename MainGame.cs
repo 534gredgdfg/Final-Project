@@ -15,7 +15,7 @@ namespace Final_Project
         private SpriteBatch _spriteBatch;
         Player user;
 
-        Texture2D rectangleTexture, outroBackroundTexture,introBackroundTexture, hutBlueTexture,hutTexture,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
+        Texture2D rectangleTexture, outroBackroundTexture,introBackroundTexture, storeBackroundTexture, hutBlueTexture,hutTexture,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
         Texture2D greenTreeTexture, bossBuyTexture, boostBuyTexture,redTreeTexture, brownTreeTexture, rock1Texture, rock2Texture, rock3Texture, grass1Texture, grass2Texture, grass3Texture, logTexture;
         Texture2D hoverTexture, UIStatsTexture ,notHoverTexture,UIHealthTexture, UIBlackTexture, UIHoverTexture, UIRedTexture, UIGrayFullTexture,UIRedEmptyTexture, UIHeartTexture,UIBlueTexture, UIBlueEmptyTexture,wizardHeadTexture;
         Vector2 backroundSpeed;
@@ -55,8 +55,8 @@ namespace Final_Project
 
         //Sounds
         Song introMusic, bossMusic, mainMusic, storeMusic;
-        SoundEffect buttonSound, staffSound, hitSound, fireSound;
-        SoundEffectInstance buttonSoundInsta;
+        SoundEffect buttonSound, staffSound, hitSound, fireSound, buySound, coinSound;
+        SoundEffectInstance buttonSoundInsta, buySoundInsta;
 
         double damgaeMultiplyer = 1;
         float seconds;
@@ -65,7 +65,7 @@ namespace Final_Project
         
         private Vector2 playerPosition;
         
-        private SpriteFont healthFont, dungeonFont, damageFont;
+        private SpriteFont healthFont, dungeonFont, damageFont, titleFont;
   
     
         List<Texture2D> shotTexture;
@@ -128,6 +128,8 @@ namespace Final_Project
         List<Texture2D> postionList;
         List<Texture2D> herbaleList;
         List<Texture2D> merchantList;
+        List<Texture2D> MerchantList;
+        List<Texture2D> shadyList;
         List<Texture2D> minoIdleList;
         List<Texture2D> evilIdleList;
 
@@ -211,9 +213,11 @@ namespace Final_Project
 
             //Add Npc
             npcList.Add(new Npc(new Rectangle(150, 100, 70, 100), herbaleList, "right"));
-            npcList.Add(new Npc(new Rectangle(950, 100, 70, 100), postionList, "right"));
+            npcList.Add(new Npc(new Rectangle(900, 100, 70, 100), postionList, "right"));
             npcList.Add(new Npc(new Rectangle(180, 750, 90,100), blacksmithList, "right"));
-            npcList.Add(new Npc(new Rectangle(990, 770, 50, 90), merchantList, "right"));
+            npcList.Add(new Npc(new Rectangle(950, 770, 40, 80), merchantList, "right"));
+            npcList.Add(new Npc(new Rectangle(440, 830, 90, 110), shadyList, "right"));
+            npcList.Add(new Npc(new Rectangle(620, 810, 110, 130), MerchantList, "right"));
 
             npcList.Add(new Npc(new Rectangle(1200, 150, 190, 170), minoIdleList, "flip"));
             npcList.Add(new Npc(new Rectangle(1200, 400, 230, 150), evilIdleList, "flip"));
@@ -234,19 +238,19 @@ namespace Final_Project
             buttonList.Add(new Buttons(rectangleTexture, new Rectangle(500, 80, 545, 500), Color.White, "Instructions", "NONE", 0, "NONE", 0, 0));
 
             //Store
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 150, 160, 160), Color.White, "Health Potion", "Health:+", 100,"NONE", 0, 60));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(100, 150, 160, 160), Color.White, "Health Potion", "Health:+", 100,"NONE", 0, 60));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(900, 150, 160, 160), Color.White, "Sheild Recovery Time", "Sheild Cooldown:",-2, "Speed:", -0.1, 225));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(850, 150, 160, 160), Color.White, "Sheild Recovery Time", "Sheild Cooldown:",-2, "Speed:", -0.1, 225));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(800, 750, 160, 160), Color.White, "Speed Boost", "Speed:+",0.70, "Max Health:", -40, 500));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(800, 750, 160, 160), Color.White, "Speed Boost", "Speed:+",0.70, "Max Health:", -40, 500));
 
-            buttonList.Add(new Buttons(boostBuyTexture, new Rectangle(100, 750, 160, 160), Color.White, "Damage Boost", "Damage:+", 7, "Speed:", -0.20, 300));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(100, 750, 160, 160), Color.White, "Damage Boost", "Damage:+", 7, "Speed:", -0.20, 300));
          
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(450, 150, 160, 160), Color.White, "Ratfolk (Ally)", "Allies:+", 1, "Sheild Cooldown:+", 0.50, 100));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(450, 150, 160, 160), Color.White, "Ratfolk (Ally)", "Allies:+", 1, "Sheild Cooldown:+", 0.50, 100));
 
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(400, 750, 160, 160), Color.White, "Wizard Ball Speed", "Ball Speed:+", 1, "Damage:", -1, 275));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(400, 750, 160, 160), Color.White, "Wizard Ball Speed", "Ball Speed:+", 1, "Damage:", -1, 275));
 
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(600, 750, 160, 160), Color.White, "Attack Downtime", "Attack Cooldown:", -0.40, "Ball Speed:", -0.10, 325));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(600, 750, 160, 160), Color.White, "Attack Downtime", "Attack Cooldown:", -0.40, "Ball Speed:", -0.10, 325));
 
 
             //Bosses
@@ -303,16 +307,20 @@ namespace Final_Project
 
             staffSound = Content.Load<SoundEffect>("Effect_Staff");
           
-
             hitSound = Content.Load<SoundEffect>("Effect_Hit");
-           
 
              fireSound = Content.Load<SoundEffect>("Effect_Hit");
-           
+
+            coinSound = Content.Load<SoundEffect>("Effect_Collect_Coin");
+
+            buySound = Content.Load<SoundEffect>("Effect_Buy_Item");
+            buySoundInsta = buySound.CreateInstance();
+
 
             rectangleTexture = Content.Load<Texture2D>("rectangle");
             outroBackroundTexture = Content.Load<Texture2D>("Art_Screen");
             introBackroundTexture = Content.Load<Texture2D>("Art_Intro");
+            storeBackroundTexture = Content.Load<Texture2D>("Store_Backround");
             //Hud
             emptyGreenBarTexture = Content.Load<Texture2D>("Health_Empty");
             healthGreenBarTexture = Content.Load<Texture2D>("Health_Full");
@@ -339,6 +347,7 @@ namespace Final_Project
             healthFont = Content.Load<SpriteFont>("Good");
             damageFont = Content.Load<SpriteFont>("DamageText");
             dungeonFont = Content.Load<SpriteFont>("DungonFont");
+            titleFont = Content.Load<SpriteFont>("TitleFont");
 
             wizardCrosshair = Content.Load<Texture2D>("WizardCrosshair");
             //Enviorment
@@ -423,6 +432,9 @@ namespace Final_Project
             Texture2D postionTexture = Content.Load<Texture2D>("Postion_Maker");
             Texture2D herbaleTexture = Content.Load<Texture2D>("Herbale_Maker");
             Texture2D merchantTexture = Content.Load<Texture2D>("Speed_Maker");
+            Texture2D MerchantTexture = Content.Load<Texture2D>("NPC_Merchant");
+            Texture2D shadyTexture = Content.Load<Texture2D>("NPC_Shady_Guy");
+
             Texture2D minoIdleTexture = Content.Load<Texture2D>("Minotaur_Idle");
             Texture2D evilIdleTexture = Content.Load<Texture2D>("Evil_Idle");
 
@@ -431,9 +443,9 @@ namespace Final_Project
             //Projectiles
             Texture2D fireBallTexture = Content.Load<Texture2D>("Move_Fire_Ball");
             Texture2D guardTexture = Content.Load<Texture2D>("guard");
-            lightningTexture1 = Content.Load<Texture2D>("lightning1");
-            lightningTexture2 = Content.Load<Texture2D>("lightning2");
-            lightningTexture3 = Content.Load<Texture2D>("lightning3");
+            lightningTexture1 = Content.Load<Texture2D>("lightning_Blue");
+            lightningTexture2 = Content.Load<Texture2D>("lightning_Yellow");
+           
 
             Texture2D fire1Texture = Content.Load<Texture2D>("fire1");
             Texture2D fire2Texture = Content.Load<Texture2D>("fire2");
@@ -555,6 +567,8 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, postionTexture, postionList = new List<Texture2D>(), 19);
             ReapetingAnimation(GraphicsDevice, herbaleTexture, herbaleList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, merchantTexture, merchantList = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, MerchantTexture, MerchantList = new List<Texture2D>(), 5);
+            ReapetingAnimation(GraphicsDevice, shadyTexture, shadyList = new List<Texture2D>(), 5);
             ReapetingAnimation(GraphicsDevice, minoIdleTexture, minoIdleList = new List<Texture2D>(), 5);
             ReapetingAnimation(GraphicsDevice, evilIdleTexture, evilIdleList = new List<Texture2D>(), 8);
 
@@ -589,7 +603,7 @@ namespace Final_Project
 
             ReapetingAnimation(GraphicsDevice, lightningTexture1, LightningShotList1 = new List<Texture2D>(), 4);
             ReapetingAnimation(GraphicsDevice, lightningTexture2, LightningShotList2 = new List<Texture2D>(), 4);
-            ReapetingAnimation(GraphicsDevice, lightningTexture3, LightningShotList3 = new List<Texture2D>(), 4);
+            
 
             ReapetingAnimation(GraphicsDevice, arrowTexture, ArrowShotList = new List<Texture2D>(), 4);
 
@@ -632,9 +646,7 @@ namespace Final_Project
                     case 8:
                         enemys.Add(new Player(spawnPoint, new Vector2(170, 90), 105, "slayer", 2.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
                         break;
-                }
-
-                
+                } 
             }
             
             static void AddMinotaur(List<Player> enemys, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, SoundEffect attackSound, SoundEffect hitSound)
@@ -1090,6 +1102,7 @@ namespace Final_Project
                     {
                         if (coins.CoinType != "grass")
                         {
+                            coinSound.Play();
                             user.Points += coins.CoinPoints;
                             user.TotalPoints += coins.CoinPoints;  
                             coinList.RemoveAt(i);
@@ -1196,31 +1209,19 @@ namespace Final_Project
 
                 else if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-
                     user.WeaponType = "wizard ball";
-
-
-                    user.UserAttackMelee(enemylist, barriersList, laserList, LightningShotList2, mouseState.X, mouseState.Y, null, null, null, null, null, null, null);
-
+                    user.UserAttackMelee(enemylist, barriersList, laserList, LightningShotList2, mouseState.X, mouseState.Y, shotTexture, LightningShotList1, fireList2, iceList1, iceList2, thunderList1, thunderList2);
                 }
                 else if (keyboardState.IsKeyDown(Keys.V))
                 {
-
                     user.WeaponType = "special";
-
-
                     user.UserAttackMelee(enemylist, barriersList, laserList, shotTexture, mouseState.X, mouseState.Y, shotTexture, fireList1, fireList2, iceList1, iceList2, thunderList1, thunderList2);
-
-
-
                 }
                 //Ai Shots
 
                 foreach (Player troops in enemylist)
                 {
                     //Enemy Melee user
-
-
                     if (troops.EnemyType == "melee" || troops.EnemyType == "both")
                     {
                         troops.DrawEnemyAttack(user);
@@ -1234,18 +1235,7 @@ namespace Final_Project
                         troops.DrawEnemyAttack(null);
                         if (troops.Attacking == "false")
                             troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
-
                     }
-                    /*
-                    else if ((troops.WeaponType == "minotaur" || troops.WeaponType == "wizard") && troops.Attacking == "false")
-                    {
-                        troops.DrawEnemyAttack(user);
-
-                        troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, new Vector2(0, 0), null, null, null);
-                    }
-                    */
-
-
                 }
                 //Update User Laser
                 foreach (LaserClass bullet in laserList)
@@ -1255,16 +1245,13 @@ namespace Final_Project
                 foreach (LaserClass bullet in enemyLaserList)
                 {
                     foreach (Player troops in enemylist)
-                        bullet.Update(gameTime, backroundSpeed,troops.ProjectileSpeed);
+                        bullet.Update(gameTime, new Vector2 (0,0),troops.ProjectileSpeed);
 
                 }
-
-
                 foreach (Player troops in enemylist)
                 {
                     troops.ChoosingWeapon();
                 }
-
                 //If ai gets shot
                 for (int i = laserList.Count - 1; i >= 0; i--)
                 {
@@ -1277,8 +1264,6 @@ namespace Final_Project
                             
                             if (troops.HeadShotBox().Intersects(laser.GetBoundingBox()))
                                 troops.HeadShot = 1.5f;
-
-                            
                             troops.Health -= user.WeaponDamage * (float)damgaeMultiplyer;
                             troops.EnemyHit();
                             laserList.RemoveAt(i);
@@ -1381,7 +1366,7 @@ namespace Final_Project
                         {
                             int randomLocationX = rand.Next(-55, 55);
                             int randomLocationY = rand.Next(-55, 55);
-                            if (difficulty <= 5)
+                            if (difficulty < 5)
                                 coinList.Add(new Coins(new Rectangle(troops.Hitbox().X + randomLocationX, troops.Hitbox().Y + randomLocationY, 28, 35), silverCoinTextureList, "silver", silverCoinGain));
                             else
                                 coinList.Add(new Coins(new Rectangle(troops.Hitbox().X + randomLocationX, troops.Hitbox().Y + randomLocationY, 28, 35), goldCoinTextureList, "gold", goldCoinGain));
@@ -1432,9 +1417,8 @@ namespace Final_Project
                                 totalSpent += button.Cost;
                                 button.TotalButtonCost += button.Cost;
                                 button.Bought = true;                                
-                                button.Boosts(user, ref Ratfolk, ref difficulty);
-                                
-                                
+                                button.Boosts(user, ref Ratfolk, ref difficulty);                               
+                                buySound.Play();
                                 boost = false;
                             }
                             if (bossBattle)
@@ -1501,11 +1485,11 @@ namespace Final_Project
             _spriteBatch.Begin();
             if (screen == Screen.TitleScreen)
             {
-
-                
                 _spriteBatch.Draw(introBackroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+                _spriteBatch.DrawString(titleFont, "Wizard Game", new Vector2(150, 700), Color.White);
                 foreach (Buttons button in buttonList)
                 {
+        
                     button.DrawHome(_spriteBatch, damageFont, hoverTexture, notHoverTexture);
                     if (Instruct == true)
                         button.InstructionsDraw(_spriteBatch, damageFont);
@@ -1521,7 +1505,7 @@ namespace Final_Project
                 if (reaperBattle == true)
                     _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkSlateGray);
                 else if (wizardBattle == true)
-                    _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.OrangeRed);
+                    _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.DarkRed);
                 else if (bossBattle == true)
                     _spriteBatch.Draw(rectangleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.SandyBrown);
                 else
@@ -1537,15 +1521,15 @@ namespace Final_Project
                 //Draw all the bullets
                 foreach (LaserClass bullet in laserList)
                     bullet.Draw(_spriteBatch, lightningTexture2);
-                user.Draw(_spriteBatch, mouseState.X, guardLocation);
+                user.Draw(_spriteBatch, mouseState.X, guardLocation, "user");
                 
                 foreach (Player ally in allylist)              
-                    ally.Draw(_spriteBatch, 100000, new Vector2(0,0));
+                    ally.Draw(_spriteBatch, 100000, new Vector2(0,0), "ally");
                    
                 
                 foreach (Player ai in enemylist)
                 {
-                    ai.Draw(_spriteBatch, 100000, new Vector2(0, 0));
+                    ai.Draw(_spriteBatch, 100000, new Vector2(0, 0), "ai");
                     ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, UIGrayFullTexture, bossBattle, "ai");                   
                     ai.DrawDamage(_spriteBatch, damageFont, backroundSpeed, user.WeaponType);
                 }
@@ -1611,7 +1595,7 @@ namespace Final_Project
                 }            
 
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
-                user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0));
+                user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0), "user");
                 //Hud               
                
                 _spriteBatch.Draw(UIHealthTexture, new Rectangle(100, mainGameHeight, 250, 100), Color.White);

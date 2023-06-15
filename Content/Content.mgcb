@@ -487,6 +487,18 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Health_Full.png;Health_Full.png
 
+#begin C:/Users/owenr/Downloads/lightning_Blue.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/lightning_Blue.png;lightning_Blue.png
+
 #begin C:/Users/owenr/Downloads/Minotaur_Idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -510,6 +522,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Minotaur_Walk.png;Minotaur_Walk.png
+
+#begin C:/Users/owenr/Downloads/Move_Fire_Ball.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Move_Fire_Ball.png;Move_Fire_Ball.png
 
 #begin C:/Users/owenr/Downloads/Ratfolk_Attack.png
 /importer:TextureImporter
@@ -642,6 +666,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Slayer_Attack.png;Slayer_Attack.png
+
+#begin C:/Users/owenr/Downloads/Store_Backround.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Store_Backround.png;Store_Backround.png
 
 #begin C:/Users/owenr/Downloads/Take Hit_Skel.png
 /importer:TextureImporter
@@ -806,6 +842,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Effect_Button.mp3
+
+#begin Effect_Buy_Item.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Effect_Buy_Item.mp3
+
+#begin Effect_Collect_Coin.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Effect_Collect_Coin.mp3
 
 #begin Effect_Evil_Laugh.mp3
 /importer:Mp3Importer
@@ -1061,41 +1109,17 @@
 /processorParam:Quality=Best
 /build:introMusic.mp3
 
-#begin lightning1.png
+#begin lightning_Yellow.png
 /importer:TextureImporter
 /processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyColor=255,255,255,255
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:lightning1.png
-
-#begin lightning2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:lightning2.png
-
-#begin lightning3.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:lightning3.png
+/build:lightning_Yellow.png
 
 #begin Log.png
 /importer:TextureImporter
@@ -1132,18 +1156,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Minotaur_Hit.png
-
-#begin Move_Fire_Ball.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Move_Fire_Ball.png
 
 #begin MusicBoss.mp3
 /importer:Mp3Importer
@@ -1198,6 +1210,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:NatureSprite-Gray-Rock.png
+
+#begin NPC_Merchant.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NPC_Merchant.png
+
+#begin NPC_Shady_Guy.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NPC_Shady_Guy.png
 
 #begin Postion_Maker.png
 /importer:TextureImporter
@@ -1354,6 +1390,13 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:thunder2.png
+
+#begin TitleFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:TitleFont.spritefont
 
 #begin UI_Blue_Empty.png
 /importer:TextureImporter

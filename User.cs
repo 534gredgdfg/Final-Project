@@ -42,6 +42,7 @@ namespace Final_Project
         private int _damage;
         private int _maxHealth;
         private int _killpoints = 0;
+        
         private double _points = 3000;
         private double _totalPoints = 0;
         private double _sheildSeconds = 12;
@@ -255,6 +256,11 @@ namespace Final_Project
         {
             get { return _boostSpeed; }
             set { _boostSpeed = value; }
+        }
+        public double AnimationSpeed
+        {
+            get { return animationSpeed; }
+            set { animationSpeed = value; }
         }
         public int BoostDamage
         {
@@ -567,18 +573,13 @@ namespace Final_Project
                             case 1: shotTexture = fireList2; break;
                             case 2: shotTexture = iceList2; break;
                             case 3: shotTexture = thunderList2; break;
-                                /*
-                            case 4: shotTexture = fireList1; break;
-                            
-                            case 5: shotTexture = iceList1; break;
-                            
-                            case 6: shotTexture = thunderList1; break;
-                            */
+                             
                         }
                         playerPosition = new Vector2(rand.Next(-200, 1600), -400);
                         var distance = new Vector2(Userbox().X - playerPosition.X + rand.Next(-600, 600), Userbox().Y - playerPosition.Y);
-                        float playerRotation = (float)Math.Atan2(distance.Y, distance.X);
+                        float playerRotation = (float)Math.Atan2(distance.Y, distance.X);                    
                         laserList.Add(new LaserClass(shotTexture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 40, 35), _damage));
+                        
                     }
                 }
                 else
@@ -589,7 +590,13 @@ namespace Final_Project
                         playerPosition = new Vector2(Userbox().X, Userbox().Y);
                     var distance = new Vector2(mouseStateX - playerPosition.X, mouseStateY - playerPosition.Y);
                     float playerRotation = (float)Math.Atan2(distance.Y, distance.X);
-                    laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 30, 25), _damage));
+                    
+                    
+                  
+                    if (_damage > 45)
+                        laserList.Add(new LaserClass(fireList1, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 30, 25), _damage));
+                    else
+                        laserList.Add(new LaserClass(texture, playerPosition, playerRotation, new Rectangle(Userbox().X, Userbox().Y, 30, 25), _damage));
                 }
             }
 
@@ -620,7 +627,7 @@ namespace Final_Project
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
             if (timeSinceLastAttack.TotalSeconds >= _gunInterval)
             {
-                lastMeleeTime = DateTime.Now; // update last shot time 
+               
                 if (_enemyType == "melee" || _enemyType == "both")
                 {
                     if (_rectangle.Intersects(user.GetBoundingBox()))
@@ -637,41 +644,43 @@ namespace Final_Project
                             user.UserHit();
                         }
                     }
+                    foreach (Player ally in allylist)
+                    {
 
+                        if (GetBoundingBox().Intersects(ally.GetBoundingBox()))
+                        {
+                            lastMeleeTime = DateTime.Now; // update last shot time 
+                            DrawEnemyAttack(null);
+                            ally.Health -= _damage;
+                            ally.UserHit();
+                        }
+                    }
                 }
                 if (_enemyType == "shoter" && new Rectangle(-100, -100, 1600, 1000).Contains(GetBoundingBox()) || _enemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
                 {
+                    lastMeleeTime = DateTime.Now; // update last shot time 
                     if (HSpeed > 0)
-                        enemyPosition = new Vector2(XLocationRight, YLocation);
+                        enemyPosition = new Vector2(XLocationRight, YLocation +height/2);
                     else
-                        enemyPosition = new Vector2(XLocation, YLocation);
-
+                        enemyPosition = new Vector2(XLocation, YLocation + height / 2);
+                   
                     float missingRange = rand.Next(-100, 100);
-                    var enemydistance = new Vector2(playerPositions.X + missingRange - enemyPosition.X, playerPositions.Y + missingRange - enemyPosition.Y);
+                    var enemydistance = new Vector2(user.Userbox().X + missingRange - enemyPosition.X, user.Userbox().Y + user.Userbox().Height/2 +missingRange - enemyPosition.Y );
                     enemyRotation = (float)Math.Atan2(enemydistance.Y, enemydistance.X);
-
 
                     if (WeaponType == "fire ball")
                         enemyLaserList.Add(new LaserClass(texture1, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 35), _damage));
-                    else if (WeaponType == "arrow" || WeaponType == "guy arrow")
-                        enemyLaserList.Add(new LaserClass(texture2, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 30, 8), _damage));
+                    else if (WeaponType == "arrow" )
+                        enemyLaserList.Add(new LaserClass(texture2, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 26, 6), _damage));
+                    else if (WeaponType == "guy arrow")
+                        enemyLaserList.Add(new LaserClass(texture2, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 40, 12), _damage));
                     else
                     {
                         SpecialAttack();
                         enemyLaserList.Add(new LaserClass(texture3, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 120, 60), _damage));
                     }
                 }
-                foreach (Player ally in allylist)
-                {
-
-                    if (GetBoundingBox().Intersects(ally.GetBoundingBox()))
-                    {
-                        lastMeleeTime = DateTime.Now; // update last shot time 
-                        DrawEnemyAttack(null);
-                        ally.Health -= _damage;
-                        ally.UserHit();
-                    }
-                }
+                
                 foreach (Barriers barrier in barriers)
                 {
                     if (GetBoundingBox().Intersects(barrier.GetBoundingBox()) && barrier.Breakable == "true")
@@ -774,7 +783,6 @@ namespace Final_Project
 
             }
 
-
             if (_hit == "true")
                 _hitSpeed += 0.1;
 
@@ -864,7 +872,7 @@ namespace Final_Project
             _maxHealth -= 45;
         }
 
-        public void Draw(SpriteBatch spriteBatch, int mouseX, Vector2 guardLocation)
+        public void Draw(SpriteBatch spriteBatch, int mouseX, Vector2 guardLocation, string type)
         {
             if (new Rectangle(-100, -100, 1600, 1000).Intersects(GetBoundingBox()))
             {
@@ -882,30 +890,34 @@ namespace Final_Project
                     direction = SpriteEffects.FlipHorizontally;
 
                 else if (mouseX < _rectangle.X)
-
-
                     direction = SpriteEffects.FlipHorizontally;
 
                 else
                     direction = SpriteEffects.None;
-
-                if (_drawSheild == "false")
+                if (type == "user")
                 {
                     if (_hit == "true")
-                    {
-                        if (hitSoundInsta.State == SoundState.Stopped && playHitSound == "true")
-                        {
-                            hitSoundInsta.Play();
-                            playHitSound = "false";
-                        }
-
-                        spriteBatch.Draw(_hitTextures[(int)Math.Round(_hitSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                        otherColor = Color.Gray;
+                    else
+                        otherColor = Color.White;
+                }
+               
+                //Animations
+                if (_drawSheild == "false")
+                {
+                    
+                    if (hitSoundInsta.State == SoundState.Stopped && playHitSound == "true")
+                    {                        
+                        hitSoundInsta.Play();
+                        playHitSound = "false";
                     }
-                    else if (_special == "true")
-                    {
+                    if (_hit == "true" && type != "user")                                            
+                        spriteBatch.Draw(_hitTextures[(int)Math.Round(_hitSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                    
+                    else if (_special == "true")                   
                         spriteBatch.Draw(_specialTextures[(int)Math.Round(_specialSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
 
-                    }
+                   
                     else if (_attack == "true")
                     {
                         if (attackSoundInsta.State == SoundState.Stopped && playAttackSound == "true")
@@ -916,19 +928,14 @@ namespace Final_Project
                         spriteBatch.Draw(_meleeTextures[(int)Math.Round(_meleeSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
 
                     }
-
                     else if (HSpeed != 0 || VSpeed != 0)
-                    {
+                    
                         spriteBatch.Draw(_walkingTextures[(int)Math.Round(_walkingSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
 
-                    }
-
-                    else
-                    {
-                        spriteBatch.Draw(_standingTextures[(int)Math.Round(_standingSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
-
-                    }
+                    else                   
+                        spriteBatch.Draw(_standingTextures[(int)Math.Round(_standingSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);           
                 }
+                //Sheild Animations
                 else
                 {
                     if (_hit == "true")
@@ -938,28 +945,18 @@ namespace Final_Project
                             hitSoundInsta.Play();
                             playHitSound = "false";
                         }
-                        spriteBatch.Draw(_guardTextures[(int)Math.Round(_guardSpeed)], new Rectangle((int)guardLocation.X, (int)guardLocation.Y, 24, 30), null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                        spriteBatch.Draw(_guardTextures[(int)Math.Round(_guardSpeed)], new Rectangle((int)guardLocation.X, (int)guardLocation.Y, 24, 30), null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
                     }
                     if (_trans == "true")
                         spriteBatch.Draw(_transTextures[(int)Math.Round(_transSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
 
-                    else if (HSpeed != 0 || VSpeed != 0)
-                    {
+                    else if (HSpeed != 0 || VSpeed != 0)                    
                         spriteBatch.Draw(_walkingSheildTextures[(int)Math.Round(_walkingSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
-
-                    }
-
                     else
-                    {
-                        spriteBatch.Draw(_standingSheildTextures[(int)Math.Round(_standingSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);
-
-                    }
+                    
+                        spriteBatch.Draw(_standingSheildTextures[(int)Math.Round(_standingSpeed)], _rectangle, null, Color.White, 0f, new Vector2(0, 0), direction, 0f);                
                 }
-
-
-
             }
-
         }
         public void DrawDamage(SpriteBatch spriteBatch, SpriteFont FontText, Vector2 backSpeed, string userWeapon)
         {
