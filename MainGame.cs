@@ -102,6 +102,10 @@ namespace Final_Project
         List<Texture2D> SlayerMeleeRightList;
         List<Texture2D> SlayerHitList;
 
+        List<Texture2D> FantasyRightList;
+        List<Texture2D> FantasyMeleeRightList;
+        List<Texture2D> FantasyHitList;
+
         List<Texture2D> AiSkelRightList;
         List<Texture2D> AiSkelMeleeRightList;
         List<Texture2D> AiSkelHitList;
@@ -185,8 +189,7 @@ namespace Final_Project
         {
             TitleScreen,
             MainScreen,
-            StoreScreen,
-            
+            StoreScreen,           
             OutroScreen
         }
         Screen screen;
@@ -252,13 +255,12 @@ namespace Final_Project
 
             buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(600, 750, 160, 160), Color.White, "Attack Downtime", "Attack Cooldown:", -0.40, "Ball Speed:", -0.10, 325));
 
-
             //Bosses
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 150, 160, 160), Color.SandyBrown, "Minotaur Battle", "NONE", 0, "NONE", 0, 0));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(1100, 150, 160, 160), Color.SandyBrown, "Minotaur Battle", "NONE", 0, "NONE", 0, 0));
 
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 400, 160, 160), Color.DarkRed, "Wizard Battle", "NONE", 0, "NONE", 0, 0));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(1100, 400, 160, 160), Color.DarkRed, "Wizard Battle", "NONE", 0, "NONE", 0, 0));
 
-            buttonList.Add(new Buttons(bossBuyTexture, new Rectangle(1100, 650, 160, 160), Color.Black, "Reaper Battle", "NONE", 0, "NONE", 0, 0));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(1100, 650, 160, 160), Color.DarkGray, "Reaper Battle", "NONE", 0, "NONE", 0, 0));
 
             barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
             barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
@@ -269,7 +271,6 @@ namespace Final_Project
             barriersList.Add(new Barriers(grass1Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
             barriersList.Add(new Barriers(grass2Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
             barriersList.Add(new Barriers(grass3Texture, new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 20, 30), 80, Color.White, "false", "false"));
-
            
             grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 90, 45), grassGifTextureList, "grass", 0)); 
                       
@@ -280,6 +281,8 @@ namespace Final_Project
             grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 90, 45), flowerGifTextureList, "grass", 0));
                      
             grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 90, 45), flowerGif2TextureList, "grass", 0));
+
+            grassList.Add(new Coins(new Rectangle(rand.Next(0, mainGameWidth), rand.Next(0, mainScreenHeight), 40, 20), bushGifTextureList, "bush", 0)); 
 
             barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth/4 - 50, mainScreenHeight - mainScreenHeight / 4 - 62, 125,150), 145, Color.White, "true", "true"));
             barriersList.Add(new Barriers(redTreeTexture, new Rectangle(mainGameWidth /4- 50, mainScreenHeight / 4 - 62, 125, 150), 145, Color.White, "true", "true"));
@@ -409,6 +412,10 @@ namespace Final_Project
             Texture2D SlayerWalkingRight = Content.Load<Texture2D>("Slayer_Move");
             Texture2D SlayerMeleeRightTexture = Content.Load<Texture2D>("Slayer_Attack");
             Texture2D SlayerHitTexture = Content.Load<Texture2D>("Slayer_Hit");
+
+            Texture2D FantasyWalkingRight = Content.Load<Texture2D>("Fantasy_Move");
+            Texture2D FantasyMeleeRightTexture = Content.Load<Texture2D>("Fantasy_Attack");
+            Texture2D FantasyHitTexture = Content.Load<Texture2D>("Fantasy_Take_Hit");
             //Ally
             Texture2D RatfolkWalkingRight = Content.Load<Texture2D>("Ratfolk_Move");
             Texture2D RatfolkMeleeRightTexture = Content.Load<Texture2D>("Ratfolk_Attack");
@@ -543,6 +550,10 @@ namespace Final_Project
             ReapetingAnimation(GraphicsDevice, SlayerWalkingRight, SlayerRightList = new List<Texture2D>(), 8);
             ReapetingAnimation(GraphicsDevice, SlayerMeleeRightTexture, SlayerMeleeRightList = new List<Texture2D>(), 5);
             ReapetingAnimation(GraphicsDevice, SlayerHitTexture,SlayerHitList = new List<Texture2D>(), 4);
+
+            ReapetingAnimation(GraphicsDevice, FantasyWalkingRight, FantasyRightList = new List<Texture2D>(), 8);
+            ReapetingAnimation(GraphicsDevice, FantasyMeleeRightTexture, FantasyMeleeRightList = new List<Texture2D>(), 7);
+            ReapetingAnimation(GraphicsDevice, FantasyHitTexture, FantasyHitList = new List<Texture2D>(), 3);
             //Ally
             ReapetingAnimation(GraphicsDevice, RatfolkWalkingRight, RatfolkRightList = new List<Texture2D>(), 7);
             ReapetingAnimation(GraphicsDevice, RatfolkMeleeRightTexture, RatfolkMeleeRightList = new List<Texture2D>(), 12);
@@ -616,12 +627,8 @@ namespace Final_Project
             keyboardState = Keyboard.GetState();
             static void AddBaseEnemy(List<Player> enemys, int enemy, List<Texture2D> AiRightList, List<Texture2D> AiMeleeRightList, List<Texture2D> AiHitList, Vector2 spawnPoint, SoundEffect attackSound, SoundEffect hitSound)
             {
-                Random rand = new Random();
-               
-
                 switch (enemy) 
                 {
-
                     case 1:
                         enemys.Add(new Player(spawnPoint, new Vector2(200, 100), 100, "goblin melee", 1.5, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
                         break;
@@ -644,7 +651,10 @@ namespace Final_Project
                         enemys.Add(new Player(spawnPoint, new Vector2(170, 90), 75, "bat", 2.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
                         break;
                     case 8:
-                        enemys.Add(new Player(spawnPoint, new Vector2(170, 90), 105, "slayer", 2.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        enemys.Add(new Player(spawnPoint, new Vector2(170, 90), 115, "slayer", 1.8, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
+                        break;
+                    case 9:
+                        enemys.Add(new Player(spawnPoint, new Vector2(180, 110), 105, "fantasy", 2.2, AiRightList, AiRightList, AiRightList, AiRightList, AiMeleeRightList, AiHitList, AiRightList, AiRightList, AiRightList, attackSound, hitSound));
                         break;
                 } 
             }
@@ -702,19 +712,14 @@ namespace Final_Project
 
                 else if (keyboardState.IsKeyDown(Keys.A))
                 {
-
-
                     if (user.Sheilding == "false")
                         user.HSpeed = -userspeed - (float)user.BoostSpeed;
                     else
                         user.HSpeed = (-userspeed - (float)user.BoostSpeed) / 2;
 
                 }
-
                 else
                     user.HSpeed = 0;
-
-
 
                 if (keyboardState.IsKeyDown(Keys.W))
                 {
@@ -734,11 +739,8 @@ namespace Final_Project
                     else
                         user.VSpeed = (userspeed + (float)user.BoostSpeed) / 2;
                 }
-
                 else
-
                     user.VSpeed = 0;
-
             }
             static void DimingScreen(ref bool fading, KeyboardState keyboardState, ref Color dimScreenColor, ref Player user, ref Screen screen, string type)
             {
@@ -763,17 +765,12 @@ namespace Final_Project
                         screen = Screen.StoreScreen;
                     
                     else if (screen == Screen.StoreScreen)                                       
-                           screen = Screen.MainScreen;
-                                    
+                           screen = Screen.MainScreen;                                   
                 }
             }
-
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
             // TODO: Add your update logic here
-
-
             if (screen == Screen.TitleScreen)
             {
                 //Play intro song on loop
@@ -785,8 +782,6 @@ namespace Final_Project
 
                     if (button.Contains(new Rectangle(mouseState.X, mouseState.Y, 20, 20)))
                     {
-                        
-                        
                         if (button.Type == "Start")
                         {
                             fading = true;
@@ -797,8 +792,6 @@ namespace Final_Project
                                     buttonSoundInsta.Play();
                                 startGame = true;
                             }
-                                
-                            
                         }
                         else if(button.Type == "How to Play")
                         {
@@ -808,20 +801,15 @@ namespace Final_Project
                                 if (buttonSoundInsta.State == SoundState.Stopped)
                                     buttonSoundInsta.Play();
                                 Instruct = true;
-                            }
-                                
+                            }     
                             else
                                 Instruct = false;
-                        }
-                       
+                        }  
                     }
                     else
-                    {
-                       
+                    {     
                         button.Hovering = "false";
                     }
-                   
-
                 }
                 if (startGame)
                     DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "title");
@@ -846,18 +834,15 @@ namespace Final_Project
                     difficulty += 1;
                     difficultyChange += 1200;
                 }
-
                 foreach (Player troops in enemylist)
                 {
                     if (troops.GetBoundingBox().Intersects(new Rectangle(0, 0, mainGameWidth, mainGameHeight)))
                         toStore = false;
                     else
                         toStore = true;
-
                 }
                 if (toStore)
                     DimingScreen(ref fading, keyboardState, ref dimScreenColor, ref user, ref screen, "main");
-
                 seconds = (float)gameTime.TotalGameTime.TotalSeconds - sheildTime;
                 if (bossBattle == true)
                 {
@@ -872,8 +857,7 @@ namespace Final_Project
                     }
                     coinList.Clear();
                     if (keyboardState.IsKeyDown(Keys.P) && enemylist.Count == 0)
-                    {
-                        
+                    {                        
                         RespawnMethold = false;
                         if (wizardBattle == true)
                             AddWizard(enemylist, wizardRightList, wizardMeleeRightList, wizardHitList,  staffSound,  hitSound);
@@ -881,15 +865,13 @@ namespace Final_Project
                             AddBringerOfDeath(enemylist, deathRightList, deathMeleeRightList, deathSpellList, staffSound, hitSound);
                         else
                             AddMinotaur(enemylist, minoRightList, minoMeleeRightList, minoHitList, staffSound, hitSound);
-
-                    }
-                    
+                    }    
                 }
                 else
                 {
                     for (int i = 0; enemylist.Count <= difficulty + 2; i++)
                     {
-                        enemyType = rand.Next(1, 9);
+                        enemyType = rand.Next(1, 10);                    
                         MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
                         switch (enemyType)
                         {
@@ -907,20 +889,19 @@ namespace Final_Project
                                 break;
                             case 5:
                                 AddBaseEnemy(enemylist, enemyType, guyArcherRightList, guyArcherMeleeRightList, guyArcherHitList, spawnPoint, staffSound, hitSound);
-                                break;
-                            
+                                break;                            
                             case 6:
                                 AddBaseEnemy(enemylist, enemyType, AiWormRightList, AiWormMeleeRightList, AiWormHitList, spawnPoint, fireSound,hitSound);
-                                break;
-                                                     
+                                break;                                                     
                             case 7:
                                 AddBaseEnemy(enemylist, enemyType, BatRightList, BatMeleeRightList, BatHitList, spawnPoint, staffSound, hitSound);
                                 break;
                             case 8:
                                 AddBaseEnemy(enemylist, enemyType, SlayerRightList, SlayerMeleeRightList, SlayerHitList, spawnPoint, staffSound, hitSound);
                                 break;
-                            
-
+                            case 9:
+                                AddBaseEnemy(enemylist, enemyType, FantasyRightList, FantasyMeleeRightList, FantasyHitList, spawnPoint, staffSound, hitSound);
+                                break;
                         }
                     }
                 }
@@ -966,9 +947,7 @@ namespace Final_Project
                     }
                     RespawnMethold = true;
                 }
-
                 //Define Ally Target
-
                 foreach (Player troops in enemylist)
                 {
                     if (mouseState.RightButton == ButtonState.Pressed)
@@ -997,15 +976,12 @@ namespace Final_Project
                 {
                     if (seconds >= user.SheildSeconds && user.Sheilding == "false")
                     {
-
                         user.WeaponType = "sheild melee";
-
                         user.UserAttackMelee(enemylist, barriersList, null, null, mouseState.X, mouseState.Y, null, null, null, null, null, null, null);
                         user.Sheild();
                     }
 
                 }
-
                 else if (keyboardState.IsKeyUp(Keys.Space))
                 {
                     if (user.Sheilding == "true")
@@ -1015,13 +991,10 @@ namespace Final_Project
                 }
                 if (seconds >= user.SheildSeconds)
                     seconds = (float)user.SheildSeconds;
-
                 backroundSpeed.X = 0;
                 backroundSpeed.Y = 0;
-
                 for (int i = 0; barriersList.Count <= 150; i++)
                 {
-
                     MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
                     switch (rand.Next(1, 8))
                     {
@@ -1039,12 +1012,10 @@ namespace Final_Project
                             barriersList.Add(new Barriers(brownTreeTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, rand.Next(120, 140), rand.Next(150, 180)), 80, Color.White, "true", "true")); break;
                         case 7:
                             barriersList.Add(new Barriers(logTexture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 50, 55), 80, Color.White, "true", "true")); break;
-
                     }
                     MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
                     switch (rand.Next(1, 4))
                     {
-
                         case 1:
                             barriersList.Add(new Barriers(grass1Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 20, 30), 80, Color.White, "false", "false")); break;
                         case 2:
@@ -1053,14 +1024,12 @@ namespace Final_Project
                             barriersList.Add(new Barriers(grass3Texture, new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 20, 30), 80, Color.White, "false", "false")); break;
                         
                     }
-
                 }
                 for (int i = 0; grassList.Count <= 100; i++)
                 {
                     MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
                     switch (rand.Next(1,7))
                     {
-
                         case 1:
                             grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 90,45 ), grassGifTextureList, "grass", 0)); break;
                         case 2:
@@ -1075,7 +1044,6 @@ namespace Final_Project
                             grassList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 40, 20), bushGifTextureList, "bush", 0)); break;
 
                     }
-
                 }
                 if (!bossBattle)
                 {
@@ -1094,7 +1062,6 @@ namespace Final_Project
                             coinList.Add(new Coins(new Rectangle((int)spawnPoint.X, (int)spawnPoint.Y, 28, 35), greenGemTextureList, "green", greenCoinGain));
                     }
                 }
-
                 for (int i = coinList.Count - 1; i >= 0; i--)
                 {
                     Coins coins = coinList[i];
@@ -1107,13 +1074,9 @@ namespace Final_Project
                             user.TotalPoints += coins.CoinPoints;  
                             coinList.RemoveAt(i);
                             break;
-                        }
-                        
-                    }
-                        
+                        }                      
+                    }                       
                 }
-                
-
                 for (int i = barriersList.Count - 1; i >= 0; i--)
                 {
                     Barriers t = barriersList[i];
@@ -1230,7 +1193,7 @@ namespace Final_Project
                     }
                     //Enemy Shoot
 
-                    else if (troops.EnemyType == "shoter")
+                    else if (troops.EnemyType == "shooter")
                     {
                         troops.DrawEnemyAttack(null);
                         if (troops.Attacking == "false")
@@ -1558,6 +1521,8 @@ namespace Final_Project
                 user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture,UIGrayFullTexture, false, "user");
                 _spriteBatch.DrawString(dungeonFont, $"{user.Points}", new Vector2(230, mainGameHeight +55), Color.White);
                 _spriteBatch.DrawString(dungeonFont, $"Difficulty Level: {difficulty}", new Vector2(760, 950), Color.White);
+              //  _spriteBatch.DrawString(dungeonFont, $" {user.GunInterval}", new Vector2(500, 500), Color.Red);
+
                 _spriteBatch.DrawString(dungeonFont,$"SPACEBAR Ability {(seconds).ToString("0.0")}" , new Vector2(370, 950), Color.CornflowerBlue);
 
 
@@ -1604,6 +1569,7 @@ namespace Final_Project
                 user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture, UIGrayFullTexture, false, "user");
                 _spriteBatch.DrawString(dungeonFont, $"{user.Points}", new Vector2(230, mainGameHeight + 55), Color.White);
                 _spriteBatch.DrawString(dungeonFont, $"Difficulty Level: {difficulty}", new Vector2(760, 950), Color.White);
+               // _spriteBatch.DrawString(dungeonFont, $" {user.GunInterval}", new Vector2(500, 500), Color.Red);
                 _spriteBatch.DrawString(dungeonFont, $"SPACEBAR Ability {(seconds).ToString("0.0")}", new Vector2(370, 950), Color.CornflowerBlue);
 
                 // - screen fade

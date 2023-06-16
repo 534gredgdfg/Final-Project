@@ -315,7 +315,7 @@ namespace Final_Project
                 _killpoints = 5;
                 animationSpeed = 0.12;
                 _projectileSpeed = 5;
-                _enemyType = "shoter";
+                _enemyType = "shooter";
             }
             else if (_weapontype == "guy arrow")
             {
@@ -324,7 +324,7 @@ namespace Final_Project
                 _killpoints = 6;
                 animationSpeed = 0.09;
                 _projectileSpeed = 6;
-                _enemyType = "shoter";
+                _enemyType = "shooter";
             }
             else if (_weapontype == "fire ball")
             {
@@ -332,8 +332,17 @@ namespace Final_Project
                 _gunInterval = 5.5f;
                 _killpoints = 7;
                 animationSpeed = 0.08;
-                _enemyType = "shoter";
+                _enemyType = "shooter";
                 _projectileSpeed = 4;
+                if (_health <= 35)
+                {
+                    _damage = 68;
+                    _gunInterval = 3.1f;                  
+                    animationSpeed = 0.11;
+                    _projectileSpeed = 8;
+                    otherColor = Color.Red;
+                    hitColor = Color.DarkRed;
+                }
             }
             else if (_weapontype == "goblin melee")
             {
@@ -358,23 +367,49 @@ namespace Final_Project
                 _killpoints = 6;
                 animationSpeed = 0.08;
                 _enemyType = "melee";
+                if (_health <= 45)
+                {
+                    _damage = 95;
+                    _gunInterval = 3f;
+                    _speed = 2.5;
+                    animationSpeed = 0.11;
+                    otherColor = Color.Red;
+                    hitColor = Color.DarkRed;
+                }
             }
 
             else if (_weapontype == "bat")
             {
                 _damage = 33;
                 _gunInterval = 1.1f;
-                _killpoints = 3;
+                _killpoints = 4;
                 animationSpeed = 0.12;
                 _enemyType = "melee";
             }
             else if (_weapontype == "slayer")
             {
-                _damage = 46;
-                _gunInterval = 3.1f;
-                _killpoints = 6;
+                _damage = 54;
+                _gunInterval = 3.6f;
+                _killpoints = 7;
                 animationSpeed = 0.1;
                 _enemyType = "melee";
+            }
+            else if (_weapontype == "fantasy")
+            {
+                _damage = 42;
+                _gunInterval = 2.3f;
+                _killpoints = 8;
+                animationSpeed = 0.1;
+                _enemyType = "melee";
+                if (_health <= 45)
+                {
+                    _damage = 54;
+                    _gunInterval = 1.8f;
+                    _speed = 3.0;
+                    animationSpeed = 0.11;
+                    otherColor = Color.Red;
+                    hitColor = Color.DarkRed;
+                }
             }
             //Boss Traits
             else if (_weapontype == "minotaur")
@@ -391,7 +426,6 @@ namespace Final_Project
                     otherColor = Color.Red;
                     hitColor = Color.DarkRed;
                 }
-
             }
             else if (_weapontype == "wizard")
             {
@@ -421,57 +455,87 @@ namespace Final_Project
                 {
                     _damage = 245;
                     _gunInterval = 1.6f;
-                    _speed = 3;
+                    _speed = 3.3;
                     otherColor = Color.Black;
                     hitColor = Color.Black;
                     _projectileSpeed = 15;
                 }
             }
-
         }
         public void TroopsSpeed(Rectangle user)
         {
             Random rand = new Random();
-
-            if (_hit == "false")
-            {
-                if (user.Y + user.Height / 2 > _rectangle.Bottom + rand.Next(0, 100))
+            if (_hit != "true")
+            {   
+                if (_enemyType == "shooter")
                 {
-                    _velocity.Y = (float)_speed;
-
+                    //Move Down
+                    if (user.Y -300> _rectangle.Bottom)
+                    {
+                        _velocity.Y = (float)_speed;
+                    }
+                    //Move Up
+                    if (user.Bottom +300 < _rectangle.Y)
+                    {
+                        _velocity.Y = -(float)_speed;
+                    }
+                    //Move Right
+                    if (user.X -300> _rectangle.Right)
+                    {
+                        _velocity.X = (float)_speed;
+                    }
+                    //Move Left
+                    if (user.Right +300 < _rectangle.X )
+                    {
+                        _velocity.X = -(float)_speed;
+                    }
                 }
-                if (user.Bottom - user.Height / 2 < _rectangle.Y + rand.Next(-100, 0))
+                else
                 {
-                    _velocity.Y = -(float)_speed;
+                    //Move Down
+                    if (user.Y + user.Height / 2 > _rectangle.Bottom + rand.Next(0, 100))
+                    {
+                        _velocity.Y = (float)_speed;
+                    }
+                    //Move Up
+                    if (user.Bottom - user.Height / 2 < _rectangle.Y + rand.Next(-100, 0))
+                    {
+                        _velocity.Y = -(float)_speed;
+                    }
+                    //Move Right
+                    if (user.X + user.Width / 2 > _rectangle.Right + rand.Next(0, 100))
+                    {
+                        _velocity.X = (float)_speed;
+                    }
+                    //Move Left
+                    if (user.Right - user.Width / 2 < _rectangle.X + rand.Next(-100, 0))
+                    {
+                        _velocity.X = -(float)_speed;
+                    }
                 }
-                if (user.X + user.Width / 2 > _rectangle.Right + rand.Next(0, 100))
-                {
-                    _velocity.X = (float)_speed;
-
-                }
-                if (user.Right - user.Width / 2 < _rectangle.X + rand.Next(-100, 0))
-                {
-                    _velocity.X = -(float)_speed;
-
-                }
+               
             }
         }
         private void Move(Vector2 backSpeed, List<Barriers> barriers, string screen, Rectangle Box, string type)
         {
             if (_drawingDamage == "false")
                 previousHealth = _health;
-            if (_hit == "false" || type == "user")
+
+            if (_attack == "true" && _enemyType == "shooter")
+            {
+                _location.X += (int)backSpeed.X;
+                _location.Y += (int)backSpeed.Y;
+            }
+            else if (_hit == "false" || type == "user")
             {
                 _location.X += _velocity.X + (int)backSpeed.X;
                 _location.Y += _velocity.Y + (int)backSpeed.Y;
-            }
+            }           
             else
             {
                 _location.X += (int)backSpeed.X;
                 _location.Y += (int)backSpeed.Y;
             }
-
-
             _rectangle.X = (int)Math.Round(_location.X);
             _rectangle.Y = (int)Math.Round(_location.Y);
             if (screen == "main game")
@@ -522,17 +586,16 @@ namespace Final_Project
         {
 
             TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
-
             ChoosingWeapon();
             if (timeSinceLastAttack.TotalSeconds >= _gunInterval && _drawSheild == "false")
             {
 
-                if (WeaponType == "special")
+                if (_weapontype == "special")
                     SpecialAttack();
                 else
                     Attack();
                 lastMeleeTime = DateTime.Now; // update last shot time
-                if (WeaponType == "melee" || WeaponType == "sheild melee" || WeaponType == "ally melee")
+                if (_weapontype == "melee" || _weapontype == "sheild melee" || _weapontype == "ally melee")
                 {
 
                     foreach (Player troops in enemys)
@@ -564,7 +627,7 @@ namespace Final_Project
 
                     }
                 }
-                else if (WeaponType == "special")
+                else if (_weapontype == "special")
                 {
                     for (int i = 0; i <= 9; i++)
                     {
@@ -656,7 +719,7 @@ namespace Final_Project
                         }
                     }
                 }
-                if (_enemyType == "shoter" && new Rectangle(-100, -100, 1600, 1000).Contains(GetBoundingBox()) || _enemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
+                if (_enemyType == "shooter" && new Rectangle(-100, -100, 1600, 1000).Contains(GetBoundingBox()) || _enemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
                 {
                     lastMeleeTime = DateTime.Now; // update last shot time 
                     if (HSpeed > 0)
@@ -668,11 +731,11 @@ namespace Final_Project
                     var enemydistance = new Vector2(user.Userbox().X + missingRange - enemyPosition.X, user.Userbox().Y + user.Userbox().Height/2 +missingRange - enemyPosition.Y );
                     enemyRotation = (float)Math.Atan2(enemydistance.Y, enemydistance.X);
 
-                    if (WeaponType == "fire ball")
+                    if (_weapontype == "fire ball")
                         enemyLaserList.Add(new LaserClass(texture1, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 60, 35), _damage));
-                    else if (WeaponType == "arrow" )
+                    else if (_weapontype == "arrow" )
                         enemyLaserList.Add(new LaserClass(texture2, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 26, 6), _damage));
-                    else if (WeaponType == "guy arrow")
+                    else if (_weapontype == "guy arrow")
                         enemyLaserList.Add(new LaserClass(texture2, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 40, 12), _damage));
                     else
                     {

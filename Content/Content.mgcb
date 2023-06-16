@@ -391,6 +391,42 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/Evil_Move.png;Evil_Move.png
 
+#begin C:/Users/owenr/Downloads/Fantasy_Attack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Fantasy_Attack.png;Fantasy_Attack.png
+
+#begin C:/Users/owenr/Downloads/Fantasy_Move.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Fantasy_Move.png;Fantasy_Move.png
+
+#begin C:/Users/owenr/Downloads/Fantasy_Take_Hit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/Fantasy_Take_Hit.png;Fantasy_Take_Hit.png
+
 #begin C:/Users/owenr/Downloads/Goblin Running Right.png
 /importer:TextureImporter
 /processor:TextureProcessor
