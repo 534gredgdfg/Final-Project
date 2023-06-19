@@ -22,35 +22,30 @@ namespace Final_Project
 
         public LaserClass(List<Texture2D> ligthningTextures, Vector2 position, float rotation, Rectangle rect, int damage)
         {
-
-
             this.lightningTextures = ligthningTextures;
             this.position = position;
 
             this.rotation = rotation;
             _damage = damage;
-            this.rect = rect;
-          
+            this.rect = rect; 
         }
         public int WeaponDamage
         {
             get { return _damage; }
             set { _damage = value; }
         }
-
         public void Update(GameTime gt, Vector2 backSpeed, double projectileSpeed)
         {
 
             velocity = new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation));
             velocity *= (float)projectileSpeed;
             position += velocity;
+
             position.X += (int)backSpeed.X;
             position.Y += (int)backSpeed.Y;
             rect.X = (int)position.X;
             rect.Y = (int)position.Y;
 
-            
-            
 
             updateSpeed += 0.11;
             if (updateSpeed >= lightningTextures.Count - 0.5)

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Final_Project
 {
@@ -44,7 +45,8 @@ namespace Final_Project
         Color dimScreenColor;
         bool RespawnMethold = false;
         bool boost = false;
-       
+
+       bool baseBattle = false;
         bool Instruct = false;
         bool fading;
         bool toStore = false;
@@ -57,6 +59,8 @@ namespace Final_Project
         Song introMusic, bossMusic, mainMusic, storeMusic;
         SoundEffect buttonSound, staffSound, hitSound, fireSound, buySound, coinSound;
         SoundEffectInstance buttonSoundInsta, buySoundInsta;
+
+        
 
         double damgaeMultiplyer = 1;
         float seconds;
@@ -483,8 +487,6 @@ namespace Final_Project
 
             static void ReapetingAnimation(GraphicsDevice graphicsDevice, Texture2D _texture, List<Texture2D> _textureList, int _diffImages)
             {
-
-
                 Texture2D cropTexture;
 
                 Rectangle sourceRect;
@@ -506,13 +508,7 @@ namespace Final_Project
                     _textureList.Add(cropTexture);
 
                 }
-
-
             }
-           
-
-
-
             ReapetingAnimation(GraphicsDevice, userWalkingRight, userRightList = new List<Texture2D>(), 6);            
             ReapetingAnimation(GraphicsDevice, userAttackRightTexture, userAttackList = new List<Texture2D>(), 7);           
             ReapetingAnimation(GraphicsDevice, userIdleTexture, userIdleList = new List<Texture2D>(), 5);
@@ -823,11 +819,18 @@ namespace Final_Project
                     if (MediaPlayer.State == MediaState.Stopped)
                         MediaPlayer.Play(bossMusic);
                 }
+                else if (enemylist.Count == 0)
+                {                   
+                        MediaPlayer.Stop();
+                }
+                    
                 else
                 {
                     if (MediaPlayer.State == MediaState.Stopped)
-                        MediaPlayer.Play(mainMusic);
+                        MediaPlayer.Play(mainMusic);                    
                 }
+                
+
                 //Increase Difficulty
                 if (user.TotalPoints >= difficultyChange)
                 {
@@ -846,6 +849,7 @@ namespace Final_Project
                 seconds = (float)gameTime.TotalGameTime.TotalSeconds - sheildTime;
                 if (bossBattle == true)
                 {
+                    baseBattle = false;
                     for (int i = enemylist.Count - 1; i >= 0; i--)
                     {
                         Player t = enemylist[i];
@@ -857,7 +861,8 @@ namespace Final_Project
                     }
                     coinList.Clear();
                     if (keyboardState.IsKeyDown(Keys.P) && enemylist.Count == 0)
-                    {                        
+                    {
+                      
                         RespawnMethold = false;
                         if (wizardBattle == true)
                             AddWizard(enemylist, wizardRightList, wizardMeleeRightList, wizardHitList,  staffSound,  hitSound);
@@ -869,6 +874,7 @@ namespace Final_Project
                 }
                 else
                 {
+                    baseBattle = true;               
                     for (int i = 0; enemylist.Count <= difficulty + 2; i++)
                     {
                         enemyType = rand.Next(1, 10);                    
@@ -1204,13 +1210,12 @@ namespace Final_Project
                 foreach (LaserClass bullet in laserList)
                     bullet.Update(gameTime, backroundSpeed, user.ProjectileSpeed);
 
-                //Update Enemy Laser
+                //Update Enemy Laser             
                 foreach (LaserClass bullet in enemyLaserList)
-                {
-                    foreach (Player troops in enemylist)
-                        bullet.Update(gameTime, new Vector2 (0,0),troops.ProjectileSpeed);
-
-                }
+                    bullet.Update(gameTime, backroundSpeed, difficulty + 4);
+                    
+                
+               
                 foreach (Player troops in enemylist)
                 {
                     troops.ChoosingWeapon();
@@ -1513,8 +1518,8 @@ namespace Final_Project
                     if(toStore == false)
                         _spriteBatch.DrawString(dungeonFont, "To Many Monsters Near", new Vector2(500, 500), Color.White);
                 }
-                
-
+                if (bossBattle == true && enemylist.Count == 0)
+                    _spriteBatch.DrawString(dungeonFont, "Press 'P' to Start", new Vector2(550, 425), Color.White);
                 _spriteBatch.Draw(UIHealthTexture, new Rectangle(100, mainGameHeight, 250, 100), Color.White);
                 _spriteBatch.Draw(wizardHeadTexture, new Rectangle(115, mainGameHeight + 5, 70, 85), Color.White);
                 _spriteBatch.Draw(UIHeartTexture, new Rectangle((int)user.MaxHealth/2 + 235, 910, 30, 30), Color.White);;
