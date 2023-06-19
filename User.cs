@@ -58,7 +58,7 @@ namespace Final_Project
         private double _specialSpeed;
         private int attackFrame;
         private float _gunInterval;
-        private float attackAt;
+ 
         private float _gunIntervalBoost;
         private SpriteEffects direction;
         private float enemyRotation;
@@ -67,8 +67,9 @@ namespace Final_Project
         private string _attack;
         private string playHitSound;
         private string playAttackSound;
+        private string dealDamage;
 
-        private string drawAttack = "not draw";
+
         private string _hit;
         private string _trans;
         private string _special;
@@ -327,7 +328,7 @@ namespace Final_Project
                 animationSpeed = 0.12;
                 _projectileSpeed = 5;
                 _enemyType = "shooter";
-                attackFrame = 2;
+                attackFrame = 5;
             }
             else if (_weapontype == "guy arrow")
             {
@@ -337,7 +338,7 @@ namespace Final_Project
                 animationSpeed = 0.09;
                 _projectileSpeed = 6;
                 _enemyType = "shooter";
-                attackFrame = 2;
+                attackFrame = 6;
             }
             else if (_weapontype == "fire ball")
             {
@@ -347,7 +348,7 @@ namespace Final_Project
                 animationSpeed = 0.08;
                 _enemyType = "shooter";
                 _projectileSpeed = 4;
-                attackFrame = 2;
+                attackFrame = 13;
                 if (_health <= 35)
                 {
                     _damage = 68;
@@ -364,7 +365,7 @@ namespace Final_Project
                 _gunInterval = 2.4f;
                 _killpoints = 4;
                 _enemyType = "melee";
-                attackFrame = 2;
+                attackFrame = 7;
 
             }
             else if (_weapontype == "fast goblin melee")
@@ -374,7 +375,7 @@ namespace Final_Project
                 _killpoints = 4;
                 animationSpeed = 0.14;
                 _enemyType = "melee";
-                attackFrame = 2;
+                attackFrame = 6;
             }
             else if (_weapontype == "skel melee")
             {
@@ -383,7 +384,7 @@ namespace Final_Project
                 _killpoints = 6;
                 animationSpeed = 0.08;
                 _enemyType = "melee";
-                attackFrame = 2;
+                attackFrame = 7;
                 if (_health <= 45)
                 {
                     _damage = 95;
@@ -402,7 +403,7 @@ namespace Final_Project
                 _killpoints = 4;
                 animationSpeed = 0.12;
                 _enemyType = "melee";
-                attackFrame = 2;
+                attackFrame = 6;
             }
             else if (_weapontype == "slayer")
             {
@@ -411,7 +412,7 @@ namespace Final_Project
                 _killpoints = 7;
                 animationSpeed = 0.1;
                 _enemyType = "melee";
-                attackFrame = 2;
+                attackFrame = 3;
             }
             else if (_weapontype == "fantasy")
             {
@@ -420,7 +421,7 @@ namespace Final_Project
                 _killpoints = 8;
                 animationSpeed = 0.1;
                 _enemyType = "melee";
-                attackFrame = 2;
+                attackFrame = 5;
                 if (_health <= 45)
                 {
                     _damage = 54;
@@ -438,7 +439,7 @@ namespace Final_Project
                 _gunInterval = 2.0f;
                 _killpoints = 40;
                 _enemyType = "melee";
-                attackFrame = 2;
+                attackFrame = 6;
                 if (_health <= 200)
                 {
                     _damage = 225;
@@ -454,12 +455,12 @@ namespace Final_Project
                 _gunInterval = 1.2f;
                 _killpoints = 35;
                 _enemyType = "melee";
-                attackFrame = 2;
+                attackFrame = 1;
                 if (_health <= 150)
                 {
                     _damage = 139;
                     _gunInterval = 0.6f;
-                    _speed = 4;
+                    _speed = 3;
                     otherColor = Color.Red;
                     hitColor = Color.DarkRed;
                 }
@@ -473,7 +474,7 @@ namespace Final_Project
                 _enemyType = "both";
                 animationSpeed = 0.11;
                 _projectileSpeed = 9;
-                attackFrame = 2;
+                attackFrame = 5;
                 if (_health <= 150)
                 {
                     _damage = 245;
@@ -687,26 +688,50 @@ namespace Final_Project
             }
 
         }
-        public void DrawEnemyAttack(Player user)
+        public void DrawEnemyAttack(Player user, List<Barriers> barriers, List<Player> allylist)
         {
             timer.Start();
             elapsed = timer.Elapsed;
 
             if (elapsed.TotalSeconds >= _gunInterval)
-            {
-               
-                if (user != null)
+            {        
+                if (user == null)
+                {
+                    Attack();
+                    dealDamage = "deal";
+                    timer.Reset();
+                }
+                else
                 {
                     if (_rectangle.Intersects(user.GetBoundingBox()))
                     {
                         Attack();
+                        dealDamage = "deal";
                         timer.Reset();
                     }
-                }
-                else
-                {
-                    Attack();
-                    timer.Reset();
+                    foreach (Player ally in allylist)
+                    {
+                        if (GetBoundingBox().Intersects(ally.GetBoundingBox()))
+                        {
+                            
+                            Attack();
+                            dealDamage = "deal";
+                            timer.Reset();
+
+                            
+                        }
+                    }
+                    foreach (Barriers barrier in barriers)
+                    {
+                        if (GetBoundingBox().Intersects(barrier.GetBoundingBox()) && barrier.Breakable == "true")
+                        {
+                            Attack();
+                            dealDamage = "deal";
+                            timer.Reset();
+                        }
+                           
+                    }
+
                 }
             }
         }
@@ -714,9 +739,10 @@ namespace Final_Project
         {
           
 
-            if ((int)Math.Round(_meleeSpeed) == attackFrame)
+            if ((int)Math.Round(_meleeSpeed) == attackFrame && dealDamage == "deal")
             {
-               
+                dealDamage = "stop";
+
                 if (_enemyType == "melee" || _enemyType == "both")
                 {
                     if (_rectangle.Intersects(user.GetBoundingBox()))
@@ -735,14 +761,16 @@ namespace Final_Project
                     }
                     foreach (Player ally in allylist)
                     {
-
                         if (GetBoundingBox().Intersects(ally.GetBoundingBox()))
-                        {
-                       
-                            DrawEnemyAttack(null);
+                        { 
                             ally.Health -= _damage;
                             ally.UserHit();
                         }
+                    }
+                    foreach (Barriers barrier in barriers)
+                    {
+                        if (GetBoundingBox().Intersects(barrier.GetBoundingBox()) && barrier.Breakable == "true")
+                            barrier.TakeHit((int)_damage);
                     }
                 }
                 if (_enemyType == "shooter" && new Rectangle(-100, -100, 1600, 1000).Contains(GetBoundingBox()) || _enemyType == "both" && !_rectangle.Intersects(user.GetBoundingBox()))
@@ -769,17 +797,10 @@ namespace Final_Project
                         enemyLaserList.Add(new LaserClass(texture3, enemyPosition, enemyRotation, new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, 120, 60), _damage));
                     }
                 }
-                
                 foreach (Barriers barrier in barriers)
                 {
                     if (GetBoundingBox().Intersects(barrier.GetBoundingBox()) && barrier.Breakable == "true")
-                    {
-                       
-                        DrawEnemyAttack(null);
                         barrier.TakeHit((int)_damage);
-
-
-                    }
                 }
             }
           
@@ -860,18 +881,14 @@ namespace Final_Project
 
         public void Update(Vector2 backSpeed, List<Barriers> barriers, string screen, Rectangle Box, string type)
         {
-
-            if (_attack == "true" && WeaponType == "fire worm")
-                _meleeSpeed += 0.2;
-
-            else if (_attack == "true")
+            if (_attack == "true")
+            {
                 _meleeSpeed += animationSpeed;
-
+            }
             if (_meleeSpeed >= _meleeTextures.Count - 0.5)
             {
                 _meleeSpeed = 0;
                 _attack = "false";
-
             }
 
             if (_hit == "true")
@@ -1054,6 +1071,7 @@ namespace Final_Project
         {
             spriteBatch.DrawString(FontText, $"{(int)Math.Round(_meleeSpeed)}", new Vector2(_rectangle.X-50, _rectangle.Y - 50), Color.White);
             spriteBatch.DrawString(FontText, $"{attackFrame}", new Vector2(_rectangle.X + 50, _rectangle.Y - 50), Color.White);
+            
             _damageTextLocation.X += (int)_damageTextVector.X + (int)backSpeed.X;
             _damageTextLocation.Y += (int)_damageTextVector.Y + (int)backSpeed.Y;
             if (!_damageTextLocation.Intersects(Hitbox()))

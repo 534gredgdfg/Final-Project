@@ -32,7 +32,7 @@ namespace Final_Project
         int mainGameHeight = 900;
         int enemyType = 0;
         int mainScreenHeight = 1000;
-        int difficulty = 0;
+        int difficulty = 3;
         int difficultyChange = 1400;
         int randomNumber;
 
@@ -877,7 +877,7 @@ namespace Final_Project
                     baseBattle = true;               
                     for (int i = 0; enemylist.Count <= difficulty + 2; i++)
                     {
-                        enemyType = rand.Next(1, 10);                    
+                        enemyType = rand.Next(1, 10);
                         MakeSpwanPoints(mainGameWidth, mainScreenHeight, ref spawnPoint);
                         switch (enemyType)
                         {
@@ -1193,17 +1193,15 @@ namespace Final_Project
                     //Enemy Melee user
                     if (troops.EnemyType == "melee" || troops.EnemyType == "both")
                     {
-                        troops.DrawEnemyAttack(user);
-                        if (troops.Attacking == "false")
-                            troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
+                        troops.DrawEnemyAttack(user,barriersList, allylist);
+                        troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
                     }
                     //Enemy Shoot
 
                     else if (troops.EnemyType == "shooter")
                     {
-                        troops.DrawEnemyAttack(null);
-                        if (troops.Attacking == "false")
-                            troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
+                        troops.DrawEnemyAttack(null, barriersList, allylist);                
+                        troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
                     }
                 }
                 //Update User Laser
