@@ -140,15 +140,16 @@ namespace Final_Project
         {
             if (_type == "Instructions")
             {
-                
+                int xLocation = _rect.X + 85;
                 spriteBatch.Draw(_texture, _rect, _color);
-                spriteBatch.DrawString(Font, "-Play on the infinite map", new Vector2(_rect.X, _rect.Y), Color.Black);
-                spriteBatch.DrawString(Font, "-Move using W,A,S & D", new Vector2(_rect.X, _rect.Y + 75), Color.Black);
-                spriteBatch.DrawString(Font, "-Left Click to Shoot", new Vector2(_rect.X, _rect.Y + 150), Color.Black);
-                spriteBatch.DrawString(Font, "-Press 'X' to Melee", new Vector2(_rect.X, _rect.Y + 225), Color.Black);
-                spriteBatch.DrawString(Font, "-Press 'SPACE' for special attack", new Vector2(_rect.X, _rect.Y + 300), Color.Black);
-                spriteBatch.DrawString(Font, "which leads into invicability", new Vector2(_rect.X, _rect.Y + 350), Color.Black);
-                spriteBatch.DrawString(Font, "-Press 'TAB' to enter Store", new Vector2(_rect.X, _rect.Y + 425), Color.Black);
+                spriteBatch.DrawString(Font, "-Play on the infinite map", new Vector2(xLocation, _rect.Y+165), Color.Black);
+                spriteBatch.DrawString(Font, "-Move using W,A,S & D", new Vector2(xLocation, _rect.Y + 240), Color.Black);
+                spriteBatch.DrawString(Font, "-Left Click to Shoot", new Vector2(xLocation, _rect.Y + 315), Color.Black);
+                spriteBatch.DrawString(Font, "-Press 'X' to Melee", new Vector2(xLocation, _rect.Y + 390), Color.Black);
+                spriteBatch.DrawString(Font, "-Press 'V' for special attack", new Vector2(xLocation, _rect.Y + 465), Color.Black);
+                spriteBatch.DrawString(Font, "-Press 'SPACE' for smash attack", new Vector2(xLocation, _rect.Y + 540), Color.Black);
+                spriteBatch.DrawString(Font, "which leads into invicability", new Vector2(xLocation, _rect.Y + 590), Color.Black);
+                spriteBatch.DrawString(Font, "-Press 'TAB' to enter Store", new Vector2(xLocation, _rect.Y + 665), Color.Black);
             }
                
 

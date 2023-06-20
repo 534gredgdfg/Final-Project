@@ -68,7 +68,7 @@ namespace Final_Project
         }
         public void TakeHit(int damage)
         {
-            if (_brakable == "true" )            
+            if (_brakable == "true")            
                 _health -= damage;          
         }
         public void UndoMoveV()

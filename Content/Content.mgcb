@@ -535,6 +535,18 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/owenr/Downloads/lightning_Blue.png;lightning_Blue.png
 
+#begin C:/Users/owenr/Downloads/lightning3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,255,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:C:/Users/owenr/Downloads/lightning3.png;lightning3.png
+
 #begin C:/Users/owenr/Downloads/Minotaur_Idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1156,6 +1168,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:lightning_Yellow.png
+
+#begin lightning3_blue.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:lightning3_blue.png
 
 #begin Log.png
 /importer:TextureImporter

@@ -22,6 +22,7 @@ namespace Final_Project
         private Rectangle userFullBarGray;
         private Rectangle userEmptyBar;
         private Rectangle _rectangle;
+        private Rectangle _explodeRectangle;
 
         private DateTime lastMeleeTime = DateTime.MinValue;
         private DateTime lastMeleeTimes = DateTime.MinValue;
@@ -55,6 +56,7 @@ namespace Final_Project
         private double _hitSpeed;
         private double _guardSpeed;
         private double _transSpeed;
+        private double  _explodeSpeed;
         private double _specialSpeed;
         private int attackFrame;
         private float _gunInterval;
@@ -68,7 +70,7 @@ namespace Final_Project
         private string playHitSound;
         private string playAttackSound;
         private string dealDamage;
-
+        private string bar = "empty";
 
         private string _hit;
         private string _trans;
@@ -131,9 +133,9 @@ namespace Final_Project
             redBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health + (int)Health / 4, 10);
             greenBar = new Rectangle((int)_location.X, (int)_location.Y, (int)Health, redBar.Height - redBar.Height / 5);
 
-            userEmptyBar = new Rectangle(200, 910, (int)Health / 2 + 30, 23);
-            userFullBar = new Rectangle(210, 916, (int)Health / 2, 10);
-            userFullBarGray = new Rectangle(210, 916, (int)Health / 2, 10);
+            userEmptyBar = new Rectangle(200, 900, (int)Health / 2 + 18, 23);
+            userFullBar = new Rectangle(200, 906, (int)Health / 2, 10);
+            userFullBarGray = new Rectangle(200, 906, (int)Health / 2, 10);
 
             attackSound = _attackSound;
             hitSound = _hitSound;
@@ -284,7 +286,16 @@ namespace Final_Project
             get { return _targeted; }
             set { _targeted = value; }
         }
-
+        public Stopwatch Timer
+        {
+            get { return timer; }
+            set { timer = value; }
+        }
+        public TimeSpan Elapsed
+        {
+            get { return elapsed; }
+            set { elapsed = value; }
+        }
         public void ChoosingWeapon()
         {
             //User Traits
@@ -309,7 +320,7 @@ namespace Final_Project
             else if (_weapontype == "special")
             {
                 _damage = 28 + boostDamage;
-                _gunInterval = 8.0f + _gunIntervalBoost;
+                _gunInterval = 10f + _gunIntervalBoost;
                 _projectileSpeed = 5 + _projectileSpeedBoost;
             }
             else if (_weapontype == "ally melee")
@@ -491,52 +502,28 @@ namespace Final_Project
             Random rand = new Random();
             if (_hit != "true")
             {   
-                if (_enemyType == "shooter")
+                
+                //Move Down
+                if (user.Y + user.Height / 2 > _rectangle.Bottom + rand.Next(0, 100))
                 {
-                    //Move Down
-                    if (user.Y -300> _rectangle.Bottom)
-                    {
-                        _velocity.Y = (float)_speed;
-                    }
-                    //Move Up
-                    if (user.Bottom +300 < _rectangle.Y)
-                    {
-                        _velocity.Y = -(float)_speed;
-                    }
-                    //Move Right
-                    if (user.X -300> _rectangle.Right)
-                    {
-                        _velocity.X = (float)_speed;
-                    }
-                    //Move Left
-                    if (user.Right +300 < _rectangle.X )
-                    {
-                        _velocity.X = -(float)_speed;
-                    }
+                    _velocity.Y = (float)_speed;
                 }
-                else
+                //Move Up
+                if (user.Bottom - user.Height / 2 < _rectangle.Y + rand.Next(-100, 0))
                 {
-                    //Move Down
-                    if (user.Y + user.Height / 2 > _rectangle.Bottom + rand.Next(0, 100))
-                    {
-                        _velocity.Y = (float)_speed;
-                    }
-                    //Move Up
-                    if (user.Bottom - user.Height / 2 < _rectangle.Y + rand.Next(-100, 0))
-                    {
-                        _velocity.Y = -(float)_speed;
-                    }
-                    //Move Right
-                    if (user.X + user.Width / 2 > _rectangle.Right + rand.Next(0, 100))
-                    {
-                        _velocity.X = (float)_speed;
-                    }
-                    //Move Left
-                    if (user.Right - user.Width / 2 < _rectangle.X + rand.Next(-100, 0))
-                    {
-                        _velocity.X = -(float)_speed;
-                    }
+                    _velocity.Y = -(float)_speed;
                 }
+                //Move Right
+                if (user.X + user.Width / 2 > _rectangle.Right + rand.Next(0, 100))
+                {
+                    _velocity.X = (float)_speed;
+                }
+                //Move Left
+                if (user.Right - user.Width / 2 < _rectangle.X + rand.Next(-100, 0))
+                {
+                    _velocity.X = -(float)_speed;
+                }
+                
                
             }
         }
@@ -609,16 +596,17 @@ namespace Final_Project
         public void UserAttackMelee(List<Player> enemys, List<Barriers> barriers, List<LaserClass> laserList, List<Texture2D> texture, float mouseStateX, float mouseStateY, List<Texture2D> shotTexture, List<Texture2D> fireList1, List<Texture2D> fireList2, List<Texture2D> iceList1, List<Texture2D> iceList2, List<Texture2D> thunderList1, List<Texture2D> thunderList2)
         {
 
-            TimeSpan timeSinceLastAttack = DateTime.Now - lastMeleeTime;
+            
+            
             ChoosingWeapon();
-            if (timeSinceLastAttack.TotalSeconds >= _gunInterval && _drawSheild == "false")
+            if (elapsed.TotalSeconds >= _gunInterval)
             {
 
                 if (_weapontype == "special")
                     SpecialAttack();
                 else
                     Attack();
-                lastMeleeTime = DateTime.Now; // update last shot time
+                timer.Reset();
                 if (_weapontype == "melee" || _weapontype == "sheild melee" || _weapontype == "ally melee")
                 {
 
@@ -651,9 +639,9 @@ namespace Final_Project
 
                     }
                 }
-                else if (_weapontype == "special")
+                else if (_weapontype == "special" && bar == "full")
                 {
-                    for (int i = 0; i <= 9; i++)
+                    for (int i = 0; i <= 16; i++)
                     {
                         switch (rand.Next(1, 4))
                         {
@@ -839,6 +827,11 @@ namespace Final_Project
         {
             return new Rectangle(_rectangle.X - _rectangle.Width / 2, _rectangle.Y - _rectangle.Height / 2, _rectangle.Width * 2, _rectangle.Height * 2);
         }
+        public Rectangle EnemyShootingbox()
+        {
+            return new Rectangle(_rectangle.X - _rectangle.Width, _rectangle.Y - _rectangle.Height, _rectangle.Width * 3, _rectangle.Height * 3);
+        }
+        
 
 
         public bool Collide(Rectangle item)
@@ -972,6 +965,8 @@ namespace Final_Project
             else if (userFullBarGray.Width > _health / 2)
                 userFullBarGray.Width -= 1;
 
+            
+
 
             Move(backSpeed, barriers, screen, Box, type);
         }
@@ -979,10 +974,14 @@ namespace Final_Project
         {
             _maxHealth -= 45;
         }
-
-        public void Draw(SpriteBatch spriteBatch, int mouseX, Vector2 guardLocation, string type)
+        
+       
+        public void Draw(SpriteBatch spriteBatch, int mouseX, Vector2 guardLocation, string type, List<Texture2D> explodeTextures, Vector2 backSpeed)
         {
-          
+            guardLocation.X += (int)backSpeed.X;
+            guardLocation.Y += (int)backSpeed.Y;
+           
+                
             if (new Rectangle(-100, -100, 1600, 1000).Intersects(GetBoundingBox()))
             {
                 if (HSpeed < 0 && mouseX < _rectangle.X)
@@ -1020,8 +1019,16 @@ namespace Final_Project
                         hitSoundInsta.Play();
                         playHitSound = "false";
                     }
-                    if (_hit == "true" && type != "user")                                            
+                    if (_hit == "true" && type != "user")
+                    {
+                        _explodeSpeed += 0.12;
+                        if (_explodeSpeed >= explodeTextures.Count - 0.5)
+                            _explodeSpeed = 0;
+
+                        spriteBatch.Draw(explodeTextures[(int)Math.Round(_explodeSpeed)], new Rectangle((int)guardLocation.X , (int)guardLocation.Y, 50, 50) , null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
                         spriteBatch.Draw(_hitTextures[(int)Math.Round(_hitSpeed)], _rectangle, null, hitColor, 0f, new Vector2(0, 0), direction, 0f);
+                    }                                   
+                       
                     
                     else if (_special == "true")                   
                         spriteBatch.Draw(_specialTextures[(int)Math.Round(_specialSpeed)], _rectangle, null, otherColor, 0f, new Vector2(0, 0), direction, 0f);
@@ -1069,9 +1076,10 @@ namespace Final_Project
         }
         public void DrawDamage(SpriteBatch spriteBatch, SpriteFont FontText, Vector2 backSpeed, string userWeapon)
         {
-            spriteBatch.DrawString(FontText, $"{(int)Math.Round(_meleeSpeed)}", new Vector2(_rectangle.X-50, _rectangle.Y - 50), Color.White);
-            spriteBatch.DrawString(FontText, $"{attackFrame}", new Vector2(_rectangle.X + 50, _rectangle.Y - 50), Color.White);
             
+            //spriteBatch.DrawString(FontText, $"{(int)Math.Round(_meleeSpeed)}", new Vector2(_rectangle.X-50, _rectangle.Y - 50), Color.White);
+            //spriteBatch.DrawString(FontText, $"{attackFrame}", new Vector2(_rectangle.X + 50, _rectangle.Y - 50), Color.White);
+
             _damageTextLocation.X += (int)_damageTextVector.X + (int)backSpeed.X;
             _damageTextLocation.Y += (int)_damageTextVector.Y + (int)backSpeed.Y;
             if (!_damageTextLocation.Intersects(Hitbox()))
@@ -1093,8 +1101,9 @@ namespace Final_Project
             }
 
         }
-        public void DrawHealth(SpriteBatch spriteBatch, Texture2D emptytTexture, Texture2D fullTextureRed, Texture2D grayTexture, bool bossBattle, string player)
+        public void DrawHealth(SpriteBatch spriteBatch, Texture2D emptytTexture, Texture2D fullTextureRed, Texture2D grayTexture, bool bossBattle, string player, SpriteFont FontText)
         {
+            
             
             if (bossBattle == true)
             {
@@ -1108,6 +1117,21 @@ namespace Final_Project
             }
             if (player == "user")
             {
+                int rechargeWidth = (int)Math.Round(elapsed.TotalSeconds * 15);
+
+                if (rechargeWidth >= 150)
+                {
+                    bar = "full";
+                    rechargeWidth = 150;
+                }
+                else
+                    bar = "empty";
+                    
+
+               // spriteBatch.DrawString(FontText, $" {(int)Math.Round(elapsed.TotalSeconds, 2)}", new Vector2(_rectangle.X - 50, _rectangle.Y - 50), Color.White);
+                spriteBatch.Draw(emptytTexture, new Rectangle(200, 925, 158, 23), Color.White);
+                spriteBatch.Draw(grayTexture, new Rectangle(200, 931, rechargeWidth, 10), Color.CornflowerBlue);
+
                 spriteBatch.Draw(emptytTexture, userEmptyBar, Color.White);
                 spriteBatch.Draw(grayTexture, userFullBarGray, Color.White);
                 spriteBatch.Draw(fullTextureRed, userFullBar, Color.White);

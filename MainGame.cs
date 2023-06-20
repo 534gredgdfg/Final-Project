@@ -16,12 +16,12 @@ namespace Final_Project
         private SpriteBatch _spriteBatch;
         Player user;
 
-        Texture2D rectangleTexture, outroBackroundTexture,introBackroundTexture, storeBackroundTexture, hutBlueTexture,hutTexture,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
+        Texture2D rectangleTexture, lightningExplodeTexture1, lightningExplodeTexture2, outroBackroundTexture,introBackroundTexture, storeBackroundTexture, hutBlueTexture,hutTexture,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
         Texture2D greenTreeTexture, bossBuyTexture, boostBuyTexture,redTreeTexture, brownTreeTexture, rock1Texture, rock2Texture, rock3Texture, grass1Texture, grass2Texture, grass3Texture, logTexture;
         Texture2D hoverTexture, UIStatsTexture ,notHoverTexture,UIHealthTexture, UIBlackTexture, UIHoverTexture, UIRedTexture, UIGrayFullTexture,UIRedEmptyTexture, UIHeartTexture,UIBlueTexture, UIBlueEmptyTexture,wizardHeadTexture;
         Vector2 backroundSpeed;
         Rectangle targetedEnemy = new Rectangle(750, 450, 50,50);
-        Vector2 spawnPoint,guardLocation;
+        Vector2 spawnPoint,guardLocation, explodLocation;
   
  
         int t = 0;
@@ -54,7 +54,7 @@ namespace Final_Project
         bool wizardBattle = false;
         bool reaperBattle = false;
         bool startGame = false;
-
+        bool press = false;
         //Sounds
         Song introMusic, bossMusic, mainMusic, storeMusic;
         SoundEffect buttonSound, staffSound, hitSound, fireSound, buySound, coinSound;
@@ -147,7 +147,9 @@ namespace Final_Project
 
         List<Texture2D> LightningShotList1;
         List<Texture2D> LightningShotList2;
-        List<Texture2D> LightningShotList3;
+
+        List<Texture2D> LightningExplodeList1;
+        List<Texture2D> LightningExplodeList2;
 
         List<Texture2D> fireList1;
         List<Texture2D> fireList2;
@@ -242,7 +244,7 @@ namespace Final_Project
 
             buttonList.Add(new Buttons(rectangleTexture, new Rectangle(5, 645, 545, 90), Color.White, "How to Play", "NONE", 0, "NONE", 0, 0));
 
-            buttonList.Add(new Buttons(rectangleTexture, new Rectangle(500, 80, 545, 500), Color.White, "Instructions", "NONE", 0, "NONE", 0, 0));
+            buttonList.Add(new Buttons(UIStatsTexture, new Rectangle(400, 0, 700, 900), Color.White, "Instructions", "NONE", 0, "NONE", 0, 0));
 
             //Store
             buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(100, 150, 160, 160), Color.White, "Health Potion", "Health:+", 100,"NONE", 0, 60));
@@ -456,7 +458,9 @@ namespace Final_Project
             Texture2D guardTexture = Content.Load<Texture2D>("guard");
             lightningTexture1 = Content.Load<Texture2D>("lightning_Blue");
             lightningTexture2 = Content.Load<Texture2D>("lightning_Yellow");
-           
+            lightningExplodeTexture1 = Content.Load<Texture2D>("lightning3_blue");
+            lightningExplodeTexture2 = Content.Load<Texture2D>("lightning3");
+
 
             Texture2D fire1Texture = Content.Load<Texture2D>("fire1");
             Texture2D fire2Texture = Content.Load<Texture2D>("fire2");
@@ -610,7 +614,9 @@ namespace Final_Project
 
             ReapetingAnimation(GraphicsDevice, lightningTexture1, LightningShotList1 = new List<Texture2D>(), 4);
             ReapetingAnimation(GraphicsDevice, lightningTexture2, LightningShotList2 = new List<Texture2D>(), 4);
-            
+            ReapetingAnimation(GraphicsDevice, lightningExplodeTexture1, LightningExplodeList1 = new List<Texture2D>(), 4);
+            ReapetingAnimation(GraphicsDevice, lightningExplodeTexture2, LightningExplodeList2 = new List<Texture2D>(), 4);
+
 
             ReapetingAnimation(GraphicsDevice, arrowTexture, ArrowShotList = new List<Texture2D>(), 4);
 
@@ -792,14 +798,19 @@ namespace Final_Project
                         else if(button.Type == "How to Play")
                         {
                             button.Hovering = "true";
-                            if (mouseState.LeftButton == ButtonState.Pressed)
+                            if (mouseState.LeftButton == ButtonState.Pressed && press == false)
                             {
+                                press = true;
                                 if (buttonSoundInsta.State == SoundState.Stopped)
                                     buttonSoundInsta.Play();
-                                Instruct = true;
-                            }     
-                            else
-                                Instruct = false;
+                                if (!Instruct)
+                                    Instruct = true;
+                                else
+                                    Instruct = false;
+                            }  
+                            else if (mouseState.LeftButton == ButtonState.Released)
+                                press = false;
+
                         }  
                     }
                     else
@@ -1166,12 +1177,14 @@ namespace Final_Project
 
                     barrier.Update(backroundSpeed, barriersList);
 
+                user.Timer.Start();
+                user.Elapsed = user.Timer.Elapsed;
                 //User Shots
 
                 if (keyboardState.IsKeyDown(Keys.X))
                 {
                     user.WeaponType = "melee";
-
+                    explodLocation = new Vector2(-100, -100);
                     user.UserAttackMelee(enemylist, barriersList, null, null, mouseState.X, mouseState.Y, null, null, null, null, null, null, null);
 
                 }
@@ -1183,6 +1196,7 @@ namespace Final_Project
                 }
                 else if (keyboardState.IsKeyDown(Keys.V))
                 {
+                    explodLocation = new Vector2(-100, -100);
                     user.WeaponType = "special";
                     user.UserAttackMelee(enemylist, barriersList, laserList, shotTexture, mouseState.X, mouseState.Y, shotTexture, fireList1, fireList2, iceList1, iceList2, thunderList1, thunderList2);
                 }
@@ -1191,14 +1205,14 @@ namespace Final_Project
                 foreach (Player troops in enemylist)
                 {
                     //Enemy Melee user
-                    if (troops.EnemyType == "melee" || troops.EnemyType == "both")
+                    if (troops.EnemyType == "melee" )
                     {
                         troops.DrawEnemyAttack(user,barriersList, allylist);
                         troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
                     }
                     //Enemy Shoot
 
-                    else if (troops.EnemyType == "shooter")
+                    else if (troops.EnemyType == "shooter" || troops.EnemyType == "both")
                     {
                         troops.DrawEnemyAttack(null, barriersList, allylist);                
                         troops.EnemyAttackMelee(user, barriersList, allylist, enemyLaserList, playerPosition, fireBallList, ArrowShotList, DeathShotList);
@@ -1227,7 +1241,7 @@ namespace Final_Project
                     {
                         if (troops.Hitbox().Intersects(laser.GetBoundingBox()))
                         {
-                            
+                            explodLocation = new Vector2(laser.GetBoundingBox().X - 30, laser.GetBoundingBox().Y - 30);
                             if (troops.HeadShotBox().Intersects(laser.GetBoundingBox()))
                                 troops.HeadShot = 1.5f;
                             troops.Health -= user.WeaponDamage * (float)damgaeMultiplyer;
@@ -1235,6 +1249,7 @@ namespace Final_Project
                             laserList.RemoveAt(i);
                             break;
                         }
+                        
                     }
 
                 }
@@ -1248,7 +1263,7 @@ namespace Final_Project
                     {
 
                         user.Health -= bullet.WeaponDamage;
-                        guardLocation = new Vector2(bullet.GetBoundingBox().X, bullet.GetBoundingBox().Y);
+                        guardLocation = new Vector2(bullet.GetBoundingBox().X -20, bullet.GetBoundingBox().Y - 20);
                         user.UserHit();
                         enemyLaserList.RemoveAt(i);
                         break;
@@ -1266,6 +1281,7 @@ namespace Final_Project
                     {
                         if (t.Collide(barrier.GetBoundingBox()))
                         {
+                            explodLocation = new Vector2(t.GetBoundingBox().X - 30, t.GetBoundingBox().Y - 30);
                             barrier.TakeHit((int)user.WeaponDamage);
                             if (barrier.Blocking == "true")
                                 laserList.RemoveAt(i);
@@ -1380,12 +1396,17 @@ namespace Final_Project
                             
                             if (boost == true)
                             {
-                                totalSpent += button.Cost;
-                                button.TotalButtonCost += button.Cost;
-                                button.Bought = true;                                
-                                button.Boosts(user, ref Ratfolk, ref difficulty);                               
-                                buySound.Play();
-                                boost = false;
+                                
+                                if (button.Cost <= user.Points)
+                                {
+                                    totalSpent += button.Cost;
+                                    button.TotalButtonCost += button.Cost;
+                                    button.Bought = true;
+
+                                    buySound.Play();
+                                    boost = false;
+                                }
+                                button.Boosts(user, ref Ratfolk, ref difficulty);
                             }
                             if (bossBattle)
                                 fading = true;
@@ -1454,11 +1475,10 @@ namespace Final_Project
                 _spriteBatch.Draw(introBackroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
                 _spriteBatch.DrawString(titleFont, "Wizard Game", new Vector2(150, 700), Color.White);
                 foreach (Buttons button in buttonList)
-                {
-        
+                {        
                     button.DrawHome(_spriteBatch, damageFont, hoverTexture, notHoverTexture);
                     if (Instruct == true)
-                        button.InstructionsDraw(_spriteBatch, damageFont);
+                        button.InstructionsDraw(_spriteBatch,dungeonFont);
                 }
                     
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
@@ -1487,17 +1507,18 @@ namespace Final_Project
                 //Draw all the bullets
                 foreach (LaserClass bullet in laserList)
                     bullet.Draw(_spriteBatch, lightningTexture2);
-                user.Draw(_spriteBatch, mouseState.X, guardLocation, "user");
+                user.Draw(_spriteBatch, mouseState.X, guardLocation, "user", LightningExplodeList1, backroundSpeed);
                 
                 foreach (Player ally in allylist)              
-                    ally.Draw(_spriteBatch, 100000, new Vector2(0,0), "ally");
+                    ally.Draw(_spriteBatch, 100000, new Vector2(0,0), "ally", LightningExplodeList1, backroundSpeed);
                    
                 
                 foreach (Player ai in enemylist)
                 {
-                    ai.Draw(_spriteBatch, 100000, new Vector2(0, 0), "ai");
-                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, UIGrayFullTexture, bossBattle, "ai");                   
+                    ai.Draw(_spriteBatch, 100000, explodLocation, "ai", LightningExplodeList2, backroundSpeed);
+                    ai.DrawHealth(_spriteBatch, emptyGreenBarTexture, healthGreenBarTexture, UIGrayFullTexture, bossBattle, "ai", dungeonFont);                   
                     ai.DrawDamage(_spriteBatch, damageFont, backroundSpeed, user.WeaponType);
+                    
                 }
                
                 
@@ -1521,7 +1542,7 @@ namespace Final_Project
                 _spriteBatch.Draw(UIHealthTexture, new Rectangle(100, mainGameHeight, 250, 100), Color.White);
                 _spriteBatch.Draw(wizardHeadTexture, new Rectangle(115, mainGameHeight + 5, 70, 85), Color.White);
                 _spriteBatch.Draw(UIHeartTexture, new Rectangle((int)user.MaxHealth/2 + 235, 910, 30, 30), Color.White);;
-                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture,UIGrayFullTexture, false, "user");
+                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture,UIGrayFullTexture, false, "user", dungeonFont);
                 _spriteBatch.DrawString(dungeonFont, $"{user.Points}", new Vector2(230, mainGameHeight +55), Color.White);
                 _spriteBatch.DrawString(dungeonFont, $"Difficulty Level: {difficulty}", new Vector2(760, 950), Color.White);
               //  _spriteBatch.DrawString(dungeonFont, $" {user.GunInterval}", new Vector2(500, 500), Color.Red);
@@ -1563,13 +1584,13 @@ namespace Final_Project
                 }            
 
                 _spriteBatch.Draw(wizardCrosshair, new Rectangle(mouseState.X - 18, mouseState.Y, 50, 50), Color.White);
-                user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0), "user");
+                user.Draw(_spriteBatch, mouseState.X, new Vector2(0, 0), "user", LightningExplodeList1, backroundSpeed);
                 //Hud               
                
                 _spriteBatch.Draw(UIHealthTexture, new Rectangle(100, mainGameHeight, 250, 100), Color.White);
                 _spriteBatch.Draw(wizardHeadTexture, new Rectangle(115, mainGameHeight + 5, 70, 85), Color.White);
                 _spriteBatch.Draw(UIHeartTexture, new Rectangle((int)user.MaxHealth/2 +235, 910, 30, 30), Color.White); ;
-                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture, UIGrayFullTexture, false, "user");
+                user.DrawHealth(_spriteBatch, UIRedEmptyTexture, UIRedTexture, UIGrayFullTexture, false, "user", dungeonFont);
                 _spriteBatch.DrawString(dungeonFont, $"{user.Points}", new Vector2(230, mainGameHeight + 55), Color.White);
                 _spriteBatch.DrawString(dungeonFont, $"Difficulty Level: {difficulty}", new Vector2(760, 950), Color.White);
                // _spriteBatch.DrawString(dungeonFont, $" {user.GunInterval}", new Vector2(500, 500), Color.Red);
