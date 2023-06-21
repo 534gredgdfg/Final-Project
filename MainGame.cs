@@ -16,9 +16,9 @@ namespace Final_Project
         private SpriteBatch _spriteBatch;
         Player user;
 
-        Texture2D rectangleTexture, lightningExplodeTexture1, lightningExplodeTexture2, outroBackroundTexture,introBackroundTexture, storeBackroundTexture, hutBlueTexture,hutTexture,wizardCrosshair, darkTreeTexture, grayRockTexture, darkerTreeTexture, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userWalkingLeft, userAttackRightTexture, userAttackLeftTexture, userIdleTexture;
-        Texture2D greenTreeTexture, bossBuyTexture, boostBuyTexture,redTreeTexture, brownTreeTexture, rock1Texture, rock2Texture, rock3Texture, grass1Texture, grass2Texture, grass3Texture, logTexture;
-        Texture2D hoverTexture, UIStatsTexture ,notHoverTexture,UIHealthTexture, UIBlackTexture, UIHoverTexture, UIRedTexture, UIGrayFullTexture,UIRedEmptyTexture, UIHeartTexture,UIBlueTexture, UIBlueEmptyTexture,wizardHeadTexture;
+        Texture2D rectangleTexture, lightningExplodeTexture1, lightningExplodeTexture2, outroBackroundTexture,introBackroundTexture, storeBackroundTexture, hutBlueTexture,hutTexture,wizardCrosshair, healthGreenBarTexture, emptyGreenBarTexture,userSheildWalkTexture, userSheildIdleTexture, lightningTexture1, lightningTexture2, lightningTexture3, arrowTexture, AiArcherWalkingRight, AiArcherMeleeRightTexture, AiWalkingRight, AiMeleeRightTexture, userWalkingRight, userAttackRightTexture, userIdleTexture;
+        Texture2D greenTreeTexture,redTreeTexture, brownTreeTexture, rock1Texture, rock2Texture, rock3Texture, grass1Texture, grass2Texture, grass3Texture, logTexture;
+        Texture2D hoverTexture, UIStatsTexture ,notHoverTexture,UIHealthTexture, UIRedTexture, UIGrayFullTexture,UIRedEmptyTexture, UIHeartTexture,wizardHeadTexture;
         Vector2 backroundSpeed;
         Rectangle targetedEnemy = new Rectangle(750, 450, 50,50);
         Vector2 spawnPoint,guardLocation, explodLocation;
@@ -32,8 +32,8 @@ namespace Final_Project
         int mainGameHeight = 900;
         int enemyType = 0;
         int mainScreenHeight = 1000;
-        int difficulty = 3;
-        int difficultyChange = 1400;
+        int difficulty = 1;
+        int difficultyChange = 1200;
         int randomNumber;
 
         int silverCoinGain = 15;
@@ -46,7 +46,7 @@ namespace Final_Project
         bool RespawnMethold = false;
         bool boost = false;
 
-       bool baseBattle = false;
+      
         bool Instruct = false;
         bool fading;
         bool toStore = false;
@@ -58,7 +58,7 @@ namespace Final_Project
         //Sounds
         Song introMusic, bossMusic, mainMusic, storeMusic;
         SoundEffect buttonSound, staffSound, hitSound, fireSound, buySound, coinSound;
-        SoundEffectInstance buttonSoundInsta, buySoundInsta;
+        SoundEffectInstance buttonSoundInsta;
 
         
 
@@ -247,19 +247,19 @@ namespace Final_Project
             buttonList.Add(new Buttons(UIStatsTexture, new Rectangle(400, 0, 700, 900), Color.White, "Instructions", "NONE", 0, "NONE", 0, 0));
 
             //Store
-            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(100, 150, 160, 160), Color.White, "Health Potion", "Health:+", 100,"NONE", 0, 60));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(100, 150, 170, 170), Color.White, "Health Potion", "Health:+", 100,"NONE", 0, 60));
 
-            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(850, 150, 160, 160), Color.White, "Sheild Recovery Time", "Sheild Cooldown:",-2, "Speed:", -0.1, 225));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(850, 150, 170, 170), Color.White, "Sheild Recovery Time", "Sheild Cooldown:",-2, "Speed:", -0.1, 225));
 
-            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(800, 750, 160, 160), Color.White, "Speed Boost", "Speed:+",0.70, "Max Health:", -40, 500));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(800, 750, 170, 170), Color.White, "Speed Boost", "Speed:+",0.70, "Max Health:", -40, 500));
 
-            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(100, 750, 160, 160), Color.White, "Damage Boost", "Damage:+", 7, "Speed:", -0.20, 300));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(100, 750, 170, 170), Color.White, "Damage Boost", "Damage:+", 7, "Speed:", -0.20, 300));
          
-            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(450, 150, 160, 160), Color.White, "Ratfolk (Ally)", "Allies:+", 1, "Sheild Cooldown:+", 0.50, 100));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(450, 150, 170, 170), Color.White, "Ratfolk (Ally)", "Allies:+", 1, "Sheild Cooldown:+", 0.50, 100));
 
-            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(400, 750, 160, 160), Color.White, "Wizard Ball Speed", "Ball Speed:+", 1, "Damage:", -1, 275));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(400, 750, 170, 170), Color.White, "Wizard Ball Speed", "Ball Speed:+", 1, "Damage:", -1, 275));
 
-            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(600, 750, 160, 160), Color.White, "Attack Downtime", "Attack Cooldown:", -0.40, "Ball Speed:", -0.10, 325));
+            buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(600, 750, 170, 170), Color.White, "Attack Downtime", "Attack Cooldown:", -0.40, "Ball Speed:", -0.10, 325));
 
             //Bosses
             buttonList.Add(new Buttons(storeBackroundTexture, new Rectangle(1100, 150, 160, 160), Color.SandyBrown, "Minotaur Battle", "NONE", 0, "NONE", 0, 0));
@@ -323,7 +323,7 @@ namespace Final_Project
             coinSound = Content.Load<SoundEffect>("Effect_Collect_Coin");
 
             buySound = Content.Load<SoundEffect>("Effect_Buy_Item");
-            buySoundInsta = buySound.CreateInstance();
+            
 
 
             rectangleTexture = Content.Load<Texture2D>("rectangle");
@@ -337,12 +337,7 @@ namespace Final_Project
             hoverTexture = Content.Load<Texture2D>("UI_Hover");
             notHoverTexture = Content.Load<Texture2D>("UI_Black");
 
-            UIHealthTexture = Content.Load<Texture2D>("UI_Health");
-            UIBlackTexture = Content.Load<Texture2D>("UI_Black");
-            UIHoverTexture = Content.Load<Texture2D>("UI_Hover");
-
-            UIBlueTexture = Content.Load<Texture2D>("UI_Blue_Full");
-            UIBlueEmptyTexture = Content.Load<Texture2D>("UI_Blue_Empty");
+            UIHealthTexture = Content.Load<Texture2D>("UI_Health");          
 
             UIRedTexture = Content.Load<Texture2D>("UI_Red_Full");
             UIRedEmptyTexture = Content.Load<Texture2D>("UI_Red_Empty");
@@ -353,17 +348,13 @@ namespace Final_Project
 
             wizardHeadTexture = Content.Load<Texture2D>("Wizard_Head");
 
-            healthFont = Content.Load<SpriteFont>("Good");
+            
             damageFont = Content.Load<SpriteFont>("DamageText");
             dungeonFont = Content.Load<SpriteFont>("DungonFont");
             titleFont = Content.Load<SpriteFont>("TitleFont");
 
             wizardCrosshair = Content.Load<Texture2D>("WizardCrosshair");
             //Enviorment
-            grayRockTexture = Content.Load<Texture2D>("NatureSprite-Gray-Rock");
-            darkTreeTexture = Content.Load<Texture2D>("NatureSprite-Dark-Tree");
-            darkerTreeTexture = Content.Load<Texture2D>("NatureSprite-Darker-Tree");
-
              greenTreeTexture = Content.Load<Texture2D>("Green_Tree");
              redTreeTexture = Content.Load<Texture2D>("Red_Tree");
              brownTreeTexture = Content.Load<Texture2D>("Brown_tree");
@@ -376,8 +367,7 @@ namespace Final_Project
              grass2Texture = Content.Load<Texture2D>("Grass2");
              grass3Texture = Content.Load<Texture2D>("Grass3");
 
-            bossBuyTexture = Content.Load<Texture2D>("Boss_Buy");
-            boostBuyTexture = Content.Load<Texture2D>("Boost_Buy");
+        
 
             logTexture = Content.Load<Texture2D>("Log");
             //User
@@ -860,7 +850,7 @@ namespace Final_Project
                 seconds = (float)gameTime.TotalGameTime.TotalSeconds - sheildTime;
                 if (bossBattle == true)
                 {
-                    baseBattle = false;
+                 
                     for (int i = enemylist.Count - 1; i >= 0; i--)
                     {
                         Player t = enemylist[i];
@@ -885,7 +875,7 @@ namespace Final_Project
                 }
                 else
                 {
-                    baseBattle = true;               
+                               
                     for (int i = 0; enemylist.Count <= difficulty + 2; i++)
                     {
                         enemyType = rand.Next(1, 10);
@@ -1386,27 +1376,25 @@ namespace Final_Project
                 }
                 foreach (Buttons button in buttonList)
                 {
-
                     if (button.Contains(user.Userbox()))
                     {
                         button.Hovering = "true";
                         if (keyboardState.IsKeyDown(Keys.Enter))
                         {
-                            
-                            
                             if (boost == true)
                             {
                                 
                                 if (button.Cost <= user.Points)
                                 {
+                                    
                                     totalSpent += button.Cost;
                                     button.TotalButtonCost += button.Cost;
                                     button.Bought = true;
-
+                                    button.Boosts(user, ref Ratfolk, ref difficulty);
                                     buySound.Play();
                                     boost = false;
                                 }
-                                button.Boosts(user, ref Ratfolk, ref difficulty);
+                                
                             }
                             if (bossBattle)
                                 fading = true;
@@ -1441,8 +1429,7 @@ namespace Final_Project
                     }
                     else
                     {
-                        button.Poor = false;
-                      
+                        button.Poor = false;                      
                         button.TotalButtonCost = 0;
                         button.Bought = false;
                         button.Hovering = "false";

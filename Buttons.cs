@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -43,14 +43,10 @@ namespace Final_Project
         
         public void Boosts(Player user, ref int crusaders, ref int difficulty)
         {
-
-
-            if (_type == "Health Potion" && user.Points >= _cost)
+            if (_type == "Health Potion")
             {
                 user.Health += (int)_boostChange;
-
             }
-
             else if (_type == "Sheild Recovery Time" && user.Points >= _cost && user.SheildSeconds >= 5)
             {
 
@@ -59,31 +55,31 @@ namespace Final_Project
                 user.AnimationSpeed -= 0.004;
             }
 
-            else if (_type == "Speed Boost" && user.Points >= _cost)
+            else if (_type == "Speed Boost")
             {
                 user.BoostSpeed += _boostChange;
                 user.LowerMaxHealth();
                 user.AnimationSpeed += 0.01;
 
             }
-            else if (_type == "Damage Boost" && user.Points >= _cost)
+            else if (_type == "Damage Boost")
             {
                 user.BoostDamage += (int)_boostChange;
                 user.BoostSpeed += _boostChangeCon;
                 user.AnimationSpeed -= 0.004;
 
             }
-            else if (_type == "Ratfolk (Ally)" && user.Points >= _cost)
+            else if (_type == "Ratfolk (Ally)")
             {
                 crusaders += (int)_boostChange;
                 user.SheildSeconds += _boostChangeCon;
             }
-            else if (_type == "Wizard Ball Speed" && user.Points >= _cost)
+            else if (_type == "Wizard Ball Speed")
             {
                 user.ProjectileSpeedBoost += (float)_boostChange;
                 user.BoostDamage += (int)_boostChangeCon;
             }
-            else if (_type == "Attack Downtime" && user.Points >= _cost)
+            else if (_type == "Attack Downtime")
             {
                 user.GunIntervalBoost += (float)_boostChange;
                 user.ProjectileSpeedBoost += (float)_boostChangeCon;
@@ -98,8 +94,6 @@ namespace Final_Project
                 user.Points -= (int)_cost;
                 _cost *= 1.05;
             }
-                
-
         }
         
         public string Type
@@ -157,7 +151,7 @@ namespace Final_Project
 
         public bool Contains(Rectangle item)
         {
-            return _rect.Contains(item);
+            return _rect.Intersects(item);
         }
         
         public void DrawHome(SpriteBatch spriteBatch, SpriteFont Font, Texture2D hoverTexture, Texture2D notHoverTexture)

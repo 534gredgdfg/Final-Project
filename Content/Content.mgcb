@@ -13,6 +13,9 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../DungeonFont.ttf
+/copy:../DungeonFont.ttf;DungeonFont.ttf
+
 #begin Animated_Bush.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -180,6 +183,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Bat_Take_Hit.png
+
+#begin BlackFont.ttf
+/copy:BlackFont.ttf
 
 #begin Blacksmith_Working.png
 /importer:TextureImporter

@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -45,7 +45,7 @@ namespace Final_Project
         private int _maxHealth;
         private int _killpoints = 0;
         
-        private double _points = 3000;
+        private double _points = 1500;
         private double _totalPoints = 0;
         private double _sheildSeconds = 12;
         private double _boostSpeed;
